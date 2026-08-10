@@ -2123,6 +2123,14 @@ input,select,textarea{
   max-height:2400px;padding:0 16px 16px;
 }
 .mod-hab .cfg-note{font-size:11px;color:#7a7f8e;margin-bottom:12px;line-height:1.4;padding-top:4px}
+.mod-hab .cfg-hint{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(77,201,138,.06);border:1px solid rgba(77,201,138,.18);
+  border-radius:12px;padding:12px 14px;margin-bottom:12px;
+  font-size:11px;color:#9ea3b0;line-height:1.55;letter-spacing:.02em;
+}
+.mod-hab .cfg-hint strong{color:#4dc98a;font-weight:700}
+.mod-hab .cfg-hint-ico{color:#4dc98a;flex-shrink:0;display:flex;margin-top:1px}
 .mod-hab .cfg-list-lbl{font-size:10px;color:#7a7f8e;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin:14px 0 8px}
 
 /* Metas */
@@ -2191,7 +2199,7 @@ input,select,textarea{
 <body>
 <div class="app-shell">
 
-  <!-- TOP BAR (sticky) -->
+  <!-- TOP BAR (fija: no acompaña el scroll) -->
   <div class="top-bar">
     <div class="tb-left">
       <button class="hamburger" id="hamburgerBtn" aria-label="Menú">
@@ -2241,20 +2249,9 @@ input,select,textarea{
 
 <!-- CONFIGURAR (actividades / premios / metas) -->
 <div class="scr" id="s-config">
-  <div class="cfg-section">
-    <div class="cfg-head" data-cfg="acts">
-      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/></svg></span><div><div class="cfg-title">Actividades</div><div class="cfg-sub" id="cfgActsCount">0 cargadas</div></div></div>
-      <span class="cfg-arr">▼</span>
-    </div>
-    <div class="cfg-body" id="cfgActsBody">
-      <div class="frow"><label class="flbl">Nombre</label><input class="fin" id="gName" placeholder="ej. Ejercicio, Meditación..."></div>
-      <div class="frow"><label class="flbl">Puntos que otorga</label><input type="number" class="fin" id="gPts" placeholder="20" min="1" inputmode="numeric"></div>
-      <div class="frow"><label class="flbl">Categoría</label><select class="fin" id="gCat" onchange="toggleNewCat('g')"></select></div>
-      <div class="frow hide" id="gNewCatWrap"><label class="flbl">Nueva categoría</label><input class="fin" id="gNewCat" placeholder="ej. Salud, Trabajo, Ocio..."></div>
-      <button class="btn btn-g" onclick="addAct()">Agregar actividad</button>
-      <div class="cfg-list-lbl">Cargadas</div>
-      <div id="actListCfg"></div>
-    </div>
+  <div class="cfg-hint">
+    <span class="cfg-hint-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
+    <span>Las actividades se gestionan desde <strong>Resumen</strong>: con el menú <strong>⋮</strong> de cada categoría, o con el botón <strong>+</strong> para crear una nueva.</span>
   </div>
   <div class="cfg-section">
     <div class="cfg-head" data-cfg="prizs">
@@ -2462,26 +2459,27 @@ function dshort(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{
 function uid(){return Math.random().toString(36).slice(2,8);}
 function sc(arr){return arr.slice().sort(function(a,b){return a.localeCompare(b,'es');});}
 function ensureCat(name){name=(name||'').trim();if(!name)return '';if(S.categories.indexOf(name)<0)S.categories.push(name);S.categories=sc(S.categories);return name;}
-function resolveCat(type){
-  var sel=document.getElementById(type==='g'?'gCat':'rCat');
-  var ni=document.getElementById(type==='g'?'gNewCat':'rNewCat');
+// Solo queda el selector de categoría de PREMIOS ('r'); las actividades
+// se dan de alta desde el sheet de categoría (⋮) o el botón +.
+function resolveCat(){
+  var sel=document.getElementById('rCat');
+  var ni=document.getElementById('rNewCat');
   var val=sel?sel.value:'';
-  if(val==='__new__')val=ensureCat(ni.value);
+  if(val==='__new__')val=ensureCat(ni?ni.value:'');
   else val=ensureCat(val||'Sin categoría');
   return val||'';
 }
 function renderCatSels(){
   var cats=sc(S.categories);
   var base='<option value="Sin categoría">Sin categoría</option>'
-    +cats.filter(function(c){return c!=='Sin categoría';}).map(function(c){return '<option value="'+c.replace(/"/g,'&quot;')+'">'+c+'</option>';}).join('')
+    +cats.filter(function(c){return c!=='Sin categoría';}).map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('')
     +'<option value="__new__">+ Nueva categoría</option>';
-  var g=document.getElementById('gCat'),r=document.getElementById('rCat');
-  if(g){var gv=g.value||'Sin categoría';g.innerHTML=base;g.value=(cats.indexOf(gv)>=0||gv==='Sin categoría'||gv==='__new__')?gv:'Sin categoría';}
+  var r=document.getElementById('rCat');
   if(r){var rv=r.value||'Sin categoría';r.innerHTML=base;r.value=(cats.indexOf(rv)>=0||rv==='Sin categoría'||rv==='__new__')?rv:'Sin categoría';}
-  toggleNewCat('g');toggleNewCat('r');
+  toggleNewCat('r');
 }
-function toggleNewCat(t){
-  var s=document.getElementById(t==='g'?'gCat':'rCat'),w=document.getElementById(t==='g'?'gNewCatWrap':'rNewCatWrap');
+function toggleNewCat(){
+  var s=document.getElementById('rCat'),w=document.getElementById('rNewCatWrap');
   if(s&&w)w.classList.toggle('hide',s.value!=='__new__');
 }
 function getLog(ds){
@@ -2635,6 +2633,12 @@ function openCatMenu(idx){
   renderCatSheet('menu');
   document.getElementById('catSheetBg').classList.add('on');
 }
+// Alta de actividad sin categoría preseleccionada (botón + flotante)
+function openNewAct(){
+  sheetCat=null;
+  renderCatSheet('new');
+  document.getElementById('catSheetBg').classList.add('on');
+}
 function closeCatSheet(){
   var bg=document.getElementById('catSheetBg');
   if(bg)bg.classList.remove('on');
@@ -2653,8 +2657,40 @@ function csHead(title,sub,back){
 }
 function renderCatSheet(view){
   var el=document.getElementById('catSheet');
-  if(!el||sheetCat==null)return;
-  var cat=sheetCat,acts=actsOfCat(cat),h='';
+  if(!el)return;
+  if(sheetCat==null&&view!=='new')return;
+  var cat=sheetCat,acts=cat==null?[]:actsOfCat(cat),h='';
+
+  // Alta desde el FAB: incluye selector de categoría
+  if(view==='new'){
+    var opts=sc(S.categories.filter(function(c){return c&&c!=='Sin categoría';}))
+      .map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+    h='<div class="cs-grab"></div><div class="cs-head">'
+        +'<span class="cs-ico"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>'
+        +'<div style="flex:1;min-width:0"><div class="cs-title">Nueva actividad</div></div>'
+        +'<button class="cs-close" onclick="closeCatSheet()">'
+          +'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'
+      +'</div>'
+      +'<div class="cs-field"><label class="cs-lbl">Nombre</label>'
+        +'<input class="cs-inp" id="csName" placeholder="ej. Ejercicio, Meditación..."></div>'
+      +'<div class="cs-field"><label class="cs-lbl">Puntos que otorga</label>'
+        +'<input type="number" class="cs-inp" id="csPts" placeholder="10" min="1" inputmode="numeric"></div>'
+      +'<div class="cs-field"><label class="cs-lbl">Categoría</label>'
+        +'<select class="cs-inp" id="csCatSel" onchange="csToggleNewCat()">'
+          +opts+'<option value="Sin categoría">Sin categoría</option>'
+          +'<option value="__new__">+ Nueva categoría</option>'
+        +'</select></div>'
+      +'<div class="cs-field'+(opts?' hide':'')+'" id="csNewCatWrap"><label class="cs-lbl">Nombre de la nueva categoría</label>'
+        +'<input class="cs-inp" id="csNewCat" placeholder="ej. Salud, Depto, Trabajo..."></div>'
+      +'<div class="cs-actions">'
+        +'<button class="cs-btn ghost" onclick="closeCatSheet()">Cancelar</button>'
+        +'<button class="cs-btn ok" onclick="csAddNew()">Agregar</button>'
+      +'</div>';
+    el.innerHTML=h;
+    if(!opts){var s=document.getElementById('csCatSel');if(s)s.value='__new__';}
+    setTimeout(function(){var i=document.getElementById('csName');if(i)i.focus();},80);
+    return;
+  }
 
   if(view==='add'){
     h=csHead('Nueva actividad','en '+cat,true)
@@ -2728,6 +2764,27 @@ function renderCatSheet(view){
       +'<span class="cs-opt-arr">'+ARR+'</span>'
     +'</button>';
   el.innerHTML=h;
+}
+function csToggleNewCat(){
+  var s=document.getElementById('csCatSel'),w=document.getElementById('csNewCatWrap');
+  if(!s||!w)return;
+  w.classList.toggle('hide',s.value!=='__new__');
+  if(s.value==='__new__'){var i=document.getElementById('csNewCat');if(i)i.focus();}
+}
+function csAddNew(){
+  var n=((document.getElementById('csName')||{}).value||'').trim();
+  var p=Number((document.getElementById('csPts')||{}).value);
+  var sel=document.getElementById('csCatSel');
+  var cat=sel?sel.value:'Sin categoría';
+  if(cat==='__new__')cat=((document.getElementById('csNewCat')||{}).value||'').trim();
+  if(!n)return showToast('Ingresá un nombre');
+  if(!p||p<1)return showToast('Ingresá los puntos');
+  if(!cat)return showToast('Ingresá la categoría');
+  cat=ensureCat(cat);
+  S.acts.push({id:uid(),name:n,pts:p,days:[0,1,2,3,4,5,6],category:cat});
+  setCatCollapsed(cat,false);
+  save();renderCatSels();renderConfig();renderHoy();updPts();
+  closeCatSheet();showToast('Actividad agregada ✓');
 }
 function csAdd(){
   if(sheetCat==null)return;
@@ -2910,27 +2967,10 @@ function renderHoy(){
 /* ============================================================
    CONFIGURAR · cards plegables (actividades / premios / metas)
    ============================================================ */
-function delAct(id){
-  if(!confirm('¿Eliminar esta actividad?'))return;
-  S.acts=S.acts.filter(function(a){return a.id!==id;});
-  save();renderCatSels();renderHoy();renderConfig();updPts();showToast('Eliminada');
-}
 function delPriz(id){
   if(!confirm('¿Eliminar este premio?'))return;
   S.prizs=S.prizs.filter(function(r){return r.id!==id;});
   save();renderCatSels();renderHoy();renderConfig();updPts();showToast('Eliminado');
-}
-function addAct(){
-  var name=document.getElementById('gName').value.trim();
-  var p=document.getElementById('gPts').value;
-  var cat=resolveCat('g');
-  if(!name)return showToast('Ingresá un nombre');
-  if(!p||p<1)return showToast('Ingresá los puntos');
-  if(!cat)return showToast('Ingresá la categoría');
-  S.acts.push({id:uid(),name:name,pts:Number(p),days:[0,1,2,3,4,5,6],category:cat});
-  save();renderCatSels();renderHoy();renderConfig();updPts();
-  document.getElementById('gName').value='';document.getElementById('gPts').value='';document.getElementById('gNewCat').value='';
-  showToast('Actividad agregada ✓');
 }
 function addPriz(){
   var name=document.getElementById('rName').value.trim();
@@ -2957,27 +2997,14 @@ window.toggleCfg=toggleCfg;
 
 function renderConfig(){
   // Counts
-  document.getElementById('cfgActsCount').textContent=S.acts.length+(S.acts.length===1?' cargada':' cargadas');
   document.getElementById('cfgPrizsCount').textContent=S.prizs.length+(S.prizs.length===1?' cargado':' cargados');
-
-  // Lista actividades
-  var ah='';
-  if(!S.acts.length)ah='<div class="empty-mini">Sin actividades aún</div>';
-  else S.acts.slice().sort(function(a,b){return (a.category||'').localeCompare(b.category||'')||Number(a.pts)-Number(b.pts);}).forEach(function(a){
-    ah+='<div class="vrow">'
-      +'<div class="vrow-info"><div class="vrow-name">'+a.name+'</div><div class="vrow-sub">'+cic(a.category||'')+' '+(a.category||'Sin categoría')+'</div></div>'
-      +'<span class="chip chip-g">+'+a.pts+'</span>'
-      +'<button class="xb" onclick="delAct(\''+a.id+'\')">×</button>'
-      +'</div>';
-  });
-  document.getElementById('actListCfg').innerHTML=ah;
 
   // Lista premios
   var ph='';
   if(!S.prizs.length)ph='<div class="empty-mini">Sin premios aún</div>';
   else S.prizs.slice().sort(function(a,b){return (a.category||'').localeCompare(b.category||'')||Number(a.cost)-Number(b.cost);}).forEach(function(r){
     ph+='<div class="vrow">'
-      +'<div class="vrow-info"><div class="vrow-name">'+r.name+'</div><div class="vrow-sub">'+cic(r.category||'')+' '+(r.category||'Sin categoría')+'</div></div>'
+      +'<div class="vrow-info"><div class="vrow-name">'+esc(r.name)+'</div><div class="vrow-sub">'+cic(r.category||'')+' '+esc(r.category||'Sin categoría')+'</div></div>'
       +'<span class="chip chip-r">'+r.cost+'</span>'
       +'<button class="xb" onclick="delPriz(\''+r.id+'\')">×</button>'
       +'</div>';
@@ -2988,7 +3015,7 @@ function renderConfig(){
   if(!S.goals)S.goals={};
   var cats=S.categories.slice().filter(function(c){return c&&c!=='Sin categoría';}).sort(function(a,b){return a.localeCompare(b);});
   var gh='';
-  if(!cats.length)gh='<div class="empty-mini">Primero agregá categorías al crear actividades</div>';
+  if(!cats.length)gh='<div class="empty-mini">Primero creá una actividad con el botón + en Resumen</div>';
   else cats.forEach(function(cat){
     var val=getGoal(cat);
     gh+='<div class="goal-row">'
@@ -3202,20 +3229,9 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
     renderCatSels();
     renderHoy();
     updPts();
-    // Wire FAB para quick-add
+    // Wire FAB: alta rápida de actividad (con selector de categoría)
     var fab = document.getElementById('fabAdd');
-    if(fab) fab.addEventListener('click', function(){
-      // Atajo: ir directo a Configurar → focus en el nombre de actividad
-      if(window.App && window.App.showScreen){
-        window.App.showScreen('hab','config');
-        setTimeout(function(){
-          var sec = document.querySelector('.cfg-head[data-cfg="acts"]');
-          if(sec && !sec.classList.contains('open')) toggleCfg('acts');
-          var inp = document.getElementById('gName');
-          if(inp) inp.focus();
-        }, 60);
-      }
-    });
+    if(fab) fab.addEventListener('click', openNewAct);
     // Wire toggleCfg en las cards plegables
     document.querySelectorAll('.cfg-head[data-cfg]').forEach(function(h){
       h.addEventListener('click', function(){ toggleCfg(h.dataset.cfg); });
@@ -3233,11 +3249,9 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
   // ── Exponer onclicks ──
   window.go = go;
   window.toggleCfg = toggleCfg;
-  window.addAct = addAct;
   window.addPriz = addPriz;
   window.addAU = addAU;
   window.addPU = addPU;
-  window.delAct = delAct;
   window.delPriz = delPriz;
   window.pickDay = pickDay;
   window.remAU = remAU;
@@ -3246,8 +3260,11 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
   window.toggleNewCat = toggleNewCat;
   window.toggleCat = toggleCat;
   window.openCatMenu = openCatMenu;
+  window.openNewAct = openNewAct;
   window.closeCatSheet = closeCatSheet;
   window.renderCatSheet = renderCatSheet;
+  window.csToggleNewCat = csToggleNewCat;
+  window.csAddNew = csAddNew;
   window.csAdd = csAdd;
   window.csRename = csRename;
   window.csSaveActs = csSaveActs;
