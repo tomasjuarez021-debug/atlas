@@ -2300,6 +2300,57 @@ input,select,textarea{
 }
 .mod-hab .trk-link:active{background:rgba(255,255,255,.08);color:#e8eaf0}
 
+/* ── Bloque en Resumen: marcar de un toque ── */
+.mod-hab .trk-res{
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.09);border-radius:16px;
+  padding:13px 14px 10px;margin-bottom:12px;
+}
+.mod-hab .trk-res-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.mod-hab .trk-res-t{font-size:11px;font-weight:800;color:#e8eaf0;letter-spacing:.14em;text-transform:uppercase}
+.mod-hab .trk-res-s{font-size:10px;color:#7a7f8e;margin-top:4px;letter-spacing:.02em}
+.mod-hab .trk-res-saldo{text-align:right;flex-shrink:0}
+.mod-hab .trk-res-saldo .n{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:800;color:#4dc98a;line-height:1}
+.mod-hab .trk-res-saldo.neg .n{color:#e07070}
+.mod-hab .trk-res-saldo .l{font-size:8.5px;color:#7a7f8e;letter-spacing:.16em;text-transform:uppercase;margin-top:3px;font-weight:700}
+.mod-hab .trk-res-row{
+  display:flex;align-items:center;gap:10px;padding:10px 2px;cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  transition:opacity .2s;
+}
+.mod-hab .trk-res-row:last-child{border-bottom:none}
+.mod-hab .trk-res-row:active{background:rgba(255,255,255,.04)}
+.mod-hab .trk-res-pip{width:7px;height:7px;border-radius:50%;background:var(--c,#7a7f8e);flex-shrink:0;opacity:.45;transition:opacity .2s}
+.mod-hab .trk-res-row.on .trk-res-pip{opacity:1}
+.mod-hab .trk-res-n{flex:1;min-width:0;font-size:13px;color:#c5c8d2;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.mod-hab .trk-res-row.on .trk-res-n{color:#e8eaf0;font-weight:600}
+.mod-hab .trk-res-nota{font-size:10px;color:#7a7f8e;letter-spacing:.02em}
+.mod-hab .trk-res-nota.bad{color:#c98a8a}
+.mod-hab .trk-res-chip{
+  flex-shrink:0;font-size:11px;font-weight:700;letter-spacing:-.01em;padding:3px 7px;border-radius:6px;
+  background:rgba(77,201,138,.13);color:#4dc98a;
+}
+.mod-hab .trk-res-chip.cost{background:rgba(255,107,0,.13);color:#ff8a3d}
+.mod-hab .trk-res-chk{
+  width:24px;height:24px;flex-shrink:0;border-radius:7px;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:#7a7f8e;
+  transition:background .2s,border-color .2s;
+}
+.mod-hab .trk-res-row.on .trk-res-chk{
+  background:rgba(77,201,138,.2);border-color:rgba(77,201,138,.5);
+}
+.mod-hab .trk-res-row.on .trk-res-chk::after{content:'✓';color:#4dc98a;font-size:12px}
+.mod-hab .trk-res-row.perm.on .trk-res-chk{background:rgba(255,107,0,.18);border-color:rgba(255,107,0,.45)}
+.mod-hab .trk-res-row.perm.on .trk-res-chk::after{content:'✓';color:#ff8a3d}
+.mod-hab .trk-res-chk.arrow{border:none;background:none;font-size:17px;color:#556070}
+.mod-hab .trk-res-row.bloq .trk-res-pip{background:#c14747}
+.mod-hab .trk-res-sec{
+  font-size:9px;color:#556070;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+  margin:14px 0 2px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);
+}
+
 /* ── Sheet del día ── */
 .mod-hab .trk-sheet-bg{
   position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
@@ -2437,6 +2488,7 @@ input,select,textarea{
 <!-- HOY (saldo + streak + actividades + premios) -->
 <div class="scr on" id="s-hoy">
   <div id="hoyHero"></div>
+  <div class="trk" id="trkResumen"></div>
   <div id="prizStrip"></div>
   <div id="actList"></div>
   <button class="fab" id="fabAdd" aria-label="Agregar actividad">+</button>
@@ -3426,7 +3478,7 @@ function go(scr,btn){
   document.getElementById('s-'+scr).classList.add('on');
   if(scr==='hist'){selDay=today();dropOpen=false;renderHist();}
   if(scr==='config'){renderCatSels();renderConfig();}
-  if(scr==='hoy')renderHoy();
+  if(scr==='hoy'){renderHoy();if(window.Track)window.Track.renderResumen();}
   if(scr==='cal'&&window.Track)window.Track.render();
 }
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
@@ -3485,7 +3537,7 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
     showSub: function(name){
       try { go(name); } catch(e){ console.warn('hab go', e); }
       try {
-        if(name === 'hoy') renderHoy();
+        if(name === 'hoy'){ renderHoy(); if(window.Track) window.Track.renderResumen(); }
         else if(name === 'config') renderConfig();
         else if(name === 'hist') renderHist();
         else if(name === 'cal' && window.Track) window.Track.render();
@@ -3535,7 +3587,11 @@ function seed(){
       azucar:{diasLibres:[6,0]},
       sup:{creDiaria:true,lioDiaria:true,b12Semana:2},
       higiene:{dientesDia:2},
-      entren:{porSemana:5}
+      entren:{porSemana:5},
+      // Economía: los hábitos dan puntos, los permisos los gastan.
+      // Día completo con entrenamiento = 90 pts. Semana realista ≈ 440.
+      puntos:{med:15,sue:15,dien:5,cre:5,lio:5,b12:5,ent:25,lec:15,lecMin:10},
+      costos:{chess:50,az:100,insta:250}
     }
   };
 }
@@ -3637,6 +3693,43 @@ function instaValido(k){
 }
 function instaFueraDeRegla(k){ return !!dia(k).insta && !instaValido(k); }
 function hayFalta(k){ return azProhibido(k) || instaFueraDeRegla(k); }
+
+/* ── Economía: puntos ganados por hábitos, gastados por permisos ── */
+function P(){ return T.metas.puntos; }
+function C(){ return T.metas.costos; }
+function paginasDia(d){
+  var t=0;
+  if(d.lec) Object.keys(d.lec).forEach(function(id){ t+=Number(d.lec[id])||0; });
+  return t;
+}
+function ganadosDia(k){
+  var d=dia(k), p=P(), n=0;
+  if(d.med) n+=p.med;
+  if(sueOk(d)) n+=p.sue;
+  n += Math.min(Number(d.dien||0), Number(T.metas.higiene.dientesDia)) * p.dien;
+  if(d.cre) n+=p.cre;
+  if(d.lio) n+=p.lio;
+  if(d.b12) n+=p.b12;
+  if(d.ent) n+=p.ent;
+  if(paginasDia(d) >= p.lecMin) n+=p.lec;
+  return n;
+}
+function gastadosDia(k){
+  var d=dia(k), c=C(), n=0;
+  if(d.chess) n+=c.chess;
+  if(d.az) n+=c.az;
+  if(d.insta) n+=c.insta;
+  return n;
+}
+function saldo(){
+  var n=0;
+  claves().forEach(function(k){ n += ganadosDia(k) - gastadosDia(k); });
+  return n;
+}
+function techoDia(){
+  var p=P();
+  return p.med+p.sue+p.dien*Number(T.metas.higiene.dientesDia)+p.cre+p.lio+p.ent+p.lec;
+}
 
 /* ── Métricas (siempre calculadas) ── */
 function totalMed(){ return claves().filter(function(k){ return T.dias[k].med; }).length; }
@@ -3789,6 +3882,19 @@ function renderStats(){
   var tot=totalMed(), pctMed=Math.min(100,Math.round(tot/metaMed*100));
   var s='';
 
+  // ── Saldo (economía de permisos) ──
+  var sal=saldo(), c=C(), techo=techoDia();
+  var ganMes=diasMes().reduce(function(a,k){ return a+ganadosDia(k); },0);
+  var gasMes=diasMes().reduce(function(a,k){ return a+gastadosDia(k); },0);
+  s+='<div class="trk-card" style="--c:' + (sal<0?'#c14747':'#4dc98a') + '">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Saldo de permisos</div>'
+    +   '<div class="trk-big" style="color:' + (sal<0?'#e07070':'#4dc98a') + '">' + sal + '<small>pts</small></div></div>'
+    + '<div class="trk-sub">Un día completo da <b>' + techo + '</b> pts · en ' + MESES[vis.m].toLowerCase()
+    +   ' ganaste <b>' + ganMes + '</b> y gastaste <b>' + gasMes + '</b><br>'
+    +   'Chess <b>−' + c.chess + '</b> · azúcar <b>−' + c.az + '</b> · Instagram <b>−' + c.insta + '</b>'
+    +   (sal<0?' · <span class="bad">estás en deuda</span>':'')
+    + '</div></div>';
+
   // ── Meditación ──
   s+='<div class="trk-card" style="--c:#4dc98a">'
     + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Meditar ' + T.metas.meditar.minDia + ' min</div>'
@@ -3904,6 +4010,127 @@ function renderStats(){
 }
 
 /* ============================================================
+   BLOQUE EN RESUMEN · marcar de un toque
+   ============================================================ */
+function renderResumen(){
+  var cont=document.getElementById('trkResumen');
+  if(!cont) return;
+  if(!T) load();
+  var k=hoyKey(), d=dia(k), p=P(), c=C();
+  var sal=saldo(), hoyGan=ganadosDia(k), finde=esFinde(k);
+
+  var filas=[
+    {campo:'med', nombre:'Meditar '+T.metas.meditar.minDia+' min', pts:p.med, on:!!d.med, color:'#4dc98a'},
+    {campo:'ent', nombre:'Entrenar',    pts:p.ent, on:!!d.ent, color:'#ff8a3d',
+     nota:'semana '+entrenSemana(k)+'/'+T.metas.entren.porSemana},
+    {campo:'sue', nombre:'Dormir '+T.metas.sueno.min+' h o más', pts:p.sue, on:sueOk(d), color:'#a98fd8'},
+    {campo:'cre', nombre:'Creatina',    pts:p.cre, on:!!d.cre, color:'#5fc9c2'},
+    {campo:'lio', nombre:'Lions mane',  pts:p.lio, on:!!d.lio, color:'#5fc9c2'},
+    {campo:'b12', nombre:'B12',         pts:p.b12, on:!!d.b12, color:'#5fc9c2',
+     nota:'semana '+b12Semana(k)+'/'+T.metas.sup.b12Semana}
+  ];
+
+  var s='<div class="trk-res">'
+    + '<div class="trk-res-h">'
+    +   '<div><div class="trk-res-t">Rutina de hoy</div>'
+    +     '<div class="trk-res-s">'+hoyGan+' de '+techoDia()+' pts ganados hoy</div></div>'
+    +   '<div class="trk-res-saldo'+(sal<0?' neg':'')+'"><div class="n">'+sal+'</div><div class="l">permisos</div></div>'
+    + '</div>';
+
+  filas.forEach(function(f){
+    s+='<div class="trk-res-row'+(f.on?' on':'')+'" data-campo="'+f.campo+'" style="--c:'+f.color+'">'
+      + '<span class="trk-res-pip"></span>'
+      + '<span class="trk-res-n">'+f.nombre+(f.nota?'<span class="trk-res-nota">'+esc(f.nota)+'</span>':'')+'</span>'
+      + '<span class="trk-res-chip">+'+f.pts+'</span>'
+      + '<span class="trk-res-chk"></span>'
+      + '</div>';
+  });
+
+  // Dientes: contador
+  var dn=Number(d.dien||0), meta=Number(T.metas.higiene.dientesDia);
+  s+='<div class="trk-res-row'+(dn>=meta?' on':'')+'" id="trkResDien" style="--c:#b8c4d4">'
+    + '<span class="trk-res-pip"></span>'
+    + '<span class="trk-res-n">Dientes<span class="trk-res-nota">'+dn+' de '+meta+'</span></span>'
+    + '<span class="trk-res-chip">+'+p.dien+'</span>'
+    + '<span class="trk-res-chk">'+(dn>0&&dn<meta?dn:'')+'</span>'
+    + '</div>';
+
+  // Lectura: necesita número de páginas → abre el día
+  var pag=paginasDia(d);
+  s+='<div class="trk-res-row'+(pag>=p.lecMin?' on':'')+'" id="trkResLec" style="--c:#e8b84b">'
+    + '<span class="trk-res-pip"></span>'
+    + '<span class="trk-res-n">Leer<span class="trk-res-nota">'+(pag?pag+' páginas hoy':'desde '+p.lecMin+' páginas')+'</span></span>'
+    + '<span class="trk-res-chip">+'+p.lec+'</span>'
+    + '<span class="trk-res-chk arrow">›</span>'
+    + '</div>';
+
+  // ── Permisos ──
+  var instaOk=instaValido(k);
+  var permisos=[
+    {campo:'chess', nombre:'Chess · hasta '+T.metas.chess.maxMin+' min', costo:c.chess, on:!!d.chess,
+     nota:null, permitido:true},
+    {campo:'az', nombre:'Azúcar', costo:c.az, on:!!d.az,
+     nota: finde?null:'sólo el finde', permitido:finde},
+    {campo:'insta', nombre:'Instagram · '+T.metas.insta.maxMin+' min', costo:c.insta, on:!!d.insta,
+     nota: instaOk?null:'próximo: '+largo(proxInstaPermitido()), permitido:instaOk}
+  ];
+  s+='<div class="trk-res-sec">Permisos · se pagan con puntos</div>';
+  permisos.forEach(function(f){
+    var alcanza = f.on || sal >= f.costo;
+    s+='<div class="trk-res-row perm'+(f.on?' on':'')+(f.permitido?'':' bloq')+'" data-perm="'+f.campo+'">'
+      + '<span class="trk-res-pip"></span>'
+      + '<span class="trk-res-n">'+f.nombre
+      +   (f.nota?'<span class="trk-res-nota bad">'+esc(f.nota)+'</span>'
+                 :(alcanza?'':'<span class="trk-res-nota bad">te faltan '+(f.costo-sal)+'</span>'))
+      + '</span>'
+      + '<span class="trk-res-chip cost">−'+f.costo+'</span>'
+      + '<span class="trk-res-chk"></span>'
+      + '</div>';
+  });
+  s+='</div>';
+  cont.innerHTML=s;
+
+  // ── Cableado ──
+  cont.querySelectorAll('[data-campo]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var campo=row.dataset.campo;
+      editar(k, function(x){
+        if(campo==='sue'){ if(sueOk(x)) delete x.sue; else x.sue={h:Number(T.metas.sueno.min)}; }
+        else if(x[campo]) delete x[campo];
+        else x[campo]=1;
+      });
+      repintar();
+    });
+  });
+  document.getElementById('trkResDien').addEventListener('click', function(){
+    var n=Number(dia(k).dien||0)+1;
+    if(n>meta) n=0;
+    editar(k, function(x){ if(n>0) x.dien=n; else delete x.dien; });
+    repintar();
+  });
+  document.getElementById('trkResLec').addEventListener('click', function(){ abrirDia(k); });
+  cont.querySelectorAll('[data-perm]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var campo=row.dataset.perm, d2=dia(k), costo=C()[campo];
+      if(!d2[campo] && saldo() < costo){
+        if(!confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
+      }
+      editar(k, function(x){
+        if(x[campo]) delete x[campo];
+        else x[campo] = (campo==='chess') ? {min:Number(T.metas.chess.maxMin)}
+                      : (campo==='insta') ? {min:Number(T.metas.insta.maxMin)} : 1;
+      });
+      repintar();
+    });
+  });
+}
+function repintar(){
+  renderResumen();
+  var cal=document.getElementById('s-cal');
+  if(cal && cal.classList.contains('on')) render();
+}
+
+/* ============================================================
    SHEET · un día
    ============================================================ */
 function abrirSheet(html){
@@ -3951,12 +4178,13 @@ function abrirDia(k){
   var d=dia(k), r=rel(k);
   var finde=esFinde(k);
   var h='';
-  h+=cab(largo(k), (r?r+' · ':'') + (finde?'fin de semana':'día de semana'));
+  h+=cab(largo(k), (r?r+' · ':'') + (finde?'fin de semana':'día de semana')
+        + ' · ' + ganadosDia(k) + ' pts · saldo ' + saldo());
 
   h+='<div class="trk-sec">Hábitos</div>';
   h+=fila({ id:'tgMed', color:'#4dc98a', ico:ICO.med, nombre:'Meditar ' + T.metas.meditar.minDia + ' min',
             detalle: d.med?'hecho':'sin marcar', estado: d.med?' ok':'', on:!!d.med });
-  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess',
+  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess · −' + C().chess + ' pts',
             detalle: d.chess ? (chessExceso(d) ? 'excedido: ' + d.chess.min + ' min' : d.chess.min + ' min') : 'sin marcar',
             estado: d.chess ? (chessExceso(d)?' bad':' ok') : '', on:!!d.chess,
             extra: '<input type="number" class="trk-num' + (chessExceso(d)?' warn':'') + '" id="inChe" inputmode="numeric" min="0" max="240" value="' + (d.chess?d.chess.min:T.metas.chess.maxMin) + '">' });
@@ -4012,11 +4240,11 @@ function abrirDia(k){
   }
 
   h+='<div class="trk-sec">Reglas</div>';
-  h+=fila({ id:'tgAz', color:'#ff6b00', ico:ICO.az, nombre:'Comí azúcar',
+  h+=fila({ id:'tgAz', color:'#ff6b00', ico:ICO.az, nombre:'Comí azúcar · −' + C().az + ' pts',
             detalle: d.az ? (finde?'permitido: es finde':'no estaba permitido') : (finde?'finde libre':'prohibido hoy'),
             estado: d.az ? (finde?' ok':' bad') : '', on:!!d.az, mal:!finde });
   var ok=instaValido(k);
-  h+=fila({ id:'tgIg', color:'#c14747', ico:ICO.ig, nombre:'Usé Instagram',
+  h+=fila({ id:'tgIg', color:'#c14747', ico:ICO.ig, nombre:'Usé Instagram · −' + C().insta + ' pts',
             detalle: d.insta ? (ok ? d.insta.min + ' min · dentro de la regla' : d.insta.min + ' min · fuera de la regla')
                              : (ok ? 'habilitado este día' : 'no corresponde este día'),
             estado: d.insta ? (ok?' ok':' bad') : '', on:!!d.insta, mal:!ok,
@@ -4115,6 +4343,7 @@ function guardarPaginas(k,id,v){
 }
 function refrescar(k){
   render();
+  renderResumen();
   if(sheetDia===k) abrirDia(k);   // redibuja el sheet con los estados nuevos
 }
 
@@ -4149,6 +4378,20 @@ function abrirLibros(){
   h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Entrenar · por semana</div>'
     + '<div class="trk-row-d">Sin especificar qué entrenamiento.</div></div>'
     + '<input type="number" class="trk-num" id="mtEnt" inputmode="numeric" min="1" max="14" value="' + (T.metas.entren.porSemana||5) + '"></div>';
+
+  h+='<div class="trk-sec">Puntos por hábito</div>';
+  [['pmed','Meditar','med'],['pent','Entrenar','ent'],['psue','Dormir','sue'],
+   ['plec','Leer','lec'],['pdien','Dientes (por vez)','dien'],
+   ['pcre','Creatina','cre'],['plio','Lions mane','lio'],['pb12','B12','b12']].forEach(function(x){
+    h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">'+x[1]+'</div></div>'
+      + '<input type="number" class="trk-num" id="'+x[0]+'" inputmode="numeric" min="0" max="200" value="'+P()[x[2]]+'"></div>';
+  });
+  h+='<div class="trk-sec">Costo de los permisos</div>';
+  h+='<div class="trk-sub" style="padding:2px 0 8px">Un día completo da '+techoDia()+' pts. Si los permisos salen baratos, dejan de costar algo.</div>';
+  [['cche','Chess','chess'],['caz','Azúcar (por día)','az'],['cins','Instagram','insta']].forEach(function(x){
+    h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">'+x[1]+'</div></div>'
+      + '<input type="number" class="trk-num" id="'+x[0]+'" inputmode="numeric" min="0" max="2000" value="'+C()[x[2]]+'"></div>';
+  });
 
   h+='<div class="trk-sec">Libros</div>';
   if(!T.libros.length) h+='<div class="trk-sub" style="padding:6px 0 10px">Todavía no cargaste ninguno.</div>';
@@ -4189,6 +4432,13 @@ function abrirLibros(){
   metaNum('mtB12', function(v){ T.metas.sup.b12Semana=v; }, 1, 7, true);
   metaNum('mtDien',function(v){ T.metas.higiene.dientesDia=v; }, 1, 6, true);
   metaNum('mtEnt', function(v){ T.metas.entren.porSemana=v; }, 1, 14, true);
+  [['pmed','med'],['pent','ent'],['psue','sue'],['plec','lec'],['pdien','dien'],
+   ['pcre','cre'],['plio','lio'],['pb12','b12']].forEach(function(x){
+    metaNum(x[0], function(v){ T.metas.puntos[x[1]]=v; }, 0, 200, true);
+  });
+  [['cche','chess'],['caz','az'],['cins','insta']].forEach(function(x){
+    metaNum(x[0], function(v){ T.metas.costos[x[1]]=v; }, 0, 2000, true);
+  });
 
   el.querySelectorAll('[data-tit]').forEach(function(inp){
     inp.addEventListener('change', function(){
@@ -4237,6 +4487,7 @@ function msg(t){
 
 /* ── Arranque ── */
 load();
+try{ renderResumen(); }catch(e){ console.warn('trk resumen', e); }
 var bg=document.getElementById('trkSheetBg');
 if(bg) bg.addEventListener('click', function(e){ if(e.target===bg) cerrarSheet(); });
 document.addEventListener('keydown', function(e){
@@ -4245,7 +4496,12 @@ document.addEventListener('keydown', function(e){
 
 window.Track = {
   render: render,
+  renderResumen: renderResumen,
   abrirDia: abrirDia,
+  saldo: saldo,
+  ganadosDia: ganadosDia,
+  gastadosDia: gastadosDia,
+  techoDia: techoDia,
   datos: function(){ return T; },
   metricas: function(){
     return {
