@@ -2096,8 +2096,7 @@ input,select,textarea{
   transition:transform .15s;
 }
 .mod-hab .fab:active{transform:scale(.92)}
-.mod-hab #s-config .fab,
-.mod-hab #s-hist .fab{display:none}
+.mod-hab #s-config .fab{display:none}
 
 /* ── CONFIGURAR · cards plegables ── */
 .mod-hab .cfg-section{
@@ -2123,6 +2122,61 @@ input,select,textarea{
   max-height:2400px;padding:0 16px 16px;
 }
 .mod-hab .cfg-note{font-size:11px;color:#7a7f8e;margin-bottom:12px;line-height:1.4;padding-top:4px}
+/* Configurar simple: listas por categoría + alta en dos renglones */
+.mod-hab .cfg-section.roja .cfg-ico{color:#e07070}
+.mod-hab .cfg-cat{
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#556070;
+  margin:14px 0 6px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.mod-hab .cfg-cat:first-child{margin-top:4px}
+.mod-hab .cfg-cat.roja{color:#c98a8a;border-bottom-color:rgba(193,71,71,.18)}
+.mod-hab .lrow{
+  display:flex;align-items:center;gap:10px;padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.mod-hab .lrow:last-child{border-bottom:none}
+.mod-hab .lrow-n{flex:1;min-width:0;font-size:13px;color:#e8eaf0}
+.mod-hab .lrow-s{font-size:10px;color:#7a7f8e;margin-left:8px}
+.mod-hab .lrow-p{
+  flex-shrink:0;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;
+  background:rgba(77,201,138,.14);color:#4dc98a;
+}
+.mod-hab .lrow-p.rojo{background:rgba(193,71,71,.15);color:#e07070}
+.mod-hab .lrow-x{
+  width:26px;height:26px;flex-shrink:0;border-radius:7px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);color:#7a7f8e;font-size:14px;line-height:1;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mod-hab .lrow-x:active{background:rgba(193,71,71,.15);color:#e07070;border-color:rgba(193,71,71,.3)}
+.mod-hab .add-row{display:flex;gap:8px;margin-top:10px}
+.mod-hab .add-in{
+  flex:1;min-width:0;padding:11px 12px;border-radius:9px;
+  background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.11)!important;
+  color:#e8eaf0;outline:none;
+}
+.mod-hab .add-in:focus{border-color:rgba(77,201,138,.4)!important}
+.mod-hab .add-pts{
+  width:74px;flex-shrink:0;text-align:center;padding:11px 6px;border-radius:9px;
+  background:rgba(77,201,138,.1)!important;border:1px solid rgba(77,201,138,.28)!important;
+  color:#4dc98a;font-family:'Orbitron',sans-serif;font-weight:700;outline:none;
+}
+.mod-hab .add-pts.rojo{
+  background:rgba(193,71,71,.12)!important;border-color:rgba(193,71,71,.3)!important;color:#e07070;
+}
+.mod-hab .add-btn{
+  width:104px;flex-shrink:0;border-radius:9px;border:none;cursor:pointer;
+  font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+}
+.mod-hab .add-btn.ok{background:linear-gradient(135deg,#4dc98a,#7be0ab);color:#0a1410}
+.mod-hab .add-btn.bad{background:linear-gradient(135deg,#c14747,#e07070);color:#1a0a0a}
+/* Categorías de permisos en Resumen */
+.mod-hab .trk-res-cat{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#9ea3b0;
+  margin:12px 0 2px;
+}
+.mod-hab .trk-res-cat span{font-size:9.5px;letter-spacing:.04em;text-transform:none;color:#7a7f8e;font-weight:600}
+.mod-hab .trk-res-cat.bloq span{color:#c98a8a}
 .mod-hab .cfg-hint{
   display:flex;align-items:flex-start;gap:10px;
   background:rgba(77,201,138,.06);border:1px solid rgba(77,201,138,.18);
@@ -2514,43 +2568,61 @@ input,select,textarea{
 
 <!-- CONFIGURAR (actividades / premios / metas) -->
 <div class="scr" id="s-config">
-  <div class="cfg-hint">
-    <span class="cfg-hint-ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
-    <span>Las actividades se gestionan desde <strong>Resumen</strong>: con el menú <strong>⋮</strong> de cada categoría, o con el botón <strong>+</strong> para crear una nueva.</span>
-  </div>
+
   <div class="cfg-section">
+    <div class="cfg-head" data-cfg="acts">
+      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/></svg></span><div><div class="cfg-title">Actividades</div><div class="cfg-sub" id="cfgActsCount">suman puntos</div></div></div>
+      <span class="cfg-arr">▼</span>
+    </div>
+    <div class="cfg-body" id="cfgActsBody">
+      <div id="actListCfg"></div>
+      <div class="add-row">
+        <input class="add-in" id="gName" placeholder="Nueva actividad">
+        <input type="number" class="add-pts" id="gPts" placeholder="pts" min="1" inputmode="numeric">
+      </div>
+      <div class="add-row">
+        <select class="add-in" id="gCat" onchange="toggleNewCat()"></select>
+        <button class="add-btn ok" onclick="addAct()">Agregar</button>
+      </div>
+      <div class="add-row hide" id="gNewCatWrap">
+        <input class="add-in" id="gNewCat" placeholder="Nombre de la categoría nueva">
+      </div>
+    </div>
+  </div>
+
+  <div class="cfg-section roja">
     <div class="cfg-head" data-cfg="prizs">
-      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9"/></svg></span><div><div class="cfg-title">Premios</div><div class="cfg-sub" id="cfgPrizsCount">0 cargados</div></div></div>
+      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18M12 8v13M12 8S9 3 7 5s2 3 5 3zM12 8s3-5 5-3-2 3-5 3z"/></svg></span><div><div class="cfg-title">Premios</div><div class="cfg-sub" id="cfgPrizsCount">gastan puntos</div></div></div>
       <span class="cfg-arr">▼</span>
     </div>
     <div class="cfg-body" id="cfgPrizsBody">
-      <div class="frow"><label class="flbl">Nombre del premio</label><input class="fin" id="rName" placeholder="ej. Netflix, Redes sociales..."></div>
-      <div class="frow"><label class="flbl">Puntos para desbloquearlo</label><input type="number" class="fin" id="rCost" placeholder="30" min="1" inputmode="numeric"></div>
-      <div class="frow"><label class="flbl">Categoría</label><select class="fin" id="rCat" onchange="toggleNewCat('r')"></select></div>
-      <div class="frow hide" id="rNewCatWrap"><label class="flbl">Nueva categoría</label><input class="fin" id="rNewCat" placeholder="ej. Ocio, Entretenimiento..."></div>
-      <button class="btn btn-r" onclick="addPriz()">Agregar premio</button>
-      <div class="cfg-list-lbl">Cargados</div>
+      <div class="cfg-note">Cada premio cuelga de una de las tres categorías con restricción: azúcar sólo el finde, chess una vez por día, Instagram cada <span id="cfgIgDias">14</span> días. Aparecen en Resumen y salen del mismo saldo.</div>
       <div id="prizListCfg"></div>
+      <div class="add-row">
+        <input class="add-in" id="rName" placeholder="Nuevo premio">
+        <input type="number" class="add-pts rojo" id="rCost" placeholder="pts" min="1" inputmode="numeric">
+      </div>
+      <div class="add-row">
+        <select class="add-in" id="rCat">
+          <option value="Azúcar">Azúcar</option>
+          <option value="Chess">Chess</option>
+          <option value="Instagram">Instagram</option>
+        </select>
+        <button class="add-btn bad" onclick="addPriz()">Agregar</button>
+      </div>
     </div>
   </div>
+
   <div class="cfg-section">
     <div class="cfg-head" data-cfg="goals">
-      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><div><div class="cfg-title">Metas por categoría</div><div class="cfg-sub" id="cfgGoalsSub">opcional · pts/día</div></div></div>
+      <div class="cfg-head-l"><span class="cfg-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><div><div class="cfg-title">Metas por categoría</div><div class="cfg-sub">opcional · pts/día</div></div></div>
       <span class="cfg-arr">▼</span>
     </div>
     <div class="cfg-body" id="cfgGoalsBody">
-      <div class="cfg-note">Definí una meta diaria de puntos para cada categoría. La progresión aparece en Hoy.</div>
       <div id="goalsList"></div>
     </div>
   </div>
-</div>
 
-<!-- HISTORIAL (heatmap + pies + drilldown) -->
-<div class="scr" id="s-hist">
-  <div id="streakHero"></div>
-  <div id="heatmapWrap"></div>
-  <div id="dselWrap"></div>
-  <div id="resDetail"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2585,17 +2657,15 @@ input,select,textarea{
   function $(id){return document.getElementById(id);}
   function $$(sel){return document.querySelectorAll(sel);}
 
-  const SUB_LABELS = { hoy:'Hábitos · Resumen', cal:'Hábitos · Calendario', config:'Hábitos · Configurar', hist:'Hábitos · Historial' };
+  const SUB_LABELS = { hoy:'Hábitos · Resumen', cal:'Hábitos · Calendario', config:'Hábitos · Configurar' };
   const ICO_DASH   = '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>';
   const ICO_CFG    = '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 01-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 01-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 010-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 012.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 014 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 012.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 010 4h-.1a1.6 1.6 0 00-1.5 1z"/>';
-  const ICO_HIST   = '<path d="M3 3v18h18M7 16l4-4 4 3 5-6"/>';
   const ICO_CAL    = '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h1M11.5 14h1M15.5 14h1M7.5 17.5h1M11.5 17.5h1"/>';
 
   const TABS = [
     {sub:'hoy',    label:'Resumen',    svg: ICO_DASH},
     {sub:'cal',    label:'Calendario', svg: ICO_CAL},
-    {sub:'config', label:'Configurar', svg: ICO_CFG},
-    {sub:'hist',   label:'Historial',  svg: ICO_HIST}
+    {sub:'config', label:'Configurar', svg: ICO_CFG}
   ];
 
   let currentSub = 'hoy';
@@ -2681,7 +2751,12 @@ input,select,textarea{
   window.App = window.App || {};
   window.App.modules = window.App.modules || {};
   window.App.showScreen = showScreen;
-  window.App.refreshDashboard = function(){ /* no-op: sin dashboard global */ };
+  window.App.refreshDashboard = function(){
+    if(window.Track && window.Track.renderResumen){
+      try { window.Track.renderResumen(); } catch(e){}
+      try { if($('s-cal') && $('s-cal').classList.contains('on')) window.Track.render(); } catch(e){}
+    }
+  };
   window.App.toast = toast;
 
   // ── Inicialización ──
@@ -2731,27 +2806,17 @@ function dshort(ds){return new Date(ds+'T12:00:00').toLocaleDateString('es-AR',{
 function uid(){return Math.random().toString(36).slice(2,8);}
 function sc(arr){return arr.slice().sort(function(a,b){return a.localeCompare(b,'es');});}
 function ensureCat(name){name=(name||'').trim();if(!name)return '';if(S.categories.indexOf(name)<0)S.categories.push(name);S.categories=sc(S.categories);return name;}
-// Solo queda el selector de categoría de PREMIOS ('r'); las actividades
-// se dan de alta desde el sheet de categoría (⋮) o el botón +.
-function resolveCat(){
-  var sel=document.getElementById('rCat');
-  var ni=document.getElementById('rNewCat');
-  var val=sel?sel.value:'';
-  if(val==='__new__')val=ensureCat(ni?ni.value:'');
-  else val=ensureCat(val||'Sin categoría');
-  return val||'';
-}
 function renderCatSels(){
   var cats=sc(S.categories);
   var base='<option value="Sin categoría">Sin categoría</option>'
     +cats.filter(function(c){return c!=='Sin categoría';}).map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('')
     +'<option value="__new__">+ Nueva categoría</option>';
-  var r=document.getElementById('rCat');
-  if(r){var rv=r.value||'Sin categoría';r.innerHTML=base;r.value=(cats.indexOf(rv)>=0||rv==='Sin categoría'||rv==='__new__')?rv:'Sin categoría';}
-  toggleNewCat('r');
+  var g=document.getElementById('gCat');
+  if(g){var gv=g.value||'Sin categoría';g.innerHTML=base;g.value=(cats.indexOf(gv)>=0||gv==='Sin categoría'||gv==='__new__')?gv:'Sin categoría';}
+  toggleNewCat();
 }
 function toggleNewCat(){
-  var s=document.getElementById('rCat'),w=document.getElementById('rNewCatWrap');
+  var s=document.getElementById('gCat'),w=document.getElementById('gNewCatWrap');
   if(s&&w)w.classList.toggle('hide',s.value!=='__new__');
 }
 function getLog(ds){
@@ -2763,6 +2828,16 @@ function getLog(ds){
   Object.keys(l.acts).forEach(function(id){if(!Array.isArray(l.acts[id]))l.acts[id]=l.acts[id]?[l.acts[id]]:[];});
   Object.keys(l.prizes).forEach(function(id){if(!Array.isArray(l.prizes[id]))l.prizes[id]=l.prizes[id]?[l.prizes[id]]:[];});
   return l;
+}
+/* Neto propio de este módulo (actividades cargadas menos premios canjeados) */
+function netoPropio(){
+  var e=0,g=0;
+  Object.keys(S.log||{}).forEach(function(ds){ var c=counts(ds); e+=c.earned; g+=c.spent; });
+  return e-g;
+}
+/* Saldo único de la app: esto más la rutina de hábitos */
+function saldoTotal(){
+  return netoPropio() + (window.Track && window.Track.netoPropio ? window.Track.netoPropio() : 0);
 }
 function counts(ds){
   var l=getLog(ds),e=0,s=0,ac=0,pc=0;
@@ -2798,9 +2873,9 @@ function prizU(ds,id){return(getLog(ds).prizes[id]||[]).length;}
 function addAU(id){var l=getLog(today());if(!l.acts[id])l.acts[id]=[];l.acts[id].push(nowT());save();renderHoy();updPts();if(window.App&&window.App.refreshDashboard)window.App.refreshDashboard();}
 function remAU(id){var l=getLog(today());if(!l.acts[id]||!l.acts[id].length)return;l.acts[id].pop();if(!l.acts[id].length)delete l.acts[id];save();renderHoy();updPts();if(window.App&&window.App.refreshDashboard)window.App.refreshDashboard();}
 function addPU(id){
-  var l=getLog(today()),c=counts(today());
+  var l=getLog(today());
   var r=S.prizs.find(function(x){return x.id===id;});if(!r)return;
-  if(c.net<Number(r.cost))return showToast('No te alcanzan los puntos');
+  if(saldoTotal()<Number(r.cost))return showToast('No te alcanzan los puntos');
   if(!l.prizes[id])l.prizes[id]=[];l.prizes[id].push(nowT());
   save();renderHoy();updPts();showToast('¡Premio canjeado! <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19l4-10 8 8zM13 5l1 2M19 9l2 1M16 14l3 1M19 2l1 1"/></svg>');
   if(window.App&&window.App.refreshDashboard)window.App.refreshDashboard();
@@ -3113,11 +3188,12 @@ function csDelAct(id){
    ============================================================ */
 function renderHoy(){
   var t=today(),c=counts(t),st=computeStreak();
+  var neto=saldoTotal();
   // ── HERO compacto: saldo + racha (sin mini-stats redundantes) ──
   var hero='<div class="hoy-hero">'
     +'<div class="hh-row">'
       +'<div class="hh-saldo">'
-        +'<div class="hh-saldo-n'+(c.net<0?' neg':'')+'">'+c.net+'</div>'
+        +'<div class="hh-saldo-n'+(neto<0?' neg':'')+'">'+neto+'</div>'
         +'<div class="hh-saldo-l">SALDO</div>'
       +'</div>'
       +'<div class="hh-streak">'
@@ -3128,44 +3204,9 @@ function renderHoy(){
     +'</div>';
   document.getElementById('hoyHero').innerHTML=hero;
 
-  // ── TIRA DE PREMIOS DESBLOQUEADOS ──
-  var unlocked=S.prizs.slice()
-    .map(function(r){return Object.assign({},r,{cost:Number(r.cost)});})
-    .filter(function(r){return c.net>=r.cost;})
-    .sort(function(a,b){return a.cost-b.cost;});
-  var locked=S.prizs.slice()
-    .map(function(r){return Object.assign({},r,{cost:Number(r.cost)});})
-    .filter(function(r){return c.net<r.cost;})
-    .sort(function(a,b){return (a.cost-c.net)-(b.cost-c.net);}).slice(0,3); // 3 más cercanos
-  var psh='';
-  if(unlocked.length||locked.length){
-    psh='<div class="strip-head"><span class="strip-title">PREMIOS</span>'
-      +'<span class="strip-meta">'+unlocked.length+' desbloqueado'+(unlocked.length===1?'':'s')+'</span></div>'
-      +'<div class="strip-scroll">';
-    unlocked.forEach(function(r){
-      var u=prizU(t,r.id);
-      psh+='<div class="pcard unlocked"'+(u>0?' data-used="1"':'')+'>'
-        +'<div class="pcard-cat">'+cic(r.category||'')+'</div>'
-        +'<div class="pcard-name">'+r.name+'</div>'
-        +'<div class="pcard-cost">'+r.cost+' pts</div>'
-        +'<button class="pcard-btn ok" onclick="addPU(\''+r.id+'\')">Canjear</button>'
-        +(u>0?'<div class="pcard-used">canjeado '+u+'x <button class="pcard-undo" onclick="remPU(\''+r.id+'\')">↶</button></div>':'')
-        +'</div>';
-    });
-    locked.forEach(function(r){
-      var falta=r.cost-c.net;
-      var pct=Math.min(100,Math.round(c.net/r.cost*100));
-      psh+='<div class="pcard locked">'
-        +'<div class="pcard-cat">'+cic(r.category||'')+'</div>'
-        +'<div class="pcard-name">'+r.name+'</div>'
-        +'<div class="pcard-cost">'+r.cost+' pts</div>'
-        +'<div class="pcard-bar"><div class="pcard-bar-fill" style="width:'+pct+'%"></div></div>'
-        +'<div class="pcard-falta">faltan '+falta+'</div>'
-        +'</div>';
-    });
-    psh+='</div>';
-  }
-  document.getElementById('prizStrip').innerHTML=psh;
+  // Los premios ya no se canjean acá: viven en Permisos (Resumen),
+  // con su costo y la restricción de su categoría.
+  document.getElementById('prizStrip').innerHTML='';
 
   // ── ACTIVIDADES POR CATEGORÍA con goal progress ──
   if(!S.acts.length){
@@ -3239,23 +3280,49 @@ function renderHoy(){
 /* ============================================================
    CONFIGURAR · cards plegables (actividades / premios / metas)
    ============================================================ */
+function addAct(){
+  var name=(document.getElementById('gName').value||'').trim();
+  var p=Number(document.getElementById('gPts').value);
+  var cat=resolveCatG();
+  if(!name)return showToast('Ingresá un nombre');
+  if(!p||p<1)return showToast('Ingresá los puntos');
+  S.acts.push({id:uid(),name:name,pts:p,days:[0,1,2,3,4,5,6],category:cat||'Sin categoría'});
+  save();renderCatSels();renderHoy();renderConfig();updPts();
+  document.getElementById('gName').value='';document.getElementById('gPts').value='';
+  var nc=document.getElementById('gNewCat'); if(nc) nc.value='';
+  showToast('Actividad agregada ✓');
+}
+function delAct(id){
+  if(!confirm('¿Eliminar esta actividad?'))return;
+  S.acts=S.acts.filter(function(a){return a.id!==id;});
+  save();renderCatSels();renderHoy();renderConfig();updPts();showToast('Eliminada');
+}
+function resolveCatG(){
+  var sel=document.getElementById('gCat'), ni=document.getElementById('gNewCat');
+  var v=sel?sel.value:'';
+  if(v==='__new__') v=ensureCat(ni?ni.value:'');
+  else v=ensureCat(v||'Sin categoría');
+  return v;
+}
 function delPriz(id){
+
   if(!confirm('¿Eliminar este premio?'))return;
   S.prizs=S.prizs.filter(function(r){return r.id!==id;});
   save();renderCatSels();renderHoy();renderConfig();updPts();showToast('Eliminado');
 }
 function addPriz(){
-  var name=document.getElementById('rName').value.trim();
-  var cost=document.getElementById('rCost').value;
-  var cat=resolveCat('r');
+  var name=(document.getElementById('rName').value||'').trim();
+  var cost=Number(document.getElementById('rCost').value);
+  var cat=document.getElementById('rCat').value;      // Azúcar / Chess / Instagram
   if(!name)return showToast('Ingresá un nombre');
   if(!cost||cost<1)return showToast('Ingresá el costo');
-  if(!cat)return showToast('Ingresá la categoría');
-  S.prizs.push({id:uid(),name:name,cost:Number(cost),desc:'',category:cat});
+  ensureCat(cat);
+  S.prizs.push({id:uid(),name:name,cost:cost,desc:'',category:cat});
   save();renderCatSels();renderHoy();renderConfig();updPts();
-  document.getElementById('rName').value='';document.getElementById('rCost').value='';document.getElementById('rNewCat').value='';
+  document.getElementById('rName').value='';document.getElementById('rCost').value='';
   showToast('Premio agregado ✓');
 }
+
 
 // Cards plegables (mismo patrón que gym session-card)
 function toggleCfg(name){
@@ -3268,217 +3335,66 @@ function toggleCfg(name){
 window.toggleCfg=toggleCfg;
 
 function renderConfig(){
-  // Counts
-  document.getElementById('cfgPrizsCount').textContent=S.prizs.length+(S.prizs.length===1?' cargado':' cargados');
-
-  // Lista premios
-  var ph='';
-  if(!S.prizs.length)ph='<div class="empty-mini">Sin premios aún</div>';
-  else S.prizs.slice().sort(function(a,b){return (a.category||'').localeCompare(b.category||'')||Number(a.cost)-Number(b.cost);}).forEach(function(r){
-    ph+='<div class="vrow">'
-      +'<div class="vrow-info"><div class="vrow-name">'+esc(r.name)+'</div><div class="vrow-sub">'+cic(r.category||'')+' '+esc(r.category||'Sin categoría')+'</div></div>'
-      +'<span class="chip chip-r">'+r.cost+'</span>'
-      +'<button class="xb" onclick="delPriz(\''+r.id+'\')">×</button>'
-      +'</div>';
+  // ── Actividades, agrupadas por categoría ──
+  var porCat={};
+  S.acts.forEach(function(a){ var c=a.category||'Sin categoría'; (porCat[c]=porCat[c]||[]).push(a); });
+  var ah='';
+  if(!S.acts.length) ah='<div class="empty-mini">Sin actividades aún</div>';
+  else Object.keys(porCat).sort().forEach(function(cat){
+    ah+='<div class="cfg-cat">'+esc(cat)+'</div>';
+    porCat[cat].sort(function(a,b){return Number(a.pts)-Number(b.pts);}).forEach(function(a){
+      ah+='<div class="lrow"><span class="lrow-n">'+esc(a.name)+'</span>'
+        + '<span class="lrow-p">+'+a.pts+'</span>'
+        + '<button class="lrow-x" onclick="delAct(\'' + a.id + '\')">×</button></div>';
+    });
   });
-  document.getElementById('prizListCfg').innerHTML=ph;
+  document.getElementById('actListCfg').innerHTML=ah;
+  document.getElementById('cfgActsCount').textContent = S.acts.length + (S.acts.length===1?' actividad · suma puntos':' actividades · suman puntos');
 
-  // Lista metas: categorías existentes con input para meta
+  // ── Premios, agrupados por las tres categorías con restricción ──
+  var CATS=[['Azúcar',['azúcar','azucar']],['Chess',['chess','ajedrez']],['Instagram',['instagram','insta']]];
+  var usadas=['azúcar','azucar','chess','ajedrez','instagram','insta'];
+  var ph='';
+  CATS.forEach(function(par){
+    var lista=S.prizs.filter(function(r){ return par[1].indexOf((r.category||'').toLowerCase())>=0; })
+                     .sort(function(a,b){ return Number(a.cost)-Number(b.cost); });
+    ph+='<div class="cfg-cat roja">'+par[0]+'</div>';
+    if(!lista.length) ph+='<div class="empty-mini">Sin premios acá</div>';
+    else lista.forEach(function(r){
+      ph+='<div class="lrow"><span class="lrow-n">'+esc(r.name)+'</span>'
+        + '<span class="lrow-p rojo">−'+r.cost+'</span>'
+        + '<button class="lrow-x" onclick="delPriz(\'' + r.id + '\')">×</button></div>';
+    });
+  });
+  var sueltos=S.prizs.filter(function(r){ return usadas.indexOf((r.category||'').toLowerCase())<0; });
+  if(sueltos.length){
+    ph+='<div class="cfg-cat">Fuera del esquema</div>';
+    sueltos.forEach(function(r){
+      ph+='<div class="lrow"><span class="lrow-n">'+esc(r.name)+'<span class="lrow-s">'+esc(r.category||'')+'</span></span>'
+        + '<span class="lrow-p rojo">−'+r.cost+'</span>'
+        + '<button class="lrow-x" onclick="delPriz(\'' + r.id + '\')">×</button></div>';
+    });
+  }
+  document.getElementById('prizListCfg').innerHTML=ph;
+  document.getElementById('cfgPrizsCount').textContent = S.prizs.length + (S.prizs.length===1?' premio · gasta puntos':' premios · gastan puntos');
+  var ig=document.getElementById('cfgIgDias');
+  if(ig && window.Track && window.Track.datos) ig.textContent = window.Track.datos().metas.insta.cadaDias;
+
+  // ── Metas por categoría ──
   if(!S.goals)S.goals={};
   var cats=S.categories.slice().filter(function(c){return c&&c!=='Sin categoría';}).sort(function(a,b){return a.localeCompare(b);});
   var gh='';
-  if(!cats.length)gh='<div class="empty-mini">Primero creá una actividad con el botón + en Resumen</div>';
+  if(!cats.length)gh='<div class="empty-mini">Primero creá una actividad</div>';
   else cats.forEach(function(cat){
     var val=getGoal(cat);
-    gh+='<div class="goal-row">'
-      +'<span class="goal-icon">'+cic(cat)+'</span>'
-      +'<span class="goal-name">'+cat+'</span>'
-      +'<input type="number" class="goal-input" min="0" placeholder="0" value="'+(val||'')+'" data-cat="'+cat.replace(/"/g,'&quot;')+'" inputmode="numeric">'
-      +'<span class="goal-u">pts/día</span>'
-      +'</div>';
+    gh+='<div class="goal-row"><span class="goal-name">'+esc(cat)+'</span>'
+      +'<input type="number" class="goal-input" min="0" placeholder="0" value="'+(val||'')+'" data-cat="'+esc(cat)+'" inputmode="numeric">'
+      +'<span class="goal-u">pts/día</span></div>';
   });
   document.getElementById('goalsList').innerHTML=gh;
-  // Wire inputs
   document.querySelectorAll('#goalsList .goal-input').forEach(function(inp){
-    inp.addEventListener('change',function(){
-      setGoal(inp.dataset.cat,inp.value);
-      renderHoy();
-    });
+    inp.addEventListener('change',function(){ setGoal(inp.dataset.cat,inp.value); renderHoy(); });
   });
-}
-
-/* ============================================================
-   HISTORIAL · streak + heatmap 60d + pies + drilldown
-   ============================================================ */
-var ACT_COLORS=['#4dc98a','#7be0ab','#34a96e','#67b992','#1a6e48','#89c9a8','#0f4d33'];
-var PRIZ_COLORS=['#ff6b00','#ffaa44','#f07830','#d94040','#c04020','#e89050','#f0a060'];
-
-function buildPie(data){
-  var total=data.reduce(function(s,d){return s+d.value;},0);
-  if(!total)return null;
-  var svg='<svg class="pie-svg" viewBox="0 0 90 90">';
-  var cx=45,cy=45,r=38,startAngle=-Math.PI/2;
-  data.forEach(function(d){
-    var angle=(d.value/total)*2*Math.PI;
-    var endAngle=startAngle+angle;
-    var x1=cx+r*Math.cos(startAngle),y1=cy+r*Math.sin(startAngle);
-    var x2=cx+r*Math.cos(endAngle),y2=cy+r*Math.sin(endAngle);
-    var large=angle>Math.PI?1:0;
-    if(data.length===1){
-      svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+d.color+'"/>';
-    } else {
-      svg+='<path d="M'+cx+','+cy+' L'+x1+','+y1+' A'+r+','+r+' 0 '+large+',1 '+x2+','+y2+' Z" fill="'+d.color+'" stroke="#0a0d12" stroke-width="1.5"/>';
-    }
-    startAngle=endAngle;
-  });
-  svg+='<circle cx="'+cx+'" cy="'+cy+'" r="22" fill="#111820"/>';
-  svg+='</svg>';
-  return svg;
-}
-
-function last30(){var t=today(),d=new Date(t+'T12:00:00'),arr=[];for(var i=0;i<30;i++){var dt=new Date(d);dt.setDate(d.getDate()-i);arr.push(dt.toISOString().split('T')[0]);}return arr;}
-function last60(){var t=today(),d=new Date(t+'T12:00:00'),arr=[];for(var i=59;i>=0;i--){var dt=new Date(d);dt.setDate(d.getDate()-i);arr.push(dt.toISOString().split('T')[0]);}return arr;}
-
-function renderHist(){
-  var st=computeStreak();
-  // Streak hero
-  var sh='<div class="streak-hero">'
-    +'<div class="sh-cell"><div class="sh-n">'+st.current+'</div><div class="sh-l"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 5-5 5-5 10a5 5 0 0010 0c0-3-2-3-2-5 0 2-3 2-3-5z"/></svg> RACHA ACTUAL</div></div>'
-    +'<div class="sh-cell"><div class="sh-n">'+st.max+'</div><div class="sh-l"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 14l4-4 4 3 5-6"/></svg> RÉCORD</div></div>'
-    +'<div class="sh-cell"><div class="sh-n">'+Object.keys(S.log).length+'</div><div class="sh-l"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg> DÍAS ACTIVOS</div></div>'
-    +'</div>';
-  document.getElementById('streakHero').innerHTML=sh;
-
-  // Heatmap 60d (estilo GitHub)
-  var days=last60(),t=today();
-  // computar máximo pts para escala
-  var maxPts=0;
-  days.forEach(function(ds){var n=counts(ds).earned;if(n>maxPts)maxPts=n;});
-  if(maxPts<10)maxPts=10;
-  var hh='<div class="heat-card">'
-    +'<div class="heat-head"><span class="heat-title">ÚLTIMOS 60 DÍAS</span><span class="heat-meta">'+days.filter(function(ds){return counts(ds).actCount>0;}).length+' días activos</span></div>'
-    +'<div class="heat-grid">';
-  // construir grilla por semanas (columnas) — primera fila el lunes
-  // Calculamos qué día de semana es el primer día (días[0])
-  var firstDow=(new Date(days[0]+'T12:00:00').getDay()+6)%7; // 0=lun
-  // Padding al inicio: firstDow celdas vacías al inicio de la primera columna
-  // Pero para simplificar, hacemos grid de 60 celdas con offset
-  // Mejor: armamos por columnas semanales
-  var cells=[];
-  for(var i=0;i<firstDow;i++)cells.push(null);
-  days.forEach(function(ds){cells.push(ds);});
-  // Render como grid 7 filas (lun-dom), N columnas
-  hh+='<div class="heat-inner" style="grid-template-columns:repeat('+Math.ceil(cells.length/7)+',1fr)">';
-  // Necesitamos render columna-por-columna, fila-por-fila. CSS grid auto-flow column.
-  cells.forEach(function(ds){
-    if(!ds){hh+='<div class="heat-cell empty"></div>';return;}
-    var c=counts(ds),lvl=0;
-    if(c.earned>0){
-      var ratio=c.earned/maxPts;
-      if(ratio>=0.75)lvl=4;
-      else if(ratio>=0.5)lvl=3;
-      else if(ratio>=0.25)lvl=2;
-      else lvl=1;
-    }
-    var isToday=(ds===t);
-    hh+='<div class="heat-cell lvl-'+lvl+(isToday?' today':'')+'" data-day="'+ds+'" title="'+ds+': '+c.earned+' pts ('+c.actCount+' act.)"></div>';
-  });
-  hh+='</div>';
-  hh+='<div class="heat-legend"><span class="heat-leg-l">Menos</span>'
-    +'<div class="heat-cell lvl-0"></div>'
-    +'<div class="heat-cell lvl-1"></div>'
-    +'<div class="heat-cell lvl-2"></div>'
-    +'<div class="heat-cell lvl-3"></div>'
-    +'<div class="heat-cell lvl-4"></div>'
-    +'<span class="heat-leg-l">Más</span></div>';
-  hh+='</div>';
-  document.getElementById('heatmapWrap').innerHTML=hh;
-  // Wire heatmap clicks
-  document.querySelectorAll('#heatmapWrap .heat-cell[data-day]').forEach(function(cell){
-    cell.addEventListener('click',function(){pickDay(cell.dataset.day);});
-  });
-
-  // Day selector + detail (lo que ya teníamos pero simplificado)
-  renderDayDetail();
-}
-
-function renderDayDetail(){
-  if(!selDay)selDay=today();
-  var days=last30(),t=today(),c=counts(selDay);
-  var sh='<div class="dsel"><div class="dsel-h" onclick="togDrop()"><div><div class="dsel-lbl">'+(selDay===t?'Hoy · ':'')+dlabel(selDay)+'</div><div class="dsel-sub">Tocá para ver otro día</div></div><span class="dsel-arr'+(dropOpen?' op':'')+'">▼</span></div><div class="dlist'+(dropOpen?'':' hide')+'">';
-  days.forEach(function(ds){var cc=counts(ds);sh+='<div class="dopt'+(selDay===ds?' on':'')+'" onclick="pickDay(\''+ds+'\')">'+'<span style="text-transform:capitalize">'+(ds===t?'Hoy · ':'')+dshort(ds)+'</span><span class="dopt-m">'+cc.net+' pts · '+cc.actCount+' act.</span></div>';});
-  sh+='</div></div>';
-  document.getElementById('dselWrap').innerHTML=sh;
-
-  // Net summary
-  var dh='<div class="net-bar">'
-    +'<div class="nb-item"><div class="nb-val earn">+'+c.earned+'</div><div class="nb-lbl">Ganados</div></div>'
-    +'<div class="nb-divider"></div>'
-    +'<div class="nb-item"><div class="nb-val '+(c.net>=0?'pos':'neg')+'">'+c.net+'</div><div class="nb-lbl">Saldo</div></div>'
-    +'<div class="nb-divider"></div>'
-    +'<div class="nb-item"><div class="nb-val spent">−'+c.spent+'</div><div class="nb-lbl">Canjeados</div></div>'
-    +'</div>';
-
-  // Pies
-  var l=getLog(selDay);
-  var actCatMap={};
-  S.acts.forEach(function(a){var n=(l.acts[a.id]||[]).length;if(!n)return;var cat=a.category||'Sin categoría';if(!actCatMap[cat])actCatMap[cat]=0;actCatMap[cat]+=n*Number(a.pts);});
-  var actData=Object.keys(actCatMap).map(function(cat,i){return{label:cat,value:actCatMap[cat],color:ACT_COLORS[i%ACT_COLORS.length]};});
-  actData.sort(function(a,b){return b.value-a.value;});
-  var prizCatMap={};
-  S.prizs.forEach(function(r){var n=(l.prizes[r.id]||[]).length;if(!n)return;var cat=r.category||'Sin categoría';if(!prizCatMap[cat])prizCatMap[cat]=0;prizCatMap[cat]+=n*Number(r.cost);});
-  var prizData=Object.keys(prizCatMap).map(function(cat,i){return{label:cat,value:prizCatMap[cat],color:PRIZ_COLORS[i%PRIZ_COLORS.length]};});
-  prizData.sort(function(a,b){return b.value-a.value;});
-
-  dh+='<div class="charts-row">';
-  dh+='<div class="chart-card"><div class="chart-title"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/></svg> Actividades</div>';
-  if(!actData.length){dh+='<div class="chart-empty">Sin actividades este día</div>';}
-  else{
-    var pie=buildPie(actData);
-    dh+='<div class="chart-wrap">'+pie+'<div class="pie-legend">';
-    actData.forEach(function(d){dh+='<div class="pie-leg-item"><div class="pie-leg-dot" style="background:'+d.color+'"></div><div class="pie-leg-name">'+d.label+'</div><div class="pie-leg-val">'+d.value+'pts</div></div>';});
-    dh+='</div></div>';
-  }
-  dh+='</div>';
-  dh+='<div class="chart-card"><div class="chart-title"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9"/></svg> Canjeados</div>';
-  if(!prizData.length){dh+='<div class="chart-empty">Sin canjes este día</div>';}
-  else{
-    var pie2=buildPie(prizData);
-    dh+='<div class="chart-wrap">'+pie2+'<div class="pie-legend">';
-    prizData.forEach(function(d){dh+='<div class="pie-leg-item"><div class="pie-leg-dot" style="background:'+d.color+'"></div><div class="pie-leg-name">'+d.label+'</div><div class="pie-leg-val">'+d.value+'pts</div></div>';});
-    dh+='</div></div>';
-  }
-  dh+='</div></div>';
-
-  // Timeline
-  var events=[],seq=0;
-  function tm2m(tm){if(!tm||tm==='--:--')return 9999;var p=tm.split(':');return Number(p[0])*60+Number(p[1]);}
-  S.acts.forEach(function(a){(l.acts[a.id]||[]).forEach(function(tm){events.push({type:'g',name:a.name,pts:a.pts,time:tm||'--:--',tmin:tm2m(tm),seq:seq++});});});
-  S.prizs.forEach(function(r){(l.prizes[r.id]||[]).forEach(function(tm){events.push({type:'r',name:r.name,cost:r.cost,time:tm||'--:--',tmin:tm2m(tm),seq:seq++});});});
-  events.sort(function(a,b){return a.tmin!==b.tmin?a.tmin-b.tmin:a.seq-b.seq;});
-  dh+='<div class="tl-card">';
-  if(!events.length)dh+='<div class="empty" style="padding:16px 0"><div class="ei"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a4 4 0 01-4 4H7a4 4 0 01-4-4V8l9-5z"/><path d="M3 8l9 6 9-6"/></svg></div>Sin actividad este día</div>';
-  else{
-    dh+='<div class="sdiv" style="margin:0 0 10px">Línea de tiempo</div><div class="tl-wrap">';
-    events.forEach(function(ev,i){
-      var last=i===events.length-1;
-      dh+='<div class="tl-row"><div class="tl-t">'+ev.time+'</div>'
-        +'<div class="tl-col"><div class="tl-dot '+ev.type+'"></div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
-        +'<div class="tl-b"><div class="tl-name">'+ev.name+'</div>'
-        +(ev.type==='g'?'<span class="tl-tag chip-g">+'+ev.pts+' pts</span>':'<span class="tl-tag chip-r">−'+ev.cost+' pts</span>')
-        +'</div></div>';
-    });
-    dh+='</div>';
-  }
-  dh+='</div>';
-  document.getElementById('resDetail').innerHTML=dh;
-}
-
-function togDrop(){dropOpen=!dropOpen;renderDayDetail();}
-function pickDay(ds){selDay=ds;dropOpen=false;
-  // Si estamos en heatmap (Historial), refresh
-  if(document.getElementById('s-hist').classList.contains('on'))renderDayDetail();
-  else { go('hist'); renderHist(); }
 }
 
 // exportXL() removida — generación de Excel deshabilitada
@@ -3487,7 +3403,6 @@ function pickDay(ds){selDay=ds;dropOpen=false;
 function go(scr,btn){
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
   document.getElementById('s-'+scr).classList.add('on');
-  if(scr==='hist'){selDay=today();dropOpen=false;renderHist();}
   if(scr==='config'){renderCatSels();renderConfig();}
   if(scr==='hoy'){renderHoy();if(window.Track)window.Track.renderResumen();}
   if(scr==='cal'&&window.Track)window.Track.render();
@@ -3522,14 +3437,14 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
   // ── Exponer onclicks ──
   window.go = go;
   window.toggleCfg = toggleCfg;
+  window.addAct = addAct;
+  window.delAct = delAct;
   window.addPriz = addPriz;
   window.addAU = addAU;
   window.addPU = addPU;
   window.delPriz = delPriz;
-  window.pickDay = pickDay;
   window.remAU = remAU;
   window.remPU = remPU;
-  window.togDrop = togDrop;
   window.toggleNewCat = toggleNewCat;
   window.toggleCat = toggleCat;
   window.openCatMenu = openCatMenu;
@@ -3550,9 +3465,17 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
       try {
         if(name === 'hoy'){ renderHoy(); if(window.Track) window.Track.renderResumen(); }
         else if(name === 'config') renderConfig();
-        else if(name === 'hist') renderHist();
         else if(name === 'cal' && window.Track) window.Track.render();
       } catch(e){ console.warn('hab render', e); }
+    },
+    netoPropio: netoPropio,
+    redibujar: function(){ try { renderHoy(); } catch(e){} },
+    saldoTotal: saldoTotal,
+    premios: function(cats){
+      var lista = (Array.isArray(cats)?cats:[cats]).map(function(x){ return String(x).toLowerCase(); });
+      return S.prizs.filter(function(r){ return lista.indexOf((r.category||'').toLowerCase())>=0; })
+        .map(function(r){ return {id:r.id, nombre:r.name, costo:Number(r.cost)}; })
+        .sort(function(a,b){ return a.costo-b.costo; });
     },
     getDayStats: function(dateObj){
       try {
@@ -3727,17 +3650,30 @@ function ganadosDia(k){
   if(paginasDia(d) >= p.lecMin) n+=p.lec;
   return n;
 }
-function gastadosDia(k){
-  var d=dia(k), c=C(), n=0;
-  if(d.chess) n+=c.chess;
-  if(d.az) n+=c.az;
-  if(d.insta) n+=c.insta;
-  return n;
+function costoDe(d,campo){
+  var v=d[campo];
+  if(!v) return 0;
+  if(typeof v==='object' && v.pts!=null) return Number(v.pts)||0;   // premio con precio propio
+  return Number(C()[campo])||0;                                      // permiso genérico
 }
-function saldo(){
+function gastadosDia(k){
+  var d=dia(k);
+  return costoDe(d,'chess') + costoDe(d,'az') + costoDe(d,'insta');
+}
+function netoPropio(){
   var n=0;
   claves().forEach(function(k){ n += ganadosDia(k) - gastadosDia(k); });
   return n;
+}
+/* Saldo único: la rutina más las actividades y premios del otro módulo */
+function saldo(){
+  var otro=0;
+  try { if(window.App && App.modules.hab && App.modules.hab.netoPropio) otro=App.modules.hab.netoPropio(); } catch(e){}
+  return netoPropio() + otro;
+}
+function premiosDe(cats){
+  try { if(window.App && App.modules.hab && App.modules.hab.premios) return App.modules.hab.premios(cats); } catch(e){}
+  return [];
 }
 function techoDia(){
   var p=P();
@@ -4088,28 +4024,36 @@ function renderResumen(){
     + '<span class="trk-res-chk arrow">›</span>'
     + '</div>';
 
-  // ── Permisos ──
+  // ── Permisos: los premios cargados, agrupados por categoría ──
   var instaOk=instaValido(k);
-  var permisos=[
-    {campo:'chess', nombre:'Chess · hasta '+T.metas.chess.maxMin+' min', costo:c.chess, on:!!d.chess,
-     nota:null, permitido:true},
-    {campo:'az', nombre:'Azúcar', costo:c.az, on:!!d.az,
-     nota: finde?null:'sólo el finde', permitido:finde},
-    {campo:'insta', nombre:'Instagram · '+T.metas.insta.maxMin+' min', costo:c.insta, on:!!d.insta,
-     nota: instaOk?null:'próximo: '+largo(proxInstaPermitido()), permitido:instaOk}
+  var grupos=[
+    {campo:'az',    titulo:'Azúcar',    alias:['azúcar','azucar'],      nota: finde?'finde libre':'sólo el finde', permitido:finde},
+    {campo:'chess', titulo:'Chess',     alias:['chess','ajedrez'],      nota:'hasta '+T.metas.chess.maxMin+' min', permitido:true},
+    {campo:'insta', titulo:'Instagram', alias:['instagram','insta'],    nota: instaOk?'habilitado hoy':'próximo: '+largo(proxInstaPermitido()), permitido:instaOk}
   ];
   s+='<div class="trk-res-sec">Permisos · se pagan con puntos</div>';
-  permisos.forEach(function(f){
-    var alcanza = f.on || sal >= f.costo;
-    s+='<div class="trk-res-row perm'+(f.on?' on':'')+(f.permitido?'':' bloq')+'" data-perm="'+f.campo+'">'
-      + '<span class="trk-res-pip"></span>'
-      + '<span class="trk-res-n">'+f.nombre
-      +   (f.nota?'<span class="trk-res-nota bad">'+esc(f.nota)+'</span>'
-                 :(alcanza?'':'<span class="trk-res-nota bad">te faltan '+(f.costo-sal)+'</span>'))
-      + '</span>'
-      + '<span class="trk-res-chip cost">−'+f.costo+'</span>'
-      + '<span class="trk-res-chk"></span>'
-      + '</div>';
+  grupos.forEach(function(g){
+    var lista=premiosDe(g.alias), usado=d[g.campo];
+    var idUsado=(usado && typeof usado==='object') ? usado.id : null;
+    s+='<div class="trk-res-cat'+(g.permitido?'':' bloq')+'">'+esc(g.titulo)+'<span>'+esc(g.nota)+'</span></div>';
+    if(!lista.length){
+      var costoGen=C()[g.campo];
+      s+='<div class="trk-res-row perm'+(usado?' on':'')+'" data-perm="'+g.campo+'" data-costo="'+costoGen+'">'
+        + '<span class="trk-res-pip"></span>'
+        + '<span class="trk-res-n">Sin premios cargados<span class="trk-res-nota">genérico</span></span>'
+        + '<span class="trk-res-chip cost">−'+costoGen+'</span>'
+        + '<span class="trk-res-chk"></span></div>';
+    } else lista.forEach(function(pr){
+      var on = !!usado && (idUsado===pr.id || (!idUsado && lista.length===1));
+      var alcanza = on || sal >= pr.costo;
+      s+='<div class="trk-res-row perm'+(on?' on':'')+'" data-perm="'+g.campo+'" data-priz="'+pr.id+'" data-costo="'+pr.costo+'">'
+        + '<span class="trk-res-pip"></span>'
+        + '<span class="trk-res-n">'+esc(pr.nombre)
+        +   (alcanza?'':'<span class="trk-res-nota bad">te faltan '+(pr.costo-sal)+'</span>')
+        + '</span>'
+        + '<span class="trk-res-chip cost">−'+pr.costo+'</span>'
+        + '<span class="trk-res-chk"></span></div>';
+    });
   });
   s+='</div>';
   cont.innerHTML=s;
@@ -4135,14 +4079,18 @@ function renderResumen(){
   document.getElementById('trkResLec').addEventListener('click', function(){ abrirDia(k); });
   cont.querySelectorAll('[data-perm]').forEach(function(row){
     row.addEventListener('click', function(){
-      var campo=row.dataset.perm, d2=dia(k), costo=C()[campo];
-      if(!d2[campo] && saldo() < costo){
+      var campo=row.dataset.perm, priz=row.dataset.priz||null;
+      var costo=Number(row.dataset.costo)||0, yaEste=row.classList.contains('on');
+      if(!yaEste && saldo() < costo){
         if(!confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
       }
       editar(k, function(x){
-        if(x[campo]) delete x[campo];
-        else x[campo] = (campo==='chess') ? {min:Number(T.metas.chess.maxMin)}
-                      : (campo==='insta') ? {min:Number(T.metas.insta.maxMin)} : 1;
+        if(yaEste){ delete x[campo]; return; }
+        var v={pts:costo};
+        if(priz) v.id=priz;
+        if(campo==='chess') v.min=Number(T.metas.chess.maxMin);
+        if(campo==='insta') v.min=Number(T.metas.insta.maxMin);
+        x[campo]=v;   // uno por categoría y por día: elegir otro reemplaza
       });
       repintar();
     });
@@ -4150,6 +4098,7 @@ function renderResumen(){
 }
 function repintar(){
   renderResumen();
+  try { if(window.App && App.modules.hab && App.modules.hab.redibujar) App.modules.hab.redibujar(); } catch(e){}
   var cal=document.getElementById('s-cal');
   if(cal && cal.classList.contains('on')) render();
 }
@@ -4368,6 +4317,7 @@ function guardarPaginas(k,id,v){
 function refrescar(k){
   render();
   renderResumen();
+  try { if(window.App && App.modules.hab && App.modules.hab.redibujar) App.modules.hab.redibujar(); } catch(e){}
   if(sheetDia===k) abrirDia(k);   // redibuja el sheet con los estados nuevos
 }
 
@@ -4520,6 +4470,7 @@ document.addEventListener('keydown', function(e){
 
 window.Track = {
   render: render,
+  netoPropio: netoPropio,
   renderResumen: renderResumen,
   abrirDia: abrirDia,
   saldo: saldo,
