@@ -2196,7 +2196,8 @@ input,select,textarea{
 /* ============================================================
    TRACKER · calendario mensual de hábitos
    ============================================================ */
-.mod-hab .trk{--h-med:#4dc98a;--h-che:#6aa9d8;--h-sue:#a98fd8;--h-lec:#e8b84b;--h-mal:#c14747}
+.mod-hab .trk{--h-med:#4dc98a;--h-che:#6aa9d8;--h-sue:#a98fd8;--h-lec:#e8b84b;--h-mal:#c14747;
+  --h-sup:#5fc9c2;--h-hig:#b8c4d4;--h-ent:#ff8a3d}
 
 /* ── Cabecera de mes ── */
 .mod-hab .cal-head{
@@ -2245,12 +2246,15 @@ input,select,textarea{
 }
 .mod-hab .cal-cell.hoy .cal-n{color:#4dc98a}
 .mod-hab .cal-cell.lleno .cal-n{color:#e8eaf0}
-.mod-hab .cal-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5px;max-width:90%}
-.mod-hab .cal-dot{width:5px;height:5px;border-radius:50%;display:block}
+.mod-hab .cal-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-width:92%}
+.mod-hab .cal-dot{width:4.5px;height:4.5px;border-radius:50%;display:block;flex-shrink:0}
 .mod-hab .cal-dot.med{background:var(--h-med)}
 .mod-hab .cal-dot.che{background:var(--h-che)}
 .mod-hab .cal-dot.sue{background:var(--h-sue)}
 .mod-hab .cal-dot.lec{background:var(--h-lec)}
+.mod-hab .cal-dot.sup{background:var(--h-sup)}
+.mod-hab .cal-dot.hig{background:var(--h-hig)}
+.mod-hab .cal-dot.ent{background:var(--h-ent)}
 .mod-hab .cal-dot.mal{background:var(--h-mal)}
 .mod-hab .cal-leyenda{
   display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
@@ -3528,7 +3532,10 @@ function seed(){
       chess:{maxMin:30},
       insta:{cadaDias:14,soloDomingo:true,maxMin:60},
       sueno:{min:7},
-      azucar:{diasLibres:[6,0]}
+      azucar:{diasLibres:[6,0]},
+      sup:{creDiaria:true,lioDiaria:true,b12Semana:2},
+      higiene:{dientesDia:2},
+      entren:{porSemana:5}
     }
   };
 }
@@ -3575,6 +3582,7 @@ function editar(k,fn){
   fn(T.dias[k]);
   var d=T.dias[k];
   var vacio = !d.med && !d.chess && !d.sue && !d.insta && !d.az && !d.nota
+    && !d.cre && !d.b12 && !d.lio && !d.dien && !d.ent
     && (!d.lec || !Object.keys(d.lec).some(function(id){ return d.lec[id]>0; }));
   if(vacio) delete T.dias[k];
   save();
@@ -3583,6 +3591,35 @@ function claves(){ return Object.keys(T.dias).sort(); }
 
 /* ── Reglas ── */
 function sueOk(d){ return d.sue && Number(d.sue.h) >= Number(T.metas.sueno.min); }
+
+/* ── Semanas (lunes a domingo) para las metas de frecuencia ── */
+function lunesDe(k){ return sumaDias(k, -((dow(k)+6)%7)); }
+function diasDeSemana(kLunes){
+  var a=[]; for(var i=0;i<7;i++) a.push(sumaDias(kLunes,i));
+  return a;
+}
+function cuentaSemana(k,campo){
+  return diasDeSemana(lunesDe(k)).filter(function(x){ return dia(x)[campo]; }).length;
+}
+function b12Semana(k){ return cuentaSemana(k,'b12'); }
+function entrenSemana(k){ return cuentaSemana(k,'ent'); }
+// Suplementos del día: los diarios cumplidos (b12 no es diaria, no se exige)
+function supOk(d){
+  var m=T.metas.sup;
+  return (!m.creDiaria || d.cre) && (!m.lioDiaria || d.lio) && (d.cre||d.lio||d.b12);
+}
+function dientesOk(d){ return Number(d.dien||0) >= Number(T.metas.higiene.dientesDia); }
+// Semanas completas (lunes a domingo) ya transcurridas, para porcentajes honestos
+function semanasCerradas(campo,meta){
+  var lunes={}, h=hoyKey();
+  claves().forEach(function(k){ lunes[lunesDe(k)]=1; });
+  var ks=Object.keys(lunes).filter(function(l){ return sumaDias(l,6) <= h; });
+  if(!ks.length) return null;
+  var ok=ks.filter(function(l){
+    return diasDeSemana(l).filter(function(x){ return dia(x)[campo]; }).length >= meta;
+  }).length;
+  return { total:ks.length, ok:ok, pct:Math.round(ok/ks.length*100) };
+}
 function chessExceso(d){ return d.chess && Number(d.chess.min) > Number(T.metas.chess.maxMin); }
 function azProhibido(k){ return dia(k).az && !esFinde(k); }
 function usosInsta(){ return claves().filter(function(k){ return T.dias[k].insta; }); }
@@ -3716,6 +3753,9 @@ function renderGrid(){
     if(dd.chess && !chessExceso(dd)) dots+='<i class="cal-dot che"></i>';
     if(sueOk(dd)) dots+='<i class="cal-dot sue"></i>';
     if(dd.lec && Object.keys(dd.lec).some(function(id){ return dd.lec[id]>0; })) dots+='<i class="cal-dot lec"></i>';
+    if(supOk(dd)) dots+='<i class="cal-dot sup"></i>';
+    if(dientesOk(dd)) dots+='<i class="cal-dot hig"></i>';
+    if(dd.ent) dots+='<i class="cal-dot ent"></i>';
     if(hayFalta(k) || chessExceso(dd) || (dd.sue && !sueOk(dd))) dots+='<i class="cal-dot mal"></i>';
     var cls='cal-cell';
     if(esFinde(k)) cls+=' finde';
@@ -3732,6 +3772,9 @@ function renderGrid(){
     +   '<span class="cal-leg"><i class="cal-dot che"></i>chess</span>'
     +   '<span class="cal-leg"><i class="cal-dot sue"></i>dormir</span>'
     +   '<span class="cal-leg"><i class="cal-dot lec"></i>leer</span>'
+    +   '<span class="cal-leg"><i class="cal-dot sup"></i>suplementos</span>'
+    +   '<span class="cal-leg"><i class="cal-dot hig"></i>dientes</span>'
+    +   '<span class="cal-leg"><i class="cal-dot ent"></i>entrené</span>'
     +   '<span class="cal-leg"><i class="cal-dot mal"></i>falta</span>'
     + '</div></div>';
   var wrap=document.getElementById('calGrid');
@@ -3778,6 +3821,46 @@ function renderStats(){
     s+='<div class="trk-sub" style="margin-top:6px">Global <b>' + pagsLeidas + '/' + pagsTot + ' páginas</b> · ' + pctLib + '%</div>';
   }
   s+='<button class="trk-link" id="trkLibros">Libros y metas</button></div>';
+
+  // ── Suplementación ──
+  var h=hoyKey();
+  var pctCre=pctMes(function(k){ return dia(k).cre; })||0;
+  var pctLio=pctMes(function(k){ return dia(k).lio; })||0;
+  var semB12=semanasCerradas('b12', T.metas.sup.b12Semana);
+  var b12Hoy=b12Semana(h), metaB12=T.metas.sup.b12Semana;
+  s+='<div class="trk-card" style="--c:#5fc9c2">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Suplementación</div>'
+    +   '<div class="trk-big">' + b12Hoy + '<small>/' + metaB12 + ' b12</small></div></div>'
+    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(b12Hoy/metaB12*100)) + '%"></div></div>'
+    + '<div class="trk-sub">Creatina <b>' + pctCre + '%</b> · lions mane <b>' + pctLio + '%</b> de los días de '
+    +   MESES[vis.m].toLowerCase() + '<br>B12 esta semana <b>' + b12Hoy + ' de ' + metaB12 + '</b>'
+    +   (b12Hoy>=metaB12 ? ' · <span class="ok">cumplida</span>' : ' · faltan ' + (metaB12-b12Hoy))
+    +   (semB12 ? ' · semanas cumplidas <b>' + semB12.ok + '/' + semB12.total + '</b>' : '')
+    + '</div></div>';
+
+  // ── Higiene ──
+  var pctDien=pctMes(function(k){ return dientesOk(dia(k)); })||0;
+  var mediasDien=pctMes(function(k){ var n=Number(dia(k).dien||0); return n>0 && n<T.metas.higiene.dientesDia; })||0;
+  s+='<div class="trk-card" style="--c:#b8c4d4">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Dientes ×' + T.metas.higiene.dientesDia + ' por día</div>'
+    +   '<div class="trk-big">' + pctDien + '<small>% del mes</small></div></div>'
+    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctDien + '%"></div></div>'
+    + '<div class="trk-sub">Días completos <b>' + pctDien + '%</b>'
+    +   (mediasDien ? ' · a medias <b>' + mediasDien + '%</b>' : '') + '</div></div>';
+
+  // ── Entrenamientos ──
+  var entHoy=entrenSemana(h), metaEnt=T.metas.entren.porSemana;
+  var semEnt=semanasCerradas('ent', metaEnt);
+  var entMes=diasMes().filter(function(k){ return dia(k).ent; }).length;
+  s+='<div class="trk-card" style="--c:#ff8a3d">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Entrenar ' + metaEnt + '× por semana</div>'
+    +   '<div class="trk-big">' + entHoy + '<small>/' + metaEnt + '</small></div></div>'
+    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(entHoy/metaEnt*100)) + '%"></div></div>'
+    + '<div class="trk-sub">Esta semana <b>' + entHoy + ' de ' + metaEnt + '</b>'
+    +   (entHoy>=metaEnt ? ' · <span class="ok">cumplida</span>' : ' · faltan <b>' + (metaEnt-entHoy) + '</b>')
+    +   ' · ' + entMes + ' en ' + MESES[vis.m].toLowerCase()
+    +   (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '')
+    + '</div></div>';
 
   // ── Azúcar ──
   var faltasAz=azFaltas();
@@ -3857,6 +3940,9 @@ var ICO={
   sue:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14a8 8 0 01-10-10 8 8 0 1010 10z"/></svg>',
   lec:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-8-1v13c3-1 6-.5 8 1 2-1.5 5-2 8-1V5c-3-1-6-.5-8 1z"/><path d="M12 6v13"/></svg>',
   az:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M6 12a6 6 0 0112 0M7 12v6a2 2 0 002 2h6a2 2 0 002-2v-6"/></svg>',
+  sup:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></svg>',
+  hig:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v4H9zM10 7h4l-.6 12a1.4 1.4 0 01-2.8 0z"/></svg>',
+  ent:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>',
   ig:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>'
 };
 
@@ -3878,6 +3964,34 @@ function abrirDia(k){
             detalle: d.sue ? (sueOk(d) ? d.sue.h + ' h' : 'corto: ' + d.sue.h + ' h') : 'sin marcar',
             estado: d.sue ? (sueOk(d)?' ok':' bad') : '', on:!!d.sue,
             extra: '<input type="number" class="trk-num' + (d.sue&&!sueOk(d)?' warn':'') + '" id="inSue" inputmode="decimal" step="0.5" min="0" max="16" value="' + (d.sue?d.sue.h:7.5) + '">' });
+
+  var semB12=b12Semana(k), semEnt=entrenSemana(k);
+  h+='<div class="trk-sec">Suplementación</div>';
+  h+=fila({ id:'tgCre', color:'#5fc9c2', ico:ICO.sup, nombre:'Creatina',
+            detalle: d.cre?'tomada':'todos los días', estado: d.cre?' ok':'', on:!!d.cre });
+  h+=fila({ id:'tgLio', color:'#5fc9c2', ico:ICO.sup, nombre:'Lions mane',
+            detalle: d.lio?'tomada':'todos los días', estado: d.lio?' ok':'', on:!!d.lio });
+  h+=fila({ id:'tgB12', color:'#5fc9c2', ico:ICO.sup, nombre:'B12',
+            detalle: 'esta semana ' + semB12 + '/' + T.metas.sup.b12Semana
+                     + (semB12>=T.metas.sup.b12Semana?' · cumplida':''),
+            estado: semB12>=T.metas.sup.b12Semana?' ok':'', on:!!d.b12 });
+
+  h+='<div class="trk-sec">Higiene personal</div>';
+  h+='<div class="trk-row" style="--c:#b8c4d4">'
+    + '<div class="trk-row-i">' + ICO.hig + '</div>'
+    + '<div class="trk-row-l"><div class="trk-row-n">Lavarse los dientes</div>'
+    +   '<div class="trk-row-d' + (dientesOk(d)?' ok':'') + '">' + Number(d.dien||0) + ' de ' + T.metas.higiene.dientesDia
+    +   (dientesOk(d)?' · completo':'') + '</div></div>'
+    + '<button class="trk-step" id="dienMenos">−</button>'
+    + '<input type="number" class="trk-num" id="inDien" inputmode="numeric" min="0" max="9" value="' + Number(d.dien||0) + '">'
+    + '<button class="trk-step" id="dienMas">+</button>'
+    + '</div>';
+
+  h+='<div class="trk-sec">Entrenamiento</div>';
+  h+=fila({ id:'tgEnt', color:'#ff8a3d', ico:ICO.ent, nombre:'Entrené',
+            detalle: 'esta semana ' + semEnt + '/' + T.metas.entren.porSemana
+                     + (semEnt>=T.metas.entren.porSemana?' · cumplida':''),
+            estado: semEnt>=T.metas.entren.porSemana?' ok':'', on:!!d.ent });
 
   h+='<div class="trk-sec">Lectura · páginas de este día</div>';
   if(!T.libros.length){
@@ -3944,6 +4058,23 @@ function abrirDia(k){
     editar(k, function(x){ x.sue={h:hs}; });
     refrescar(k);
   });
+  ['cre','lio','b12','ent'].forEach(function(campo){
+    var id='#tg'+campo.charAt(0).toUpperCase()+campo.slice(1);
+    var btn=el.querySelector(id);
+    if(btn) btn.addEventListener('click', function(){
+      editar(k, function(x){ if(x[campo]) delete x[campo]; else x[campo]=1; });
+      refrescar(k);
+    });
+  });
+  function setDientes(v){
+    v=Math.max(0,Math.min(9,v));
+    editar(k, function(x){ if(v>0) x.dien=v; else delete x.dien; });
+    refrescar(k);
+  }
+  el.querySelector('#dienMenos').addEventListener('click', function(){ setDientes(Number(dia(k).dien||0)-1); });
+  el.querySelector('#dienMas').addEventListener('click', function(){ setDientes(Number(dia(k).dien||0)+1); });
+  el.querySelector('#inDien').addEventListener('change', function(e){ setDientes(Number(e.target.value)||0); });
+
   el.querySelector('#tgAz').addEventListener('click', function(){
     editar(k, function(x){ if(x.az) delete x.az; else x.az=1; });
     refrescar(k);
@@ -4009,6 +4140,15 @@ function abrirLibros(){
   h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Instagram · cada</div>'
     + '<div class="trk-row-d">Días entre usos permitidos (domingos).</div></div>'
     + '<input type="number" class="trk-num" id="mtIg" inputmode="numeric" min="1" max="90" value="' + (T.metas.insta.cadaDias||14) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">B12 · por semana</div>'
+    + '<div class="trk-row-d">Veces por semana (lunes a domingo).</div></div>'
+    + '<input type="number" class="trk-num" id="mtB12" inputmode="numeric" min="1" max="7" value="' + (T.metas.sup.b12Semana||2) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Dientes · por día</div>'
+    + '<div class="trk-row-d">Veces para dar el día por completo.</div></div>'
+    + '<input type="number" class="trk-num" id="mtDien" inputmode="numeric" min="1" max="6" value="' + (T.metas.higiene.dientesDia||2) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Entrenar · por semana</div>'
+    + '<div class="trk-row-d">Sin especificar qué entrenamiento.</div></div>'
+    + '<input type="number" class="trk-num" id="mtEnt" inputmode="numeric" min="1" max="14" value="' + (T.metas.entren.porSemana||5) + '"></div>';
 
   h+='<div class="trk-sec">Libros</div>';
   if(!T.libros.length) h+='<div class="trk-sub" style="padding:6px 0 10px">Todavía no cargaste ninguno.</div>';
@@ -4046,6 +4186,9 @@ function abrirLibros(){
   metaNum('mtSue', function(v){ T.metas.sueno.min=v; }, 1, 12, false);
   metaNum('mtChe', function(v){ T.metas.chess.maxMin=v; }, 5, 240, true);
   metaNum('mtIg',  function(v){ T.metas.insta.cadaDias=v; }, 1, 90, true);
+  metaNum('mtB12', function(v){ T.metas.sup.b12Semana=v; }, 1, 7, true);
+  metaNum('mtDien',function(v){ T.metas.higiene.dientesDia=v; }, 1, 6, true);
+  metaNum('mtEnt', function(v){ T.metas.entren.porSemana=v; }, 1, 14, true);
 
   el.querySelectorAll('[data-tit]').forEach(function(inp){
     inp.addEventListener('change', function(){
@@ -4109,7 +4252,11 @@ window.Track = {
       medTotal: totalMed(), medRacha: rachaMed(), medRecord: recordMed(),
       findesRestantes: findesRestantes(), findesUsados: findesUsados(), azFaltas: azFaltas(),
       semanasRestantes: semanasRestantes(), proxInsta: proxInstaPermitido(),
-      promSueno: promSueno(), leido: leido
+      promSueno: promSueno(), leido: leido,
+      b12Semana: b12Semana(hoyKey()), entrenSemana: entrenSemana(hoyKey()),
+      semanasB12: semanasCerradas('b12', T.metas.sup.b12Semana),
+      semanasEnt: semanasCerradas('ent', T.metas.entren.porSemana),
+      supOk: supOk, dientesOk: dientesOk, lunesDe: lunesDe
     };
   }
 };
