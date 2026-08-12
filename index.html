@@ -3515,7 +3515,7 @@ function seed(){
     metas:{
       meditar:{meta:100,minDia:10},
       libros:{meta:2},
-      chess:{maxMin:30},
+      chess:{maxMin:30,desde:19,hasta:22},
       insta:{cadaDias:14,soloDomingo:true,maxMin:60},
       sueno:{min:7},
       azucar:{diasLibres:[6,0]},
@@ -3599,6 +3599,23 @@ function entrenSemana(k){ return cuentaSemana(k,'ent'); }
 function supOk(d){
   var m=T.metas.sup;
   return (!m.creDiaria || d.cre) && (!m.lioDiaria || d.lio) && (d.cre||d.lio||d.b12);
+}
+/* Ventana horaria del chess: sólo se ofrece entre --:00 y --:00 */
+function horaAhora(){ var d=new Date(); return d.getHours() + d.getMinutes()/60; }
+function chessAbierto(){
+  var m=T.metas.chess, h=horaAhora();
+  return h >= Number(m.desde) && h < Number(m.hasta);
+}
+function motivoChess(){
+  var m=T.metas.chess, h=horaAhora();
+  if(h < Number(m.desde)) return 'se abre a las ' + p2(m.desde) + ':00';
+  if(h >= Number(m.hasta)) return 'cerró a las ' + p2(m.hasta) + ':00';
+  return 'hasta las ' + p2(m.hasta) + ':00';
+}
+function proxFinde(){
+  var k=hoyKey();
+  for(var i=1;i<=7;i++){ var x=sumaDias(k,i); if(esFinde(x)) return x; }
+  return k;
 }
 function dientesOk(d){ return Number(d.dien||0) >= Number(T.metas.higiene.dientesDia); }
 // Semanas completas (lunes a domingo) ya transcurridas, para porcentajes honestos
@@ -4026,16 +4043,26 @@ function renderResumen(){
 
   // ── Permisos: los premios cargados, agrupados por categoría ──
   var instaOk=instaValido(k);
+  var cheAbierto=chessAbierto();
   var grupos=[
-    {campo:'az',    titulo:'Azúcar',    alias:['azúcar','azucar'],      nota: finde?'finde libre':'sólo el finde', permitido:finde},
-    {campo:'chess', titulo:'Chess',     alias:['chess','ajedrez'],      nota:'hasta '+T.metas.chess.maxMin+' min', permitido:true},
-    {campo:'insta', titulo:'Instagram', alias:['instagram','insta'],    nota: instaOk?'habilitado hoy':'próximo: '+largo(proxInstaPermitido()), permitido:instaOk}
+    {campo:'az', titulo:'Azúcar', alias:['azúcar','azucar'],
+     nota: finde ? 'finde libre' : 'vuelve el ' + fecha(proxFinde()).toLocaleDateString('es-AR',{weekday:'long'}),
+     permitido:finde},
+    {campo:'chess', titulo:'Chess', alias:['chess','ajedrez'],
+     nota: motivoChess() + (cheAbierto ? ' · hasta ' + T.metas.chess.maxMin + ' min' : ''),
+     permitido:cheAbierto},
+    {campo:'insta', titulo:'Instagram', alias:['instagram','insta'],
+     nota: instaOk ? 'habilitado hoy' : 'próximo: ' + largo(proxInstaPermitido()),
+     permitido:instaOk}
   ];
   s+='<div class="trk-res-sec">Permisos · se pagan con puntos</div>';
   grupos.forEach(function(g){
     var lista=premiosDe(g.alias), usado=d[g.campo];
     var idUsado=(usado && typeof usado==='object') ? usado.id : null;
     s+='<div class="trk-res-cat'+(g.permitido?'':' bloq')+'">'+esc(g.titulo)+'<span>'+esc(g.nota)+'</span></div>';
+    // Fuera de su ventana los premios no se ofrecen. Si ya quedó uno
+    // marcado hoy, sigue a la vista para poder deshacerlo.
+    if(!g.permitido && !usado) return;
     if(!lista.length){
       var costoGen=C()[g.campo];
       s+='<div class="trk-res-row perm'+(usado?' on':'')+'" data-perm="'+g.campo+'" data-costo="'+costoGen+'">'
@@ -4157,7 +4184,7 @@ function abrirDia(k){
   h+='<div class="trk-sec">Hábitos</div>';
   h+=fila({ id:'tgMed', color:'#4dc98a', ico:ICO.med, nombre:'Meditar ' + T.metas.meditar.minDia + ' min',
             detalle: d.med?'hecho':'sin marcar', estado: d.med?' ok':'', on:!!d.med });
-  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess · −' + C().chess + ' pts',
+  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess · −' + C().chess + ' pts · ' + p2(T.metas.chess.desde) + '-' + p2(T.metas.chess.hasta) + ' h',
             detalle: d.chess ? (chessExceso(d) ? 'excedido: ' + d.chess.min + ' min' : d.chess.min + ' min') : 'sin marcar',
             estado: d.chess ? (chessExceso(d)?' bad':' ok') : '', on:!!d.chess,
             extra: '<input type="number" class="trk-num' + (chessExceso(d)?' warn':'') + '" id="inChe" inputmode="numeric" min="0" max="240" value="' + (d.chess?d.chess.min:T.metas.chess.maxMin) + '">' });
@@ -4340,6 +4367,10 @@ function abrirLibros(){
   h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Chess · máximo</div>'
     + '<div class="trk-row-d">Minutos por día.</div></div>'
     + '<input type="number" class="trk-num" id="mtChe" inputmode="numeric" min="5" max="240" value="' + (T.metas.chess.maxMin||30) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Chess · ventana</div>'
+    + '<div class="trk-row-d">Sólo se ofrece entre esas horas.</div></div>'
+    + '<input type="number" class="trk-num" id="mtCheD" inputmode="numeric" min="0" max="23" value="' + T.metas.chess.desde + '">'
+    + '<input type="number" class="trk-num" id="mtCheH" inputmode="numeric" min="1" max="24" value="' + T.metas.chess.hasta + '"></div>';
   h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Instagram · cada</div>'
     + '<div class="trk-row-d">Días entre usos permitidos (domingos).</div></div>'
     + '<input type="number" class="trk-num" id="mtIg" inputmode="numeric" min="1" max="90" value="' + (T.metas.insta.cadaDias||14) + '"></div>';
@@ -4402,6 +4433,8 @@ function abrirLibros(){
   metaNum('mtMed', function(v){ T.metas.meditar.meta=v; }, 1, 1000, true);
   metaNum('mtSue', function(v){ T.metas.sueno.min=v; }, 1, 12, false);
   metaNum('mtChe', function(v){ T.metas.chess.maxMin=v; }, 5, 240, true);
+  metaNum('mtCheD', function(v){ T.metas.chess.desde=v; }, 0, 23, true);
+  metaNum('mtCheH', function(v){ T.metas.chess.hasta=v; }, 1, 24, true);
   metaNum('mtIg',  function(v){ T.metas.insta.cadaDias=v; }, 1, 90, true);
   metaNum('mtB12', function(v){ T.metas.sup.b12Semana=v; }, 1, 7, true);
   metaNum('mtDien',function(v){ T.metas.higiene.dientesDia=v; }, 1, 6, true);
