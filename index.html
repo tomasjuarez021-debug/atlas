@@ -2193,6 +2193,197 @@ input,select,textarea{
 .mod-hab .heat-legend{display:flex;align-items:center;gap:4px;margin-top:12px;justify-content:flex-end}
 .mod-hab .heat-leg-l{font-size:9px;color:#7a7f8e;letter-spacing:.06em}
 
+/* ============================================================
+   TRACKER · calendario mensual de hábitos
+   ============================================================ */
+.mod-hab .trk{--h-med:#4dc98a;--h-che:#6aa9d8;--h-sue:#a98fd8;--h-lec:#e8b84b;--h-mal:#c14747}
+
+/* ── Cabecera de mes ── */
+.mod-hab .cal-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;
+}
+.mod-hab .cal-mes{
+  font-family:'Orbitron',sans-serif;font-size:14px;font-weight:800;color:#e8eaf0;
+  letter-spacing:.1em;text-transform:uppercase;text-align:center;flex:1;
+}
+.mod-hab .cal-mes span{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  color:#7a7f8e;letter-spacing:.16em;margin-top:3px;font-weight:600}
+.mod-hab .cal-nav{
+  width:34px;height:34px;flex-shrink:0;border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#9ea3b0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mod-hab .cal-nav:active{background:rgba(255,255,255,.09);color:#e8eaf0}
+.mod-hab .cal-nav[disabled]{opacity:.25;cursor:default}
+
+/* ── Grilla ── */
+.mod-hab .cal-card{
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:12px 10px 14px;margin-bottom:12px;
+}
+.mod-hab .cal-dows{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px}
+.mod-hab .cal-dow{
+  text-align:center;font-size:9px;color:#556070;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:700;padding-bottom:4px;
+}
+.mod-hab .cal-dow.wknd{color:#7a6a4a}
+.mod-hab .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mod-hab .cal-cell{
+  position:relative;aspect-ratio:1/1.12;border-radius:9px;
+  border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015);
+  display:flex;flex-direction:column;align-items:center;padding-top:5px;gap:3px;
+  cursor:pointer;transition:background .15s,border-color .15s;
+}
+.mod-hab .cal-cell:active{background:rgba(255,255,255,.07)}
+.mod-hab .cal-cell.vacio{border-color:transparent;background:transparent;cursor:default}
+.mod-hab .cal-cell.finde{background:rgba(232,184,75,.045)}
+.mod-hab .cal-cell.hoy{border-color:rgba(77,201,138,.55)}
+.mod-hab .cal-cell.futuro{opacity:.35;cursor:default}
+.mod-hab .cal-cell.mal{border-color:rgba(193,71,71,.5);background:rgba(193,71,71,.09)}
+.mod-hab .cal-n{
+  font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:#9ea3b0;line-height:1;
+}
+.mod-hab .cal-cell.hoy .cal-n{color:#4dc98a}
+.mod-hab .cal-cell.lleno .cal-n{color:#e8eaf0}
+.mod-hab .cal-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5px;max-width:90%}
+.mod-hab .cal-dot{width:5px;height:5px;border-radius:50%;display:block}
+.mod-hab .cal-dot.med{background:var(--h-med)}
+.mod-hab .cal-dot.che{background:var(--h-che)}
+.mod-hab .cal-dot.sue{background:var(--h-sue)}
+.mod-hab .cal-dot.lec{background:var(--h-lec)}
+.mod-hab .cal-dot.mal{background:var(--h-mal)}
+.mod-hab .cal-leyenda{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+  margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.05);
+}
+.mod-hab .cal-leg{display:flex;align-items:center;gap:5px;font-size:9.5px;color:#7a7f8e;letter-spacing:.04em}
+
+/* ── Bloques de métricas ── */
+.mod-hab .trk-card{
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:14px 15px;margin-bottom:10px;
+  position:relative;overflow:hidden;
+}
+.mod-hab .trk-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,#4dc98a);opacity:.55;
+}
+.mod-hab .trk-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.mod-hab .trk-t{
+  font-size:11px;font-weight:800;color:#e8eaf0;letter-spacing:.14em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+}
+.mod-hab .trk-t .pip{width:7px;height:7px;border-radius:50%;background:var(--c,#4dc98a);flex-shrink:0}
+.mod-hab .trk-big{
+  font-family:'Orbitron',sans-serif;font-size:19px;font-weight:800;color:#e8eaf0;letter-spacing:-.01em;
+}
+.mod-hab .trk-big small{font-size:10px;color:#7a7f8e;font-weight:600;margin-left:3px}
+.mod-hab .trk-sub{font-size:11px;color:#7a7f8e;line-height:1.55;letter-spacing:.02em}
+.mod-hab .trk-sub b{color:#c5c8d2;font-weight:600}
+.mod-hab .trk-sub .ok{color:#4dc98a}
+.mod-hab .trk-sub .bad{color:#e07070}
+.mod-hab .trk-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin:9px 0}
+.mod-hab .trk-bar-f{height:100%;border-radius:3px;background:var(--c,#4dc98a);transition:width .5s}
+.mod-hab .trk-libro{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.mod-hab .trk-libro:last-of-type{border-bottom:none}
+.mod-hab .trk-libro-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.mod-hab .trk-libro-n{font-size:12.5px;color:#e8eaf0;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-hab .trk-libro-p{font-family:'Orbitron',sans-serif;font-size:11px;color:#e8b84b;font-weight:700;flex-shrink:0}
+.mod-hab .trk-libro.hecho .trk-libro-p{color:#4dc98a}
+.mod-hab .trk-link{
+  display:block;width:100%;text-align:center;margin-top:4px;padding:12px;
+  border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.03);
+  color:#9ea3b0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+}
+.mod-hab .trk-link:active{background:rgba(255,255,255,.08);color:#e8eaf0}
+
+/* ── Sheet del día ── */
+.mod-hab .trk-sheet-bg{
+  position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(4,6,10,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.mod-hab .trk-sheet-bg.on{display:flex}
+.mod-hab .trk-sheet{
+  width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
+  background:linear-gradient(180deg,#141d27 0%,#0c1219 100%);
+  border:1px solid rgba(255,255,255,.1);border-bottom:none;border-radius:20px 20px 0 0;
+  padding:10px 16px calc(18px + env(safe-area-inset-bottom));
+  animation:trkUp .26s cubic-bezier(.34,1.1,.64,1) both;
+}
+@keyframes trkUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mod-hab .trk-grab{width:38px;height:4px;border-radius:3px;background:rgba(255,255,255,.14);margin:2px auto 14px}
+.mod-hab .trk-sh-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.mod-hab .trk-sh-t{font-size:13px;font-weight:800;color:#e8eaf0;letter-spacing:.06em;text-transform:uppercase}
+.mod-hab .trk-sh-s{font-size:10px;color:#7a7f8e;letter-spacing:.08em;margin-top:4px;font-weight:600}
+.mod-hab .trk-sh-x{
+  width:30px;height:30px;flex-shrink:0;border-radius:9px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:#9ea3b0;display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mod-hab .trk-row{
+  display:flex;align-items:center;gap:11px;padding:13px 0;
+  border-bottom:1px solid rgba(255,255,255,.055);
+}
+.mod-hab .trk-row:last-child{border-bottom:none}
+.mod-hab .trk-row-i{
+  width:30px;height:30px;flex-shrink:0;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);color:var(--c,#9ea3b0);
+}
+.mod-hab .trk-row-l{flex:1;min-width:0}
+.mod-hab .trk-row-n{font-size:13px;color:#e8eaf0;font-weight:600}
+.mod-hab .trk-row-d{font-size:10.5px;color:#7a7f8e;margin-top:3px;letter-spacing:.02em}
+.mod-hab .trk-row-d.bad{color:#e07070}
+.mod-hab .trk-row-d.ok{color:#4dc98a}
+.mod-hab .trk-tg{
+  width:50px;height:29px;flex-shrink:0;border-radius:16px;position:relative;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:background .25s,border-color .25s;
+}
+.mod-hab .trk-tg::after{
+  content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;
+  background:#6b7280;transition:transform .25s,background .25s;
+}
+.mod-hab .trk-tg.on{background:rgba(77,201,138,.22);border-color:rgba(77,201,138,.5)}
+.mod-hab .trk-tg.on::after{transform:translateX(21px);background:#4dc98a}
+.mod-hab .trk-tg.mal.on{background:rgba(193,71,71,.2);border-color:rgba(193,71,71,.5)}
+.mod-hab .trk-tg.mal.on::after{background:#e07070}
+.mod-hab .trk-num{
+  width:62px;flex-shrink:0;text-align:center;padding:8px 4px;border-radius:9px;
+  background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.11)!important;
+  color:#e8eaf0;font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;
+}
+.mod-hab .trk-num.warn{border-color:rgba(193,71,71,.45)!important;color:#e07070}
+.mod-hab .trk-step{
+  width:32px;height:32px;flex-shrink:0;border-radius:9px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);color:#e8eaf0;font-size:16px;line-height:1;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mod-hab .trk-step:active{background:rgba(255,255,255,.1)}
+.mod-hab .trk-sec{
+  font-size:9.5px;color:#556070;letter-spacing:.2em;text-transform:uppercase;
+  font-weight:700;margin:16px 0 2px;
+}
+.mod-hab .trk-aviso{
+  display:flex;gap:9px;align-items:flex-start;
+  background:rgba(193,71,71,.09);border:1px solid rgba(193,71,71,.25);border-radius:10px;
+  padding:10px 12px;margin:12px 0 2px;font-size:11px;color:#e0a0a0;line-height:1.5;
+}
+.mod-hab .trk-aviso.info{background:rgba(232,184,75,.08);border-color:rgba(232,184,75,.22);color:#d8c090}
+.mod-hab .trk-inp{
+  width:100%;padding:11px 12px;border-radius:10px;
+  background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.11)!important;
+  color:#e8eaf0;
+}
+.mod-hab .trk-btn{
+  flex:1;padding:13px;border-radius:11px;cursor:pointer;
+  font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+}
+.mod-hab .trk-btn.ok{border:none;background:linear-gradient(135deg,#4dc98a,#7be0ab);color:#0a1410}
+.mod-hab .trk-btn.ghost{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#9ea3b0}
+.mod-hab .trk-acts{display:flex;gap:10px;margin-top:16px}
+.mod-hab .trk-del{
+  width:32px;height:32px;flex-shrink:0;border-radius:9px;
+  border:1px solid rgba(193,71,71,.3);background:rgba(193,71,71,.12);color:#e07070;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;line-height:1;
+}
+
 </style>
 </head>
 
@@ -2247,6 +2438,13 @@ input,select,textarea{
   <button class="fab" id="fabAdd" aria-label="Agregar actividad">+</button>
 </div>
 
+<!-- CALENDARIO (tracker de hábitos) -->
+<div class="scr trk" id="s-cal">
+  <div id="calHead"></div>
+  <div id="calGrid"></div>
+  <div id="calStats"></div>
+</div>
+
 <!-- CONFIGURAR (actividades / premios / metas) -->
 <div class="scr" id="s-config">
   <div class="cfg-hint">
@@ -2295,6 +2493,11 @@ input,select,textarea{
   <div class="cat-sheet" id="catSheet"></div>
 </div>
 
+<!-- SHEET DEL TRACKER (día / libros) -->
+<div class="trk-sheet-bg trk" id="trkSheetBg">
+  <div class="trk-sheet" id="trkSheet"></div>
+</div>
+
     </div>
   </div>
 
@@ -2315,13 +2518,15 @@ input,select,textarea{
   function $(id){return document.getElementById(id);}
   function $$(sel){return document.querySelectorAll(sel);}
 
-  const SUB_LABELS = { hoy:'Hábitos · Resumen', config:'Hábitos · Configurar', hist:'Hábitos · Historial' };
+  const SUB_LABELS = { hoy:'Hábitos · Resumen', cal:'Hábitos · Calendario', config:'Hábitos · Configurar', hist:'Hábitos · Historial' };
   const ICO_DASH   = '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>';
   const ICO_CFG    = '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 01-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 01-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 010-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 012.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 014 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 012.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 010 4h-.1a1.6 1.6 0 00-1.5 1z"/>';
   const ICO_HIST   = '<path d="M3 3v18h18M7 16l4-4 4 3 5-6"/>';
+  const ICO_CAL    = '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h1M11.5 14h1M15.5 14h1M7.5 17.5h1M11.5 17.5h1"/>';
 
   const TABS = [
     {sub:'hoy',    label:'Resumen',    svg: ICO_DASH},
+    {sub:'cal',    label:'Calendario', svg: ICO_CAL},
     {sub:'config', label:'Configurar', svg: ICO_CFG},
     {sub:'hist',   label:'Historial',  svg: ICO_HIST}
   ];
@@ -3218,6 +3423,7 @@ function go(scr,btn){
   if(scr==='hist'){selDay=today();dropOpen=false;renderHist();}
   if(scr==='config'){renderCatSels();renderConfig();}
   if(scr==='hoy')renderHoy();
+  if(scr==='cal'&&window.Track)window.Track.render();
 }
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
 
@@ -3278,6 +3484,7 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
         if(name === 'hoy') renderHoy();
         else if(name === 'config') renderConfig();
         else if(name === 'hist') renderHist();
+        else if(name === 'cal' && window.Track) window.Track.render();
       } catch(e){ console.warn('hab render', e); }
     },
     getDayStats: function(dateObj){
@@ -3294,6 +3501,618 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
       } catch(e){ return {earned:0, spent:0, net:0, actCount:0}; }
     }
   };
+})();
+</script>
+
+
+<!-- ============================================================
+     MÓDULO TRACKER · calendario de hábitos
+     Datos propios en 'atlas.track.v1' (separados de 'evo1').
+     ============================================================ -->
+<script>
+(function(){
+'use strict';
+
+var KEY='atlas.track.v1';
+var T=null;              // estado
+var vis=null;            // mes visible {y,m}
+var sheetDia=null;       // día abierto en el sheet
+
+/* ── Semilla y persistencia ── */
+function seed(){
+  return {
+    v:1, libros:[], dias:{},
+    metas:{
+      meditar:{meta:100,minDia:10},
+      libros:{meta:2},
+      chess:{maxMin:30},
+      insta:{cadaDias:14,soloDomingo:true,maxMin:60},
+      sueno:{min:7},
+      azucar:{diasLibres:[6,0]}
+    }
+  };
+}
+function load(){
+  try{ T=JSON.parse(localStorage.getItem(KEY))||null; }catch(e){ T=null; }
+  if(!T||typeof T!=='object'||!T.dias) T=seed();
+  if(!T.libros) T.libros=[];
+  var s=seed();
+  if(!T.metas) T.metas={};
+  Object.keys(s.metas).forEach(function(k){
+    if(!T.metas[k]) T.metas[k]=s.metas[k];
+    else Object.keys(s.metas[k]).forEach(function(p){ if(T.metas[k][p]==null) T.metas[k][p]=s.metas[k][p]; });
+  });
+  return T;
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(T)); }catch(e){ msg('No se pudo guardar'); } }
+
+/* ── Fechas (misma fecha argentina que usa el resto de Atlas) ── */
+function p2(n){ return String(n).padStart(2,'0'); }
+function hoyKey(){ var d=new Date(); d.setTime(d.getTime()-3*3600000); return d.toISOString().split('T')[0]; }
+function ymd(y,m,d){ return y+'-'+p2(m+1)+'-'+p2(d); }
+function fecha(k){ return new Date(k+'T12:00:00'); }
+function dow(k){ return fecha(k).getDay(); }                 // 0=domingo
+function esFinde(k){ var d=dow(k); return d===0||d===6; }
+function sumaDias(k,n){ var d=fecha(k); d.setDate(d.getDate()+n); return ymd(d.getFullYear(),d.getMonth(),d.getDate()); }
+function difDias(a,b){ return Math.round((fecha(b)-fecha(a))/86400000); }
+function largo(k){
+  var s=fecha(k).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  return s.charAt(0).toUpperCase()+s.slice(1);
+}
+function rel(k){
+  var h=hoyKey();
+  if(k===h) return 'Hoy';
+  if(k===sumaDias(h,-1)) return 'Ayer';
+  if(k===sumaDias(h,1)) return 'Mañana';
+  return '';
+}
+var MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+/* ── Acceso a días ── */
+function dia(k){ return T.dias[k]||{}; }
+function editar(k,fn){
+  if(!T.dias[k]) T.dias[k]={};
+  fn(T.dias[k]);
+  var d=T.dias[k];
+  var vacio = !d.med && !d.chess && !d.sue && !d.insta && !d.az && !d.nota
+    && (!d.lec || !Object.keys(d.lec).some(function(id){ return d.lec[id]>0; }));
+  if(vacio) delete T.dias[k];
+  save();
+}
+function claves(){ return Object.keys(T.dias).sort(); }
+
+/* ── Reglas ── */
+function sueOk(d){ return d.sue && Number(d.sue.h) >= Number(T.metas.sueno.min); }
+function chessExceso(d){ return d.chess && Number(d.chess.min) > Number(T.metas.chess.maxMin); }
+function azProhibido(k){ return dia(k).az && !esFinde(k); }
+function usosInsta(){ return claves().filter(function(k){ return T.dias[k].insta; }); }
+function proxDomingo(k){ return sumaDias(k, (7-dow(k))%7); }
+function proxInstaPermitido(){
+  var u=usosInsta();
+  if(!u.length) return proxDomingo(hoyKey());
+  return proxDomingo(sumaDias(u[u.length-1], T.metas.insta.cadaDias));
+}
+function instaValido(k){
+  if(T.metas.insta.soloDomingo && dow(k)!==0) return false;
+  var previos=usosInsta().filter(function(x){ return x<k; });
+  if(!previos.length) return true;
+  return difDias(previos[previos.length-1],k) >= T.metas.insta.cadaDias;
+}
+function instaFueraDeRegla(k){ return !!dia(k).insta && !instaValido(k); }
+function hayFalta(k){ return azProhibido(k) || instaFueraDeRegla(k); }
+
+/* ── Métricas (siempre calculadas) ── */
+function totalMed(){ return claves().filter(function(k){ return T.dias[k].med; }).length; }
+function rachaMed(){
+  var k=hoyKey(), n=0;
+  if(!dia(k).med) k=sumaDias(k,-1);
+  while(dia(k).med){ n++; k=sumaDias(k,-1); }
+  return n;
+}
+function recordMed(){
+  var ks=claves().filter(function(k){ return T.dias[k].med; });
+  var max=0, cur=0, prev=null;
+  ks.forEach(function(k){
+    cur = (prev && difDias(prev,k)===1) ? cur+1 : 1;
+    if(cur>max) max=cur;
+    prev=k;
+  });
+  return Math.max(max, rachaMed());
+}
+function leido(id){
+  var s=0;
+  claves().forEach(function(k){ var l=T.dias[k].lec; if(l&&l[id]) s+=Number(l[id]); });
+  return s;
+}
+function libroTerminado(lb){ return leido(lb.id) >= Number(lb.paginas); }
+function findeId(k){ return dow(k)===0 ? sumaDias(k,-1) : k; }   // identificamos el finde por su sábado
+function findesRestantes(){
+  var h=hoyKey(), fin=fecha(h).getFullYear()+'-12-31', set={}, k=h;
+  var guarda=0;
+  while(k<=fin && guarda++<400){
+    if(esFinde(k)) set[findeId(k)]=1;
+    k=sumaDias(k,1);
+  }
+  return Object.keys(set).length;
+}
+function findesUsados(){
+  var anio=fecha(hoyKey()).getFullYear(), set={};
+  claves().forEach(function(k){
+    if(T.dias[k].az && esFinde(k) && fecha(k).getFullYear()===anio) set[findeId(k)]=1;
+  });
+  return Object.keys(set).length;
+}
+function azFaltas(){ return claves().filter(azProhibido).length; }
+function semanasRestantes(){
+  var h=hoyKey(), fin=fecha(h).getFullYear()+'-12-31';
+  return Math.max(0, Math.ceil(difDias(h,fin)/7));
+}
+function promSueno(){
+  var hs=claves().filter(function(k){ return T.dias[k].sue; }).map(function(k){ return Number(T.dias[k].sue.h); });
+  if(!hs.length) return 0;
+  return Math.round(hs.reduce(function(a,b){ return a+b; },0)/hs.length*10)/10;
+}
+// Días del mes visible ya transcurridos (para porcentajes honestos)
+function diasMes(){
+  var h=hoyKey(), y=vis.y, m=vis.m;
+  var ult=new Date(y,m+1,0).getDate();
+  var arr=[];
+  for(var d=1; d<=ult; d++){
+    var k=ymd(y,m,d);
+    if(k<=h) arr.push(k);
+  }
+  return arr;
+}
+function pctMes(test){
+  var ds=diasMes();
+  if(!ds.length) return null;
+  return Math.round(ds.filter(test).length/ds.length*100);
+}
+
+/* ============================================================
+   CALENDARIO
+   ============================================================ */
+function render(){
+  if(!T) load();
+  var h=hoyKey();
+  if(!vis){ var f=fecha(h); vis={ y:f.getFullYear(), m:f.getMonth() }; }
+  renderHead(); renderGrid(); renderStats();
+}
+
+function renderHead(){
+  var h=fecha(hoyKey());
+  var esFuturo = (vis.y>h.getFullYear()) || (vis.y===h.getFullYear() && vis.m>=h.getMonth());
+  document.getElementById('calHead').innerHTML =
+    '<div class="cal-head">'
+    + '<button class="cal-nav" id="calPrev" aria-label="Mes anterior">'
+    +   '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>'
+    + '<div class="cal-mes">' + MESES[vis.m] + ' ' + vis.y + '<span>' + diasMes().length + ' días registrables</span></div>'
+    + '<button class="cal-nav" id="calNext"' + (esFuturo?' disabled':'') + ' aria-label="Mes siguiente">'
+    +   '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>'
+    + '</div>';
+  document.getElementById('calPrev').addEventListener('click', function(){
+    vis.m--; if(vis.m<0){ vis.m=11; vis.y--; } render();
+  });
+  var nx=document.getElementById('calNext');
+  if(!nx.disabled) nx.addEventListener('click', function(){
+    vis.m++; if(vis.m>11){ vis.m=0; vis.y++; } render();
+  });
+}
+
+function renderGrid(){
+  var h=hoyKey();
+  var primero=new Date(vis.y, vis.m, 1);
+  var offset=(primero.getDay()+6)%7;                 // 0 = lunes
+  var ultimo=new Date(vis.y, vis.m+1, 0).getDate();
+  var dows=['L','M','M','J','V','S','D'];
+  var g='<div class="cal-card"><div class="cal-dows">';
+  dows.forEach(function(d,i){ g+='<div class="cal-dow'+(i>=5?' wknd':'')+'">'+d+'</div>'; });
+  g+='</div><div class="cal-grid">';
+  for(var i=0;i<offset;i++) g+='<div class="cal-cell vacio"></div>';
+  for(var d=1; d<=ultimo; d++){
+    var k=ymd(vis.y,vis.m,d), dd=dia(k), futuro=k>h;
+    var dots='';
+    if(dd.med) dots+='<i class="cal-dot med"></i>';
+    if(dd.chess && !chessExceso(dd)) dots+='<i class="cal-dot che"></i>';
+    if(sueOk(dd)) dots+='<i class="cal-dot sue"></i>';
+    if(dd.lec && Object.keys(dd.lec).some(function(id){ return dd.lec[id]>0; })) dots+='<i class="cal-dot lec"></i>';
+    if(hayFalta(k) || chessExceso(dd) || (dd.sue && !sueOk(dd))) dots+='<i class="cal-dot mal"></i>';
+    var cls='cal-cell';
+    if(esFinde(k)) cls+=' finde';
+    if(k===h) cls+=' hoy';
+    if(futuro) cls+=' futuro';
+    if(hayFalta(k)) cls+=' mal';
+    if(dots) cls+=' lleno';
+    g+='<div class="'+cls+'"'+(futuro?'':' data-dia="'+k+'"')+'>'
+      +'<span class="cal-n">'+d+'</span><span class="cal-dots">'+dots+'</span></div>';
+  }
+  g+='</div>'
+    + '<div class="cal-leyenda">'
+    +   '<span class="cal-leg"><i class="cal-dot med"></i>meditar</span>'
+    +   '<span class="cal-leg"><i class="cal-dot che"></i>chess</span>'
+    +   '<span class="cal-leg"><i class="cal-dot sue"></i>dormir</span>'
+    +   '<span class="cal-leg"><i class="cal-dot lec"></i>leer</span>'
+    +   '<span class="cal-leg"><i class="cal-dot mal"></i>falta</span>'
+    + '</div></div>';
+  var wrap=document.getElementById('calGrid');
+  wrap.innerHTML=g;
+  wrap.querySelectorAll('.cal-cell[data-dia]').forEach(function(c){
+    c.addEventListener('click', function(){ abrirDia(c.dataset.dia); });
+  });
+}
+
+function renderStats(){
+  var metaMed=Number(T.metas.meditar.meta)||100;
+  var tot=totalMed(), pctMed=Math.min(100,Math.round(tot/metaMed*100));
+  var s='';
+
+  // ── Meditación ──
+  s+='<div class="trk-card" style="--c:#4dc98a">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Meditar ' + T.metas.meditar.minDia + ' min</div>'
+    +   '<div class="trk-big">' + tot + '<small>/' + metaMed + '</small></div></div>'
+    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctMed + '%"></div></div>'
+    + '<div class="trk-sub">Racha actual <b>' + rachaMed() + '</b> · récord <b>' + recordMed() + '</b>'
+    +   ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>'
+    + '</div>';
+
+  // ── Libros ──
+  var metaLib=Number(T.metas.libros.meta)||2;
+  var pagsTot=T.libros.reduce(function(a,b){ return a+Number(b.paginas||0); },0);
+  var pagsLeidas=T.libros.reduce(function(a,b){ return a+Math.min(leido(b.id),Number(b.paginas||0)); },0);
+  var pctLib=pagsTot?Math.round(pagsLeidas/pagsTot*100):0;
+  var termin=T.libros.filter(libroTerminado).length;
+  s+='<div class="trk-card" style="--c:#e8b84b">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Leer ' + metaLib + ' libro' + (metaLib===1?'':'s') + '</div>'
+    +   '<div class="trk-big">' + termin + '<small>/' + metaLib + '</small></div></div>';
+  if(!T.libros.length){
+    s+='<div class="trk-sub">Todavía no cargaste ningún libro.</div>';
+  } else {
+    T.libros.forEach(function(lb){
+      var le=leido(lb.id), tt=Number(lb.paginas)||1, pc=Math.min(100,Math.round(le/tt*100));
+      s+='<div class="trk-libro' + (libroTerminado(lb)?' hecho':'') + '">'
+        + '<div class="trk-libro-h"><div class="trk-libro-n">' + esc(lb.titulo) + '</div>'
+        +   '<div class="trk-libro-p">' + le + '/' + tt + ' · ' + pc + '%</div></div>'
+        + '<div class="trk-bar" style="--c:' + (libroTerminado(lb)?'#4dc98a':'#e8b84b') + '"><div class="trk-bar-f" style="width:' + pc + '%"></div></div>'
+        + '</div>';
+    });
+    s+='<div class="trk-sub" style="margin-top:6px">Global <b>' + pagsLeidas + '/' + pagsTot + ' páginas</b> · ' + pctLib + '%</div>';
+  }
+  s+='<button class="trk-link" id="trkLibros">Libros y metas</button></div>';
+
+  // ── Azúcar ──
+  var faltasAz=azFaltas();
+  s+='<div class="trk-card" style="--c:#ff6b00">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Azúcar sólo el finde</div>'
+    +   '<div class="trk-big">' + findesRestantes() + '<small>findes</small></div></div>'
+    + '<div class="trk-sub">Quedan <b>' + findesRestantes() + ' findes</b> y <b>' + semanasRestantes() + ' semanas</b> hasta fin de año'
+    +   ' · aprovechados <b>' + findesUsados() + '</b>'
+    +   ' · entre semana ' + (faltasAz ? '<span class="bad">' + faltasAz + ' ' + (faltasAz===1?'falta':'faltas') + '</span>' : '<span class="ok">impecable</span>')
+    + '</div></div>';
+
+  // ── Instagram ──
+  var us=usosInsta(), ult=us.length?us[us.length-1]:null, prox=proxInstaPermitido();
+  var habilitado = hoyKey()>=prox;
+  s+='<div class="trk-card" style="--c:#c14747">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Instagram</div>'
+    +   '<div class="trk-big">' + us.length + '<small>usos</small></div></div>'
+    + '<div class="trk-sub">'
+    +   (ult ? 'Último: <b>' + largo(ult) + '</b> · hace <b>' + difDias(ult,hoyKey()) + ' días</b><br>' : 'Todavía sin registros.<br>')
+    +   (habilitado ? '<span class="ok">Habilitado hoy</span>' : 'Próximo permitido: <b>' + largo(prox) + '</b>')
+    +   ' · 1 vez cada ' + T.metas.insta.cadaDias + ' días, domingos, ' + T.metas.insta.maxMin + ' min'
+    + '</div></div>';
+
+  // ── Sueño y chess ──
+  var pctSue=pctMes(function(k){ return sueOk(dia(k)); });
+  var pctChe=pctMes(function(k){ var d=dia(k); return d.chess && !chessExceso(d); });
+  var excesos=claves().filter(function(k){ return chessExceso(dia(k)); }).length;
+  s+='<div class="trk-card" style="--c:#a98fd8">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Dormir ' + T.metas.sueno.min + ' h o más</div>'
+    +   '<div class="trk-big">' + (promSueno()||'—') + '<small>h promedio</small></div></div>'
+    + '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + MESES[vis.m].toLowerCase() + '.</div>'
+    + '</div>'
+    + '<div class="trk-card" style="--c:#6aa9d8">'
+    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Chess · máx ' + T.metas.chess.maxMin + ' min</div>'
+    +   '<div class="trk-big">' + (pctChe||0) + '<small>% del mes</small></div></div>'
+    + '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>'
+    + '</div>';
+
+  document.getElementById('calStats').innerHTML=s;
+  document.getElementById('trkLibros').addEventListener('click', abrirLibros);
+}
+
+/* ============================================================
+   SHEET · un día
+   ============================================================ */
+function abrirSheet(html){
+  var el=document.getElementById('trkSheet');
+  el.innerHTML=html;
+  document.getElementById('trkSheetBg').classList.add('on');
+  return el;
+}
+function cerrarSheet(){
+  document.getElementById('trkSheetBg').classList.remove('on');
+  sheetDia=null;
+}
+function cab(titulo,sub){
+  return '<div class="trk-grab"></div><div class="trk-sh-h">'
+    + '<div><div class="trk-sh-t">' + esc(titulo) + '</div>'
+    + (sub?'<div class="trk-sh-s">' + esc(sub) + '</div>':'') + '</div>'
+    + '<button class="trk-sh-x" id="trkX">'
+    +   '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+    + '</button></div>';
+}
+function fila(opts){
+  return '<div class="trk-row" style="--c:' + opts.color + '">'
+    + '<div class="trk-row-i">' + opts.ico + '</div>'
+    + '<div class="trk-row-l"><div class="trk-row-n">' + opts.nombre + '</div>'
+    +   '<div class="trk-row-d' + (opts.estado||'') + '" id="' + opts.id + 'D">' + opts.detalle + '</div></div>'
+    + (opts.extra||'')
+    + '<div class="trk-tg' + (opts.mal?' mal':'') + (opts.on?' on':'') + '" id="' + opts.id + '"></div>'
+    + '</div>';
+}
+
+var ICO={
+  med:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v6M8 13l4-1 4 1M6 19l6-4 6 4"/></svg>',
+  che:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 3 2 2-3 2 1 6H8l1-6-3-2 2-2z"/><path d="M6 21h12"/></svg>',
+  sue:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14a8 8 0 01-10-10 8 8 0 1010 10z"/></svg>',
+  lec:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-8-1v13c3-1 6-.5 8 1 2-1.5 5-2 8-1V5c-3-1-6-.5-8 1z"/><path d="M12 6v13"/></svg>',
+  az:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M6 12a6 6 0 0112 0M7 12v6a2 2 0 002 2h6a2 2 0 002-2v-6"/></svg>',
+  ig:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>'
+};
+
+function abrirDia(k){
+  sheetDia=k;
+  var d=dia(k), r=rel(k);
+  var finde=esFinde(k);
+  var h='';
+  h+=cab(largo(k), (r?r+' · ':'') + (finde?'fin de semana':'día de semana'));
+
+  h+='<div class="trk-sec">Hábitos</div>';
+  h+=fila({ id:'tgMed', color:'#4dc98a', ico:ICO.med, nombre:'Meditar ' + T.metas.meditar.minDia + ' min',
+            detalle: d.med?'hecho':'sin marcar', estado: d.med?' ok':'', on:!!d.med });
+  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess',
+            detalle: d.chess ? (chessExceso(d) ? 'excedido: ' + d.chess.min + ' min' : d.chess.min + ' min') : 'sin marcar',
+            estado: d.chess ? (chessExceso(d)?' bad':' ok') : '', on:!!d.chess,
+            extra: '<input type="number" class="trk-num' + (chessExceso(d)?' warn':'') + '" id="inChe" inputmode="numeric" min="0" max="240" value="' + (d.chess?d.chess.min:T.metas.chess.maxMin) + '">' });
+  h+=fila({ id:'tgSue', color:'#a98fd8', ico:ICO.sue, nombre:'Dormir bien',
+            detalle: d.sue ? (sueOk(d) ? d.sue.h + ' h' : 'corto: ' + d.sue.h + ' h') : 'sin marcar',
+            estado: d.sue ? (sueOk(d)?' ok':' bad') : '', on:!!d.sue,
+            extra: '<input type="number" class="trk-num' + (d.sue&&!sueOk(d)?' warn':'') + '" id="inSue" inputmode="decimal" step="0.5" min="0" max="16" value="' + (d.sue?d.sue.h:7.5) + '">' });
+
+  h+='<div class="trk-sec">Lectura · páginas de este día</div>';
+  if(!T.libros.length){
+    h+='<div class="trk-sub" style="padding:10px 0">Cargá un libro desde <b>Libros y metas</b> para anotar páginas.</div>';
+  } else {
+    T.libros.forEach(function(lb){
+      var pg=(d.lec&&d.lec[lb.id])?Number(d.lec[lb.id]):0;
+      var le=leido(lb.id);
+      h+='<div class="trk-row" style="--c:#e8b84b">'
+        + '<div class="trk-row-i">' + ICO.lec + '</div>'
+        + '<div class="trk-row-l"><div class="trk-row-n">' + esc(lb.titulo) + '</div>'
+        +   '<div class="trk-row-d">' + le + ' de ' + lb.paginas + ' páginas</div></div>'
+        + '<button class="trk-step" data-pag="' + lb.id + '" data-delta="-1">−</button>'
+        + '<input type="number" class="trk-num" data-pagin="' + lb.id + '" inputmode="numeric" min="0" value="' + pg + '">'
+        + '<button class="trk-step" data-pag="' + lb.id + '" data-delta="1">+</button>'
+        + '</div>';
+    });
+  }
+
+  h+='<div class="trk-sec">Reglas</div>';
+  h+=fila({ id:'tgAz', color:'#ff6b00', ico:ICO.az, nombre:'Comí azúcar',
+            detalle: d.az ? (finde?'permitido: es finde':'no estaba permitido') : (finde?'finde libre':'prohibido hoy'),
+            estado: d.az ? (finde?' ok':' bad') : '', on:!!d.az, mal:!finde });
+  var ok=instaValido(k);
+  h+=fila({ id:'tgIg', color:'#c14747', ico:ICO.ig, nombre:'Usé Instagram',
+            detalle: d.insta ? (ok ? d.insta.min + ' min · dentro de la regla' : d.insta.min + ' min · fuera de la regla')
+                             : (ok ? 'habilitado este día' : 'no corresponde este día'),
+            estado: d.insta ? (ok?' ok':' bad') : '', on:!!d.insta, mal:!ok,
+            extra: '<input type="number" class="trk-num" id="inIg" inputmode="numeric" min="0" max="600" value="' + (d.insta?d.insta.min:T.metas.insta.maxMin) + '">' });
+
+  if(d.az && !finde) h+='<div class="trk-aviso">Es día de semana: el azúcar quedaba para el finde.</div>';
+  if(d.insta && !ok){
+    var pr=proxInstaPermitido();
+    h+='<div class="trk-aviso">Fuera de la frecuencia permitida. Con esta regla, el próximo domingo habilitado es ' + esc(largo(pr)) + '.</div>';
+  }
+  if(!d.insta && !ok && dow(k)===0) h+='<div class="trk-aviso info">Es domingo, pero todavía no pasaron ' + T.metas.insta.cadaDias + ' días desde el último uso.</div>';
+
+  var el=abrirSheet(h);
+
+  // ── Cableado ──
+  document.getElementById('trkX').addEventListener('click', cerrarSheet);
+
+  el.querySelector('#tgMed').addEventListener('click', function(){
+    editar(k, function(x){ if(x.med) delete x.med; else x.med=1; });
+    refrescar(k);
+  });
+  el.querySelector('#tgChe').addEventListener('click', function(){
+    var min=Number(document.getElementById('inChe').value)||0;
+    editar(k, function(x){ if(x.chess) delete x.chess; else x.chess={min:min}; });
+    refrescar(k);
+  });
+  el.querySelector('#inChe').addEventListener('change', function(e){
+    var min=Math.max(0,Number(e.target.value)||0);
+    editar(k, function(x){ x.chess={min:min}; });
+    refrescar(k);
+  });
+  el.querySelector('#tgSue').addEventListener('click', function(){
+    var hs=Number(document.getElementById('inSue').value)||0;
+    editar(k, function(x){ if(x.sue) delete x.sue; else x.sue={h:hs}; });
+    refrescar(k);
+  });
+  el.querySelector('#inSue').addEventListener('change', function(e){
+    var hs=Math.max(0,Number(e.target.value)||0);
+    editar(k, function(x){ x.sue={h:hs}; });
+    refrescar(k);
+  });
+  el.querySelector('#tgAz').addEventListener('click', function(){
+    editar(k, function(x){ if(x.az) delete x.az; else x.az=1; });
+    refrescar(k);
+  });
+  el.querySelector('#tgIg').addEventListener('click', function(){
+    var min=Number(document.getElementById('inIg').value)||0;
+    editar(k, function(x){ if(x.insta) delete x.insta; else x.insta={min:min}; });
+    refrescar(k);
+  });
+  el.querySelector('#inIg').addEventListener('change', function(e){
+    var min=Math.max(0,Number(e.target.value)||0);
+    editar(k, function(x){ x.insta={min:min}; });
+    refrescar(k);
+  });
+  el.querySelectorAll('[data-pag]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id=b.dataset.pag, delta=Number(b.dataset.delta);
+      var inp=el.querySelector('[data-pagin="'+id+'"]');
+      var v=Math.max(0,(Number(inp.value)||0)+delta);
+      inp.value=v;
+      guardarPaginas(k,id,v);
+      refrescar(k);
+    });
+  });
+  el.querySelectorAll('[data-pagin]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      guardarPaginas(k, inp.dataset.pagin, Math.max(0,Number(inp.value)||0));
+      refrescar(k);
+    });
+  });
+}
+function guardarPaginas(k,id,v){
+  editar(k, function(x){
+    if(!x.lec) x.lec={};
+    if(v>0) x.lec[id]=v; else delete x.lec[id];
+    if(!Object.keys(x.lec).length) delete x.lec;
+  });
+}
+function refrescar(k){
+  render();
+  if(sheetDia===k) abrirDia(k);   // redibuja el sheet con los estados nuevos
+}
+
+/* ============================================================
+   SHEET · libros y metas
+   ============================================================ */
+function abrirLibros(){
+  sheetDia=null;
+  var h=cab('Libros y metas','Se recalculan todos los porcentajes');
+  h+='<div class="trk-sec">Metas</div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Libros a leer</div>'
+    + '<div class="trk-row-d">Sobre esta meta se cuenta el "x de y".</div></div>'
+    + '<input type="number" class="trk-num" id="mtLib" inputmode="numeric" min="1" max="50" value="' + (T.metas.libros.meta||2) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Meta de meditación</div>'
+    + '<div class="trk-row-d">Días totales.</div></div>'
+    + '<input type="number" class="trk-num" id="mtMed" inputmode="numeric" min="1" max="1000" value="' + (T.metas.meditar.meta||100) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Dormir · mínimo</div>'
+    + '<div class="trk-row-d">Horas para dar el día por cumplido.</div></div>'
+    + '<input type="number" class="trk-num" id="mtSue" inputmode="decimal" step="0.5" min="1" max="12" value="' + (T.metas.sueno.min||7) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Chess · máximo</div>'
+    + '<div class="trk-row-d">Minutos por día.</div></div>'
+    + '<input type="number" class="trk-num" id="mtChe" inputmode="numeric" min="5" max="240" value="' + (T.metas.chess.maxMin||30) + '"></div>';
+  h+='<div class="trk-row"><div class="trk-row-l"><div class="trk-row-n">Instagram · cada</div>'
+    + '<div class="trk-row-d">Días entre usos permitidos (domingos).</div></div>'
+    + '<input type="number" class="trk-num" id="mtIg" inputmode="numeric" min="1" max="90" value="' + (T.metas.insta.cadaDias||14) + '"></div>';
+
+  h+='<div class="trk-sec">Libros</div>';
+  if(!T.libros.length) h+='<div class="trk-sub" style="padding:6px 0 10px">Todavía no cargaste ninguno.</div>';
+  T.libros.forEach(function(lb){
+    var le=leido(lb.id);
+    h+='<div class="trk-row" data-libro="' + lb.id + '">'
+      + '<div class="trk-row-l">'
+      +   '<input class="trk-inp" data-tit="' + lb.id + '" value="' + esc(lb.titulo) + '" style="margin-bottom:6px">'
+      +   '<div class="trk-row-d">' + le + ' páginas leídas' + (libroTerminado(lb)?' · terminado':'') + '</div>'
+      + '</div>'
+      + '<input type="number" class="trk-num" data-pags="' + lb.id + '" inputmode="numeric" min="1" value="' + lb.paginas + '">'
+      + '<button class="trk-del" data-borrar="' + lb.id + '">×</button>'
+      + '</div>';
+  });
+
+  h+='<div class="trk-sec">Agregar libro</div>'
+    + '<input class="trk-inp" id="nvTit" placeholder="Título" style="margin-bottom:10px">'
+    + '<input type="number" class="trk-inp" id="nvPag" placeholder="Páginas totales" inputmode="numeric" min="1">'
+    + '<div class="trk-acts"><button class="trk-btn ghost" id="trkCerrar">Cerrar</button>'
+    + '<button class="trk-btn ok" id="trkAdd">Agregar</button></div>';
+
+  var el=abrirSheet(h);
+  document.getElementById('trkX').addEventListener('click', cerrarSheet);
+  document.getElementById('trkCerrar').addEventListener('click', cerrarSheet);
+
+  function metaNum(id, path, min, max, entero){
+    document.getElementById(id).addEventListener('change', function(e){
+      var v=Number(e.target.value)||min;
+      v=Math.min(max,Math.max(min,entero?Math.round(v):v));
+      path(v); save(); render(); abrirLibros();
+    });
+  }
+  metaNum('mtLib', function(v){ T.metas.libros.meta=v; }, 1, 50, true);
+  metaNum('mtMed', function(v){ T.metas.meditar.meta=v; }, 1, 1000, true);
+  metaNum('mtSue', function(v){ T.metas.sueno.min=v; }, 1, 12, false);
+  metaNum('mtChe', function(v){ T.metas.chess.maxMin=v; }, 5, 240, true);
+  metaNum('mtIg',  function(v){ T.metas.insta.cadaDias=v; }, 1, 90, true);
+
+  el.querySelectorAll('[data-tit]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var lb=T.libros.find(function(x){ return x.id===inp.dataset.tit; });
+      if(lb && inp.value.trim()){ lb.titulo=inp.value.trim(); save(); render(); }
+    });
+  });
+  el.querySelectorAll('[data-pags]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var lb=T.libros.find(function(x){ return x.id===inp.dataset.pags; });
+      if(lb){ lb.paginas=Math.max(1,Number(inp.value)||1); save(); render(); abrirLibros(); }
+    });
+  });
+  el.querySelectorAll('[data-borrar]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id=b.dataset.borrar;
+      var lb=T.libros.find(function(x){ return x.id===id; });
+      if(!confirm('¿Eliminar "' + (lb?lb.titulo:'') + '"? Las páginas cargadas de ese libro se pierden.')) return;
+      T.libros=T.libros.filter(function(x){ return x.id!==id; });
+      Object.keys(T.dias).forEach(function(k){
+        var d=T.dias[k];
+        if(d.lec && d.lec[id]!=null){ delete d.lec[id]; if(!Object.keys(d.lec).length) delete d.lec; }
+      });
+      save(); render(); abrirLibros(); msg('Libro eliminado');
+    });
+  });
+  document.getElementById('trkAdd').addEventListener('click', function(){
+    var t=document.getElementById('nvTit').value.trim();
+    var p=Math.max(1,Number(document.getElementById('nvPag').value)||0);
+    if(!t) return msg('Ingresá el título');
+    if(p<2) return msg('Ingresá las páginas');
+    T.libros.push({ id:'lb'+Math.random().toString(36).slice(2,7), titulo:t, paginas:p });
+    save(); render(); abrirLibros(); msg('Libro agregado ✓');
+  });
+}
+
+/* ── Varios ── */
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function msg(t){
+  if(window.App && window.App.toast) window.App.toast(t);
+  else if(window.showToast) window.showToast(t);
+}
+
+/* ── Arranque ── */
+load();
+var bg=document.getElementById('trkSheetBg');
+if(bg) bg.addEventListener('click', function(e){ if(e.target===bg) cerrarSheet(); });
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape' && bg && bg.classList.contains('on')) cerrarSheet();
+});
+
+window.Track = {
+  render: render,
+  abrirDia: abrirDia,
+  datos: function(){ return T; },
+  metricas: function(){
+    return {
+      medTotal: totalMed(), medRacha: rachaMed(), medRecord: recordMed(),
+      findesRestantes: findesRestantes(), findesUsados: findesUsados(), azFaltas: azFaltas(),
+      semanasRestantes: semanasRestantes(), proxInsta: proxInstaPermitido(),
+      promSueno: promSueno(), leido: leido
+    };
+  }
+};
 })();
 </script>
 
