@@ -2272,6 +2272,17 @@ input,select,textarea{
   content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,#4dc98a);opacity:.55;
 }
 .mod-hab .trk-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+/* Tarjetas plegables: por defecto sólo el titular */
+.mod-hab .trk-card.colap > .trk-h{margin-bottom:0;cursor:pointer;user-select:none;-webkit-user-select:none}
+.mod-hab .trk-card.colap > .trk-h:active{opacity:.75}
+.mod-hab .trk-hr{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.mod-hab .trk-chev{color:#556070;display:flex;align-items:center;transition:transform .28s ease}
+.mod-hab .trk-card.abierta .trk-chev{transform:rotate(180deg);color:var(--c,#9ea3b0)}
+.mod-hab .trk-body{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .3s ease, opacity .22s ease, margin-top .3s ease;
+}
+.mod-hab .trk-card.abierta .trk-body{max-height:1200px;opacity:1;margin-top:11px}
 .mod-hab .trk-t{
   font-size:11px;font-weight:800;color:#e8eaf0;letter-spacing:.14em;text-transform:uppercase;
   display:flex;align-items:center;gap:8px;
@@ -3577,7 +3588,7 @@ var sheetDia=null;       // día abierto en el sheet
 /* ── Semilla y persistencia ── */
 function seed(){
   return {
-    v:1, libros:[], dias:{},
+    v:1, libros:[], dias:{}, ui:{cards:{}},
     metas:{
       meditar:{meta:100,minDia:10},
       libros:{meta:2},
@@ -3599,6 +3610,8 @@ function load(){
   try{ T=JSON.parse(localStorage.getItem(KEY))||null; }catch(e){ T=null; }
   if(!T||typeof T!=='object'||!T.dias) T=seed();
   if(!T.libros) T.libros=[];
+  if(!T.ui) T.ui={cards:{}};
+  if(!T.ui.cards) T.ui.cards={};
   var s=seed();
   if(!T.metas) T.metas={};
   Object.keys(s.metas).forEach(function(k){
@@ -3877,32 +3890,43 @@ function renderGrid(){
   });
 }
 
+/* Tarjeta plegable: el titular queda a la vista, la explicación se abre */
+function tarjeta(id, color, titulo, big, cuerpo){
+  var abierta = !!(T.ui && T.ui.cards && T.ui.cards[id]);
+  return '<div class="trk-card colap' + (abierta?' abierta':'') + '" data-card="' + id + '" style="--c:' + color + '">'
+    + '<div class="trk-h">'
+    +   '<div class="trk-t"><i class="pip"></i>' + titulo + '</div>'
+    +   '<div class="trk-hr">' + big
+    +     '<span class="trk-chev"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="trk-body">' + cuerpo + '</div>'
+    + '</div>';
+}
+
 function renderStats(){
   var metaMed=Number(T.metas.meditar.meta)||100;
   var tot=totalMed(), pctMed=Math.min(100,Math.round(tot/metaMed*100));
+  var h=hoyKey(), mes=MESES[vis.m].toLowerCase();
   var s='';
 
-  // ── Saldo (economía de permisos) ──
+  // ── Saldo de permisos ──
   var sal=saldo(), c=C(), techo=techoDia();
   var ganMes=diasMes().reduce(function(a,k){ return a+ganadosDia(k); },0);
   var gasMes=diasMes().reduce(function(a,k){ return a+gastadosDia(k); },0);
-  s+='<div class="trk-card" style="--c:' + (sal<0?'#c14747':'#4dc98a') + '">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Saldo de permisos</div>'
-    +   '<div class="trk-big" style="color:' + (sal<0?'#e07070':'#4dc98a') + '">' + sal + '<small>pts</small></div></div>'
-    + '<div class="trk-sub">Un día completo da <b>' + techo + '</b> pts · en ' + MESES[vis.m].toLowerCase()
-    +   ' ganaste <b>' + ganMes + '</b> y gastaste <b>' + gasMes + '</b><br>'
-    +   'Chess <b>−' + c.chess + '</b> · azúcar <b>−' + c.az + '</b> · Instagram <b>−' + c.insta + '</b>'
-    +   (sal<0?' · <span class="bad">estás en deuda</span>':'')
-    + '</div></div>';
+  s+=tarjeta('saldo', (sal<0?'#c14747':'#4dc98a'), 'Saldo de permisos',
+    '<div class="trk-big" style="color:' + (sal<0?'#e07070':'#4dc98a') + '">' + sal + '<small>pts</small></div>',
+    '<div class="trk-sub">Un día completo da <b>' + techo + '</b> pts · en ' + mes
+    + ' ganaste <b>' + ganMes + '</b> y gastaste <b>' + gasMes + '</b><br>'
+    + 'Chess <b>−' + c.chess + '</b> · azúcar <b>−' + c.az + '</b> · Instagram <b>−' + c.insta + '</b>'
+    + (sal<0?' · <span class="bad">estás en deuda</span>':'') + '</div>');
 
   // ── Meditación ──
-  s+='<div class="trk-card" style="--c:#4dc98a">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Meditar ' + T.metas.meditar.minDia + ' min</div>'
-    +   '<div class="trk-big">' + tot + '<small>/' + metaMed + '</small></div></div>'
-    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctMed + '%"></div></div>'
+  s+=tarjeta('med', '#4dc98a', 'Meditar ' + T.metas.meditar.minDia + ' min',
+    '<div class="trk-big">' + tot + '<small>/' + metaMed + '</small></div>',
+    '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctMed + '%"></div></div>'
     + '<div class="trk-sub">Racha actual <b>' + rachaMed() + '</b> · récord <b>' + recordMed() + '</b>'
-    +   ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>'
-    + '</div>';
+    + ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>');
 
   // ── Libros ──
   var metaLib=Number(T.metas.libros.meta)||2;
@@ -3910,103 +3934,103 @@ function renderStats(){
   var pagsLeidas=T.libros.reduce(function(a,b){ return a+Math.min(leido(b.id),Number(b.paginas||0)); },0);
   var pctLib=pagsTot?Math.round(pagsLeidas/pagsTot*100):0;
   var termin=T.libros.filter(libroTerminado).length;
-  s+='<div class="trk-card" style="--c:#e8b84b">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Leer ' + metaLib + ' libro' + (metaLib===1?'':'s') + '</div>'
-    +   '<div class="trk-big">' + termin + '<small>/' + metaLib + '</small></div></div>';
+  var cuerpoLib='';
   if(!T.libros.length){
-    s+='<div class="trk-sub">Todavía no cargaste ningún libro.</div>';
+    cuerpoLib='<div class="trk-sub">Todavía no cargaste ningún libro.</div>';
   } else {
     T.libros.forEach(function(lb){
       var le=leido(lb.id), tt=Number(lb.paginas)||1, pc=Math.min(100,Math.round(le/tt*100));
-      s+='<div class="trk-libro' + (libroTerminado(lb)?' hecho':'') + '">'
+      cuerpoLib+='<div class="trk-libro' + (libroTerminado(lb)?' hecho':'') + '">'
         + '<div class="trk-libro-h"><div class="trk-libro-n">' + esc(lb.titulo) + '</div>'
         +   '<div class="trk-libro-p">' + le + '/' + tt + ' · ' + pc + '%</div></div>'
         + '<div class="trk-bar" style="--c:' + (libroTerminado(lb)?'#4dc98a':'#e8b84b') + '"><div class="trk-bar-f" style="width:' + pc + '%"></div></div>'
         + '</div>';
     });
-    s+='<div class="trk-sub" style="margin-top:6px">Global <b>' + pagsLeidas + '/' + pagsTot + ' páginas</b> · ' + pctLib + '%</div>';
+    cuerpoLib+='<div class="trk-sub" style="margin-top:6px">Global <b>' + pagsLeidas + '/' + pagsTot + ' páginas</b> · ' + pctLib + '%</div>';
   }
-  s+='<button class="trk-link" id="trkLibros">Libros y metas</button></div>';
+  s+=tarjeta('lib', '#e8b84b', 'Leer ' + metaLib + ' libro' + (metaLib===1?'':'s'),
+    '<div class="trk-big">' + termin + '<small>/' + metaLib + '</small></div>', cuerpoLib);
 
   // ── Suplementación ──
-  var h=hoyKey();
   var pctCre=pctMes(function(k){ return dia(k).cre; })||0;
   var pctLio=pctMes(function(k){ return dia(k).lio; })||0;
   var semB12=semanasCerradas('b12', T.metas.sup.b12Semana);
   var b12Hoy=b12Semana(h), metaB12=T.metas.sup.b12Semana;
-  s+='<div class="trk-card" style="--c:#5fc9c2">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Suplementación</div>'
-    +   '<div class="trk-big">' + b12Hoy + '<small>/' + metaB12 + ' b12</small></div></div>'
-    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(b12Hoy/metaB12*100)) + '%"></div></div>'
-    + '<div class="trk-sub">Creatina <b>' + pctCre + '%</b> · lions mane <b>' + pctLio + '%</b> de los días de '
-    +   MESES[vis.m].toLowerCase() + '<br>B12 esta semana <b>' + b12Hoy + ' de ' + metaB12 + '</b>'
-    +   (b12Hoy>=metaB12 ? ' · <span class="ok">cumplida</span>' : ' · faltan ' + (metaB12-b12Hoy))
-    +   (semB12 ? ' · semanas cumplidas <b>' + semB12.ok + '/' + semB12.total + '</b>' : '')
-    + '</div></div>';
+  s+=tarjeta('sup', '#5fc9c2', 'Suplementación',
+    '<div class="trk-big">' + b12Hoy + '<small>/' + metaB12 + ' b12</small></div>',
+    '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(b12Hoy/metaB12*100)) + '%"></div></div>'
+    + '<div class="trk-sub">Creatina <b>' + pctCre + '%</b> · lions mane <b>' + pctLio + '%</b> de los días de ' + mes
+    + '<br>B12 esta semana <b>' + b12Hoy + ' de ' + metaB12 + '</b>'
+    + (b12Hoy>=metaB12 ? ' · <span class="ok">cumplida</span>' : ' · faltan ' + (metaB12-b12Hoy))
+    + (semB12 ? ' · semanas cumplidas <b>' + semB12.ok + '/' + semB12.total + '</b>' : '') + '</div>');
 
   // ── Higiene ──
   var pctDien=pctMes(function(k){ return dientesOk(dia(k)); })||0;
   var mediasDien=pctMes(function(k){ var n=Number(dia(k).dien||0); return n>0 && n<T.metas.higiene.dientesDia; })||0;
-  s+='<div class="trk-card" style="--c:#b8c4d4">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Dientes ×' + T.metas.higiene.dientesDia + ' por día</div>'
-    +   '<div class="trk-big">' + pctDien + '<small>% del mes</small></div></div>'
-    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctDien + '%"></div></div>'
+  s+=tarjeta('hig', '#b8c4d4', 'Dientes ×' + T.metas.higiene.dientesDia + ' por día',
+    '<div class="trk-big">' + pctDien + '<small>% del mes</small></div>',
+    '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctDien + '%"></div></div>'
     + '<div class="trk-sub">Días completos <b>' + pctDien + '%</b>'
-    +   (mediasDien ? ' · a medias <b>' + mediasDien + '%</b>' : '') + '</div></div>';
+    + (mediasDien ? ' · a medias <b>' + mediasDien + '%</b>' : '') + '</div>');
 
   // ── Entrenamientos ──
   var entHoy=entrenSemana(h), metaEnt=T.metas.entren.porSemana;
   var semEnt=semanasCerradas('ent', metaEnt);
   var entMes=diasMes().filter(function(k){ return dia(k).ent; }).length;
-  s+='<div class="trk-card" style="--c:#ff8a3d">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Entrenar ' + metaEnt + '× por semana</div>'
-    +   '<div class="trk-big">' + entHoy + '<small>/' + metaEnt + '</small></div></div>'
-    + '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(entHoy/metaEnt*100)) + '%"></div></div>'
+  s+=tarjeta('ent', '#ff8a3d', 'Entrenar ' + metaEnt + '× por semana',
+    '<div class="trk-big">' + entHoy + '<small>/' + metaEnt + '</small></div>',
+    '<div class="trk-bar"><div class="trk-bar-f" style="width:' + Math.min(100,Math.round(entHoy/metaEnt*100)) + '%"></div></div>'
     + '<div class="trk-sub">Esta semana <b>' + entHoy + ' de ' + metaEnt + '</b>'
-    +   (entHoy>=metaEnt ? ' · <span class="ok">cumplida</span>' : ' · faltan <b>' + (metaEnt-entHoy) + '</b>')
-    +   ' · ' + entMes + ' en ' + MESES[vis.m].toLowerCase()
-    +   (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '')
-    + '</div></div>';
+    + (entHoy>=metaEnt ? ' · <span class="ok">cumplida</span>' : ' · faltan <b>' + (metaEnt-entHoy) + '</b>')
+    + ' · ' + entMes + ' en ' + mes
+    + (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '') + '</div>');
 
   // ── Azúcar ──
   var faltasAz=azFaltas();
-  s+='<div class="trk-card" style="--c:#ff6b00">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Azúcar sólo el finde</div>'
-    +   '<div class="trk-big">' + findesRestantes() + '<small>findes</small></div></div>'
-    + '<div class="trk-sub">Quedan <b>' + findesRestantes() + ' findes</b> y <b>' + semanasRestantes() + ' semanas</b> hasta fin de año'
-    +   ' · aprovechados <b>' + findesUsados() + '</b>'
-    +   ' · entre semana ' + (faltasAz ? '<span class="bad">' + faltasAz + ' ' + (faltasAz===1?'falta':'faltas') + '</span>' : '<span class="ok">impecable</span>')
-    + '</div></div>';
+  s+=tarjeta('az', '#ff6b00', 'Azúcar sólo el finde',
+    '<div class="trk-big">' + findesRestantes() + '<small>findes</small></div>',
+    '<div class="trk-sub">Quedan <b>' + findesRestantes() + ' findes</b> y <b>' + semanasRestantes() + ' semanas</b> hasta fin de año'
+    + ' · aprovechados <b>' + findesUsados() + '</b>'
+    + ' · entre semana ' + (faltasAz ? '<span class="bad">' + faltasAz + ' ' + (faltasAz===1?'falta':'faltas') + '</span>' : '<span class="ok">impecable</span>')
+    + '</div>');
 
   // ── Instagram ──
   var us=usosInsta(), ult=us.length?us[us.length-1]:null, prox=proxInstaPermitido();
-  var habilitado = hoyKey()>=prox;
-  s+='<div class="trk-card" style="--c:#c14747">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Instagram</div>'
-    +   '<div class="trk-big">' + us.length + '<small>usos</small></div></div>'
-    + '<div class="trk-sub">'
-    +   (ult ? 'Último: <b>' + largo(ult) + '</b> · hace <b>' + difDias(ult,hoyKey()) + ' días</b><br>' : 'Todavía sin registros.<br>')
-    +   (habilitado ? '<span class="ok">Habilitado hoy</span>' : 'Próximo permitido: <b>' + largo(prox) + '</b>')
-    +   ' · 1 vez cada ' + T.metas.insta.cadaDias + ' días, domingos, ' + T.metas.insta.maxMin + ' min'
-    + '</div></div>';
+  var habilitado = h>=prox;
+  s+=tarjeta('ig', '#c14747', 'Instagram',
+    '<div class="trk-big">' + us.length + '<small>usos</small></div>',
+    '<div class="trk-sub">'
+    + (ult ? 'Último: <b>' + largo(ult) + '</b> · hace <b>' + difDias(ult,h) + ' días</b><br>' : 'Todavía sin registros.<br>')
+    + (habilitado ? '<span class="ok">Habilitado hoy</span>' : 'Próximo permitido: <b>' + largo(prox) + '</b>')
+    + ' · 1 vez cada ' + T.metas.insta.cadaDias + ' días, domingos, ' + T.metas.insta.maxMin + ' min</div>');
 
   // ── Sueño y chess ──
   var pctSue=pctMes(function(k){ return sueOk(dia(k)); });
   var pctChe=pctMes(function(k){ var d=dia(k); return d.chess && !chessExceso(d); });
   var excesos=claves().filter(function(k){ return chessExceso(dia(k)); }).length;
-  s+='<div class="trk-card" style="--c:#a98fd8">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Dormir ' + T.metas.sueno.min + ' h o más</div>'
-    +   '<div class="trk-big">' + (promSueno()||'—') + '<small>h promedio</small></div></div>'
-    + '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + MESES[vis.m].toLowerCase() + '.</div>'
-    + '</div>'
-    + '<div class="trk-card" style="--c:#6aa9d8">'
-    + '<div class="trk-h"><div class="trk-t"><i class="pip"></i>Chess · máx ' + T.metas.chess.maxMin + ' min</div>'
-    +   '<div class="trk-big">' + (pctChe||0) + '<small>% del mes</small></div></div>'
-    + '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>'
-    + '</div>';
+  s+=tarjeta('sue', '#a98fd8', 'Dormir ' + T.metas.sueno.min + ' h o más',
+    '<div class="trk-big">' + (promSueno()||'—') + '<small>h promedio</small></div>',
+    '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + mes + '.</div>');
+  s+=tarjeta('che', '#6aa9d8', 'Chess · máx ' + T.metas.chess.maxMin + ' min',
+    '<div class="trk-big">' + (pctChe||0) + '<small>% del mes</small></div>',
+    '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>');
 
-  document.getElementById('calStats').innerHTML=s;
+  // Fuera de las tarjetas: siempre accesible
+  s+='<button class="trk-link" id="trkLibros">Libros y metas</button>';
+
+  var cont=document.getElementById('calStats');
+  cont.innerHTML=s;
   document.getElementById('trkLibros').addEventListener('click', abrirLibros);
+  cont.querySelectorAll('.trk-card.colap > .trk-h').forEach(function(cab){
+    cab.addEventListener('click', function(){
+      var card=cab.parentElement, id=card.dataset.card;
+      var abierta=card.classList.toggle('abierta');
+      if(!T.ui) T.ui={};
+      if(!T.ui.cards) T.ui.cards={};
+      if(abierta) T.ui.cards[id]=1; else delete T.ui.cards[id];
+      save();
+    });
+  });
 }
 
 /* ============================================================
