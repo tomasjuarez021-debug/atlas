@@ -2416,6 +2416,54 @@ input,select,textarea{
   margin:14px 0 2px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);
 }
 
+/* ============================================================
+   PROGRESO · anillo del día, stats y heatmaps
+   (estructura inspirada en Atenea, lenguaje visual de Atlas)
+   ============================================================ */
+/* ── Hero del día con anillo de progreso ── */
+.mod-hab .trk-res-hero{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.mod-hab .ring{position:relative;width:72px;height:72px;flex-shrink:0}
+.mod-hab .ring svg{display:block;transform:rotate(-90deg)}
+.mod-hab .ring .ring-track{stroke:rgba(255,255,255,.07)}
+.mod-hab .ring .ring-fill{stroke:url(#ringGrad);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.mod-hab .ring-pct{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-weight:800;font-size:18px;color:#e8eaf0;letter-spacing:-.02em;
+}
+.mod-hab .ring-pct small{font-size:9px;color:#7a7f8e;font-weight:700;margin-left:1px}
+.mod-hab .hero-txt{flex:1;min-width:0}
+.mod-hab .hero-chips{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.mod-hab .hchip{
+  display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:4px 9px;border-radius:8px;color:#7a7f8e;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+}
+.mod-hab .hchip b{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:800;color:#4dc98a;letter-spacing:0}
+.mod-hab .hchip.neg b{color:#e07070}
+.mod-hab .hchip.streak b{color:#ff8a3d}
+
+/* ── Fila de stats del mes (arriba de las tarjetas) ── */
+.mod-hab .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mod-hab .stat-card{
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:13px 8px 11px;text-align:center;
+}
+.mod-hab .stat-card .sv{font-family:'Orbitron',sans-serif;font-size:21px;font-weight:800;color:#e8eaf0;line-height:1}
+.mod-hab .stat-card .sv small{font-size:10px;color:#7a7f8e;font-weight:600}
+.mod-hab .stat-card .sv.good{color:#4dc98a}
+.mod-hab .stat-card .sv.gold{color:#e8b84b}
+.mod-hab .stat-card .sv.warn{color:#ff8a3d}
+.mod-hab .stat-card .sl{font-size:8px;color:#7a7f8e;letter-spacing:.1em;text-transform:uppercase;margin-top:7px;font-weight:700}
+
+/* ── Mini heatmap del mes dentro de cada tarjeta ── */
+.mod-hab .trk-hm-lbl{font-size:8.5px;color:#556070;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin:11px 0 7px}
+.mod-hab .trk-hm{display:grid;grid-template-columns:repeat(7,15px);gap:4px;justify-content:start}
+.mod-hab .trk-hm i{width:15px;height:15px;border-radius:4px;background:rgba(255,255,255,.05);display:block}
+.mod-hab .trk-hm i.on{background:var(--c,#4dc98a)}
+.mod-hab .trk-hm i.mal{background:rgba(193,71,71,.4)}
+.mod-hab .trk-hm i.fut{background:rgba(255,255,255,.02)}
+.mod-hab .trk-hm i.vacio{background:transparent}
+
 /* ── Sheet del día ── */
 .mod-hab .trk-sheet-bg{
   position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
@@ -3189,20 +3237,9 @@ function csDelAct(id){
 function renderHoy(){
   var t=today(),c=counts(t),st=computeStreak();
   var neto=saldoTotal();
-  // ── HERO compacto: saldo + racha (sin mini-stats redundantes) ──
-  var hero='<div class="hoy-hero">'
-    +'<div class="hh-row">'
-      +'<div class="hh-saldo">'
-        +'<div class="hh-saldo-n'+(neto<0?' neg':'')+'">'+neto+'</div>'
-        +'<div class="hh-saldo-l">SALDO</div>'
-      +'</div>'
-      +'<div class="hh-streak">'
-        +'<div class="hh-streak-n">'+st.current+'</div>'
-        +'<div class="hh-streak-l"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 5-5 5-5 10a5 5 0 0010 0c0-3-2-3-2-5 0 2-3 2-3-5z"/></svg> RACHA</div>'
-      +'</div>'
-    +'</div>'
-    +'</div>';
-  document.getElementById('hoyHero').innerHTML=hero;
+  // El saldo y la racha viven ahora en el anillo del día (Rutina de hoy),
+  // así que evitamos el strip superior redundante y dejamos un solo hero.
+  document.getElementById('hoyHero').innerHTML='';
 
   // Los premios ya no se canjean acá: viven en Permisos (Resumen),
   // con su costo y la restricción de su categoría.
@@ -3863,6 +3900,37 @@ function renderStats(){
   var h=hoyKey(), mes=MESES[vis.m].toLowerCase();
   var s='';
 
+  // ── Mini heatmap del mes visible para un hábito (predicado por día) ──
+  function heat(pred){
+    var y=vis.y, m=vis.m, ult=new Date(y,m+1,0).getDate();
+    var primero=new Date(y,m,1), offset=(primero.getDay()+6)%7;   // 0 = lunes
+    var out='<div class="trk-hm-lbl">'+MESES[m]+' '+y+'</div><div class="trk-hm">';
+    for(var i=0;i<offset;i++) out+='<i class="vacio"></i>';
+    for(var d=1; d<=ult; d++){
+      var k=ymd(y,m,d), cls;
+      if(k>h) cls='fut';
+      else if(pred(k)) cls='on';
+      else if(hayFalta(k)) cls='mal';
+      else cls='';
+      out+='<i class="'+cls+'"></i>';
+    }
+    out+='</div>';
+    return out;
+  }
+
+  // ── Stats del mes: racha, días activos y días perfectos ──
+  var techoD=techoDia(), dm=diasMes();
+  var activos=dm.filter(function(k){ return ganadosDia(k)>0; }).length;
+  var perfectos=dm.filter(function(k){ return techoD>0 && ganadosDia(k)>=techoD; }).length;
+  var rk=h, racha=0;
+  if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
+  while(ganadosDia(rk)>0){ racha++; rk=sumaDias(rk,-1); }
+  s+='<div class="stat-row">'
+    + '<div class="stat-card"><div class="sv warn">'+racha+'</div><div class="sl">racha días</div></div>'
+    + '<div class="stat-card"><div class="sv good">'+activos+'<small>/'+dm.length+'</small></div><div class="sl">activos '+mes+'</div></div>'
+    + '<div class="stat-card"><div class="sv gold">'+perfectos+'</div><div class="sl">perfectos</div></div>'
+    + '</div>';
+
   // ── Saldo de permisos ──
   var sal=saldo(), c=C(), techo=techoDia();
   var ganMes=diasMes().reduce(function(a,k){ return a+ganadosDia(k); },0);
@@ -3879,7 +3947,8 @@ function renderStats(){
     '<div class="trk-big">' + tot + '<small>/' + metaMed + '</small></div>',
     '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctMed + '%"></div></div>'
     + '<div class="trk-sub">Racha actual <b>' + rachaMed() + '</b> · récord <b>' + recordMed() + '</b>'
-    + ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>');
+    + ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>'
+    + heat(function(k){ return dia(k).med; }));
 
   // ── Libros ──
   var metaLib=Number(T.metas.libros.meta)||2;
@@ -3915,7 +3984,8 @@ function renderStats(){
     + '<div class="trk-sub">Creatina <b>' + pctCre + '%</b> · lions mane <b>' + pctLio + '%</b> de los días de ' + mes
     + '<br>B12 esta semana <b>' + b12Hoy + ' de ' + metaB12 + '</b>'
     + (b12Hoy>=metaB12 ? ' · <span class="ok">cumplida</span>' : ' · faltan ' + (metaB12-b12Hoy))
-    + (semB12 ? ' · semanas cumplidas <b>' + semB12.ok + '/' + semB12.total + '</b>' : '') + '</div>');
+    + (semB12 ? ' · semanas cumplidas <b>' + semB12.ok + '/' + semB12.total + '</b>' : '') + '</div>'
+    + heat(function(k){ return supOk(dia(k)); }));
 
   // ── Higiene ──
   var pctDien=pctMes(function(k){ return dientesOk(dia(k)); })||0;
@@ -3924,7 +3994,8 @@ function renderStats(){
     '<div class="trk-big">' + pctDien + '<small>% del mes</small></div>',
     '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctDien + '%"></div></div>'
     + '<div class="trk-sub">Días completos <b>' + pctDien + '%</b>'
-    + (mediasDien ? ' · a medias <b>' + mediasDien + '%</b>' : '') + '</div>');
+    + (mediasDien ? ' · a medias <b>' + mediasDien + '%</b>' : '') + '</div>'
+    + heat(function(k){ return dientesOk(dia(k)); }));
 
   // ── Entrenamientos ──
   var entHoy=entrenSemana(h), metaEnt=T.metas.entren.porSemana;
@@ -3936,7 +4007,8 @@ function renderStats(){
     + '<div class="trk-sub">Esta semana <b>' + entHoy + ' de ' + metaEnt + '</b>'
     + (entHoy>=metaEnt ? ' · <span class="ok">cumplida</span>' : ' · faltan <b>' + (metaEnt-entHoy) + '</b>')
     + ' · ' + entMes + ' en ' + mes
-    + (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '') + '</div>');
+    + (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '') + '</div>'
+    + heat(function(k){ return dia(k).ent; }));
 
   // ── Azúcar ──
   var faltasAz=azFaltas();
@@ -3963,10 +4035,12 @@ function renderStats(){
   var excesos=claves().filter(function(k){ return chessExceso(dia(k)); }).length;
   s+=tarjeta('sue', '#a98fd8', 'Dormir ' + T.metas.sueno.min + ' h o más',
     '<div class="trk-big">' + (promSueno()||'—') + '<small>h promedio</small></div>',
-    '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + mes + '.</div>');
+    '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + mes + '.</div>'
+    + heat(function(k){ return sueOk(dia(k)); }));
   s+=tarjeta('che', '#6aa9d8', 'Chess · máx ' + T.metas.chess.maxMin + ' min',
     '<div class="trk-big">' + (pctChe||0) + '<small>% del mes</small></div>',
-    '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>');
+    '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>'
+    + heat(function(k){ var d=dia(k); return d.chess && !chessExceso(d); }));
 
   // Fuera de las tarjetas: siempre accesible
   s+='<button class="trk-link" id="trkLibros">Libros y metas</button>';
@@ -4007,11 +4081,37 @@ function renderResumen(){
      nota:'semana '+b12Semana(k)+'/'+T.metas.sup.b12Semana}
   ];
 
+  // ── Anillo del día: % del techo diario cumplido hoy ──
+  var techo=techoDia();
+  var pctDia = techo>0 ? Math.min(100, Math.round(hoyGan/techo*100)) : 0;
+  var ringC = 201.1;                                   // 2·π·r  (r=32)
+  var ringOff = (ringC*(1-pctDia/100)).toFixed(1);
+  // ── Racha de días activos (con al menos un punto ganado) ──
+  var rk=hoyKey(), rachaAct=0;
+  if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
+  while(ganadosDia(rk)>0){ rachaAct++; rk=sumaDias(rk,-1); }
+
   var s='<div class="trk-res">'
-    + '<div class="trk-res-h">'
-    +   '<div><div class="trk-res-t">Rutina de hoy</div>'
-    +     '<div class="trk-res-s">'+hoyGan+' de '+techoDia()+' pts ganados hoy</div></div>'
-    +   '<div class="trk-res-saldo'+(sal<0?' neg':'')+'"><div class="n">'+sal+'</div><div class="l">permisos</div></div>'
+    + '<div class="trk-res-hero">'
+    +   '<div class="ring">'
+    +     '<svg width="72" height="72" viewBox="0 0 72 72">'
+    +       '<defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">'
+    +         '<stop offset="0" stop-color="#4dc98a"/><stop offset="1" stop-color="#e8b84b"/>'
+    +       '</linearGradient></defs>'
+    +       '<circle class="ring-track" cx="36" cy="36" r="32" fill="none" stroke-width="6"/>'
+    +       '<circle class="ring-fill" cx="36" cy="36" r="32" fill="none" stroke-width="6"'
+    +         ' stroke-dasharray="'+ringC+'" stroke-dashoffset="'+ringOff+'"/>'
+    +     '</svg>'
+    +     '<div class="ring-pct">'+pctDia+'<small>%</small></div>'
+    +   '</div>'
+    +   '<div class="hero-txt">'
+    +     '<div class="trk-res-t">Rutina de hoy</div>'
+    +     '<div class="trk-res-s">'+hoyGan+' de '+techo+' pts ganados hoy</div>'
+    +     '<div class="hero-chips">'
+    +       '<span class="hchip'+(sal<0?' neg':'')+'"><b>'+sal+'</b> permisos</span>'
+    +       '<span class="hchip streak">🔥 <b>'+rachaAct+'</b> racha</span>'
+    +     '</div>'
+    +   '</div>'
     + '</div>';
 
   filas.forEach(function(f){
