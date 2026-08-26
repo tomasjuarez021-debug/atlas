@@ -3625,14 +3625,20 @@ function load(){
 }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(T)); }catch(e){ msg('No se pudo guardar'); } }
 
-/* Ancla del heatmap: el día "130" (hoy la primera vez) queda fijo y
-   guardado en localStorage, así la ventana de cuadraditos no se corre
-   cada día — sólo se van rellenando los que pasan. */
+/* Ancla del heatmap: el LUNES de esta semana, fijo y guardado en
+   localStorage. La ventana es siempre de 130 cuadrados y no se mueve en
+   el tiempo; los días anteriores (desde ese lunes) quedan visibles. */
+function lunesDe(k){
+  var d=fecha(k); d.setDate(d.getDate()-((d.getDay()+6)%7));   // 0=lunes
+  return ymd(d.getFullYear(),d.getMonth(),d.getDate());
+}
 function hmStart(){
   if(!T) load();
-  if(!T.hmStart){ T.hmStart = hoyKey(); save(); }
+  var lun = lunesDe(T.hmStart || hoyKey());   // ancla al lunes de su semana
+  if(T.hmStart !== lun){ T.hmStart = lun; save(); }
   return T.hmStart;
 }
+var HM_TOTAL = 130;   // cantidad fija de cuadrados
 
 /* ── Fechas (misma fecha argentina que usa el resto de Atlas) ── */
 function p2(n){ return String(n).padStart(2,'0'); }
@@ -3952,34 +3958,33 @@ function renderStats(){
   var h=hoyKey(), mes=MESES[vis.m].toLowerCase();
   var s='';
 
-  // ── Heatmap: ventana FIJA desde el ancla (día "130") hasta fin de año ──
-  // El ancla se guarda en localStorage (hmStart), así los cuadraditos no se
-  // corren día a día: sólo se van rellenando. Filas = día de semana, columnas
-  // = semanas (estilo Atenea).
+  // ── Heatmap: ventana FIJA de 130 cuadrados desde el LUNES ancla ──
+  // El lunes se guarda en localStorage (hmStart) y no se mueve en el tiempo.
+  // Los días anteriores (desde ese lunes) quedan visibles: cumplidos en
+  // verde, faltas en rojo, sin cumplir en gris. Filas = día de semana.
   function heat(pred){
-    var startK=hmStart(), sd=fecha(startK), hd=fecha(h);
-    var y=hd.getFullYear(), end=fecha(y+'-12-31');   // 31/12 al mediodía (incluye el último día)
-    var align=new Date(sd); align.setDate(sd.getDate()-((sd.getDay()+6)%7));  // lunes del ancla
-    var total=Math.max(0, Math.round((end-sd)/86400000)+1);                   // cuadraditos (fijo)
-    var disp=Math.max(0, Math.round((end-hd)/86400000)+1);                    // días hoy→31/12
-    var out='<div class="trk-hm-lbl">desde el día <b>'+total+'</b> hasta fin de año · '+disp+' disponibles</div>'
-      + '<div class="trk-hm-wrap">'
+    var startK=hmStart(), sd=fecha(startK);
+    var cumpl=0, transc=0;
+    var out='<div class="trk-hm-wrap">'
       + '<div class="trk-hm-days"><span>L</span><span></span><span>M</span><span></span><span>V</span><span></span><span>D</span></div>'
       + '<div class="trk-hm">';
-    var cur=new Date(align);
-    while(cur<=end){
-      var k=ymd(cur.getFullYear(),cur.getMonth(),cur.getDate()), cls;
-      if(k<startK) cls='pre';                         // relleno previo al ancla (semana en curso)
-      else if(k>h) cls='disp';                        // futuro disponible
-      else if(pred(k)) cls='on';                      // cumplido
-      else if(hayFalta(k)) cls='mal';                 // falta registrada
-      else cls='';                                    // día pasado dentro de la ventana, sin cumplir
+    for(var i=0;i<HM_TOTAL;i++){
+      var cd=new Date(sd); cd.setDate(sd.getDate()+i);
+      var k=ymd(cd.getFullYear(),cd.getMonth(),cd.getDate()), cls;
+      if(k>h) cls='disp';                             // futuro disponible
+      else { transc++;
+        if(pred(k)){ cls='on'; cumpl++; }             // cumplido (también días pasados)
+        else if(hayFalta(k)) cls='mal';               // falta registrada
+        else cls='';                                  // pasado sin cumplir (gris)
+      }
       if(k===h) cls+=' hoy';
       out+='<i class="'+cls+'"></i>';
-      cur.setDate(cur.getDate()+1);
     }
     out+='</div></div>';
-    return out;
+    var lab=sd.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'});
+    var head='<div class="trk-hm-lbl"><b>'+HM_TOTAL+'</b> días desde el lun '+lab
+      + ' · '+cumpl+'/'+transc+' cumplidos · '+(HM_TOTAL-transc)+' por venir</div>';
+    return head+out;
   }
 
   // ── Stats del mes: racha, días activos y días perfectos ──
