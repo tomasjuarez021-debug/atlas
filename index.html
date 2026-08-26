@@ -3625,6 +3625,15 @@ function load(){
 }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(T)); }catch(e){ msg('No se pudo guardar'); } }
 
+/* Ancla del heatmap: el día "130" (hoy la primera vez) queda fijo y
+   guardado en localStorage, así la ventana de cuadraditos no se corre
+   cada día — sólo se van rellenando los que pasan. */
+function hmStart(){
+  if(!T) load();
+  if(!T.hmStart){ T.hmStart = hoyKey(); save(); }
+  return T.hmStart;
+}
+
 /* ── Fechas (misma fecha argentina que usa el resto de Atlas) ── */
 function p2(n){ return String(n).padStart(2,'0'); }
 function hoyKey(){ var d=new Date(); d.setTime(d.getTime()-3*3600000); return d.toISOString().split('T')[0]; }
@@ -3943,23 +3952,28 @@ function renderStats(){
   var h=hoyKey(), mes=MESES[vis.m].toLowerCase();
   var s='';
 
-  // ── Heatmap desde HOY hasta fin de año (días disponibles por hábito) ──
-  // Filas = día de semana (lun→dom), columnas = semanas. Estilo Atenea.
+  // ── Heatmap: ventana FIJA desde el ancla (día "130") hasta fin de año ──
+  // El ancla se guarda en localStorage (hmStart), así los cuadraditos no se
+  // corren día a día: sólo se van rellenando. Filas = día de semana, columnas
+  // = semanas (estilo Atenea).
   function heat(pred){
-    var hd=fecha(h), y=hd.getFullYear(), end=new Date(y,11,31);
-    var start=new Date(hd); start.setDate(hd.getDate()-((hd.getDay()+6)%7)); // lunes de esta semana
-    var disp=Math.round((end-hd)/86400000)+1;                                // días hoy→31/12
-    var out='<div class="trk-hm-lbl">hasta fin de año · <b>'+disp+'</b> días disponibles</div>'
+    var startK=hmStart(), sd=fecha(startK), hd=fecha(h);
+    var y=hd.getFullYear(), end=fecha(y+'-12-31');   // 31/12 al mediodía (incluye el último día)
+    var align=new Date(sd); align.setDate(sd.getDate()-((sd.getDay()+6)%7));  // lunes del ancla
+    var total=Math.max(0, Math.round((end-sd)/86400000)+1);                   // cuadraditos (fijo)
+    var disp=Math.max(0, Math.round((end-hd)/86400000)+1);                    // días hoy→31/12
+    var out='<div class="trk-hm-lbl">desde el día <b>'+total+'</b> hasta fin de año · '+disp+' disponibles</div>'
       + '<div class="trk-hm-wrap">'
       + '<div class="trk-hm-days"><span>L</span><span></span><span>M</span><span></span><span>V</span><span></span><span>D</span></div>'
       + '<div class="trk-hm">';
-    var cur=new Date(start);
+    var cur=new Date(align);
     while(cur<=end){
       var k=ymd(cur.getFullYear(),cur.getMonth(),cur.getDate()), cls;
-      if(k<h) cls='pre';                              // relleno previo a hoy (semana en curso)
+      if(k<startK) cls='pre';                         // relleno previo al ancla (semana en curso)
+      else if(k>h) cls='disp';                        // futuro disponible
       else if(pred(k)) cls='on';                      // cumplido
-      else if(hayFalta(k) && k<=h) cls='mal';         // falta registrada
-      else cls='disp';                                // disponible (hoy o futuro)
+      else if(hayFalta(k)) cls='mal';                 // falta registrada
+      else cls='';                                    // día pasado dentro de la ventana, sin cumplir
       if(k===h) cls+=' hoy';
       out+='<i class="'+cls+'"></i>';
       cur.setDate(cur.getDate()+1);
