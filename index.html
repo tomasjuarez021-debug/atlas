@@ -4208,7 +4208,9 @@ function renderStats(){
 function premiosTrackerHTML(k, sal, soloDisp){
   var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
   if(soloDisp){
-    lista=lista.filter(function(pr){ return premioDisp(pr).ok || premTomado(k,pr.id); });
+    // En Hoy sólo los que corresponden por restricción Y te alcanzan los
+    // puntos (o ya los tomaste hoy). El saldo también es una restricción.
+    lista=lista.filter(function(pr){ return (premioDisp(pr).ok && sal>=Number(pr.costo)) || premTomado(k,pr.id); });
     if(!lista.length) return '';   // en Hoy no mostramos una sección vacía
   }
   var s='<div class="trk-res-sec sep">Premios · tomá o no</div>';
