@@ -4197,6 +4197,48 @@ function renderStats(){
 /* ============================================================
    BLOQUE EN RESUMEN · marcar de un toque
    ============================================================ */
+/* Tracker de premios reutilizable (se usa en Hoy y en la pestaña Premios) */
+function premiosTrackerHTML(k, sal){
+  var lista=premiosList();
+  var s='<div class="trk-res-sec">Premios · tomá o no</div>';
+  if(!lista.length){
+    return s+'<div class="trk-res-nota" style="display:block;padding:10px 2px">Sin premios. Agregalos en la pestaña Premios.</div>';
+  }
+  lista.forEach(function(pr){
+    var on=premTomado(k,pr.id), disp=premioDisp(pr);
+    var alcanza = on || sal>=pr.costo;
+    var col = on?'#4dc98a':(disp.ok?'#4dc98a':'#c98a8a');
+    s+='<div class="trk-res-row perm'+(on?' on':'')+'" data-prem="'+pr.id+'" data-costo="'+pr.costo+'" style="--c:'+col+'">'
+      + '<span class="trk-res-pip"></span>'
+      + '<span class="trk-res-n">'+esc(pr.nombre)
+      +   '<span class="trk-res-nota'+((disp.ok||on)?'':' bad')+'">'+esc(disp.nota)+(alcanza?'':' · te faltan '+(pr.costo-sal))+'</span>'
+      + '</span>'
+      + '<span class="trk-res-chip cost">−'+pr.costo+'</span>'
+      + '<span class="trk-res-chk"></span>'
+      + '</div>';
+  });
+  return s;
+}
+function wirePremiosRows(cont, k){
+  cont.querySelectorAll('[data-prem]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var id=row.dataset.prem, costo=Number(row.dataset.costo)||0, ya=row.classList.contains('on');
+      var pr=premiosList().filter(function(x){ return x.id===id; })[0];
+      if(!ya){
+        var disp=pr?premioDisp(pr):{ok:true,nota:''};
+        if(!disp.ok && !confirm('Está bloqueado ahora ('+disp.nota+').\n¿Marcarlo igual?')) return;
+        if(saldo()<costo && !confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
+      }
+      editar(k, function(x){
+        if(!x.prem) x.prem={};
+        if(ya) delete x.prem[id]; else x.prem[id]=costo;
+        if(!Object.keys(x.prem).length) delete x.prem;
+      });
+      repintar();
+    });
+  });
+}
+
 function renderResumen(){
   var cont=document.getElementById('trkResumen');
   if(!cont) return;
@@ -4275,10 +4317,14 @@ function renderResumen(){
     + '<span class="trk-res-chk arrow">›</span>'
     + '</div>';
 
+  // ── Premios: debajo de las actividades ──
+  s+=premiosTrackerHTML(k, sal);
+
   s+='</div>';
   cont.innerHTML=s;
 
   // ── Cableado ──
+  wirePremiosRows(cont, k);
   cont.querySelectorAll('[data-campo]').forEach(function(row){
     row.addEventListener('click', function(){
       var campo=row.dataset.campo;
@@ -4322,27 +4368,9 @@ function renderPremios(){
     + (sal<0?' · <span class="bad">estás en deuda</span>':'')+'</div>'
     + '</div>';
 
-  // ── Tracker único: todos los premios, tomado hoy o no ──
+  // ── Tracker único (mismo que en Hoy) ──
   var lista=premiosList();
-  s+='<div class="trk-res">';
-  s+='<div class="trk-res-sec" style="border-top:none;padding-top:0;margin-top:2px">Premios de hoy · tomá o no</div>';
-  if(!lista.length){
-    s+='<div class="trk-res-nota" style="display:block;padding:12px 2px">Todavía no hay premios. Agregá abajo.</div>';
-  }
-  lista.forEach(function(pr){
-    var on=premTomado(k,pr.id), disp=premioDisp(pr);
-    var alcanza = on || sal>=pr.costo;
-    var col = on?'#4dc98a':(disp.ok?'#4dc98a':'#c98a8a');
-    s+='<div class="trk-res-row perm'+(on?' on':'')+'" data-prem="'+pr.id+'" data-costo="'+pr.costo+'" style="--c:'+col+'">'
-      + '<span class="trk-res-pip"></span>'
-      + '<span class="trk-res-n">'+esc(pr.nombre)
-      +   '<span class="trk-res-nota'+((disp.ok||on)?'':' bad')+'">'+esc(disp.nota)+(alcanza?'':' · te faltan '+(pr.costo-sal))+'</span>'
-      + '</span>'
-      + '<span class="trk-res-chip cost">−'+pr.costo+'</span>'
-      + '<span class="trk-res-chk"></span>'
-      + '</div>';
-  });
-  s+='</div>';
+  s+='<div class="trk-res">'+premiosTrackerHTML(k, sal)+'</div>';
 
   var editando = !!(T.ui && T.ui.premEdit);
   s+='<button class="trk-link" id="premEditBtn">'+(editando?'✕ Cerrar edición':'⚙ Configurar premios')+'</button>';
@@ -4381,23 +4409,7 @@ function renderPremios(){
   cont.innerHTML=s;
 
   // ── Wiring: tracker (tomar/destomar) ──
-  cont.querySelectorAll('[data-prem]').forEach(function(row){
-    row.addEventListener('click', function(){
-      var id=row.dataset.prem, costo=Number(row.dataset.costo)||0, ya=row.classList.contains('on');
-      var pr=lista.filter(function(x){ return x.id===id; })[0];
-      if(!ya){
-        var disp=pr?premioDisp(pr):{ok:true,nota:''};
-        if(!disp.ok && !confirm('Está bloqueado ahora ('+disp.nota+').\n¿Marcarlo igual?')) return;
-        if(saldo()<costo && !confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
-      }
-      editar(k, function(x){
-        if(!x.prem) x.prem={};
-        if(ya) delete x.prem[id]; else x.prem[id]=costo;
-        if(!Object.keys(x.prem).length) delete x.prem;
-      });
-      repintar();
-    });
-  });
+  wirePremiosRows(cont, k);
 
   // ── Wiring: botón editar ──
   var eb=document.getElementById('premEditBtn');
