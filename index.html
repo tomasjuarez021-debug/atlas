@@ -2494,6 +2494,43 @@ input,select,textarea{
 .mod-hab .prem-hero-sub b{color:#c5c8d2;font-weight:600}
 .mod-hab .prem-hero-sub .bad{color:#e07070}
 
+/* ── Editor de premios (agregar / modificar / restricciones) ── */
+.mod-hab .prem-editor{margin-top:4px}
+.mod-hab .pe-form{
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:13px;margin-bottom:10px;
+}
+.mod-hab .pe-form.add{border-style:dashed;border-color:rgba(77,201,138,.35)}
+.mod-hab .pe-row{display:flex;gap:8px;margin-bottom:9px}
+.mod-hab .pe-row:last-of-type{margin-bottom:0}
+.mod-hab .pe-nombre{flex:1;min-width:0}
+.mod-hab .pe-costo{width:78px;flex:0 0 auto;text-align:center}
+.mod-hab .pe-form input,.mod-hab .pe-form select{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  padding:10px 11px;color:#e8eaf0;font-family:'JetBrains Mono',monospace;outline:none;
+}
+.mod-hab .pe-form input:focus,.mod-hab .pe-form select:focus{border-color:rgba(77,201,138,.5)}
+.mod-hab .pe-form select{width:100%;-webkit-appearance:none;appearance:none}
+.mod-hab .pe-params{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.mod-hab .pe-params label{font-size:12px;color:#9ea3b0;display:flex;align-items:center;gap:6px}
+.mod-hab .pe-params label input{width:62px;text-align:center}
+.mod-hab .pe-dia{
+  width:34px;height:34px;flex:0 0 auto;border-radius:9px;font-size:12px;font-weight:700;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);color:#9ea3b0;
+}
+.mod-hab .pe-dia.on{background:rgba(77,201,138,.2);border-color:rgba(77,201,138,.55);color:#4dc98a}
+.mod-hab .pe-actions{display:flex;gap:9px;margin-top:12px}
+.mod-hab .pe-actions button{
+  flex:1;padding:11px;border-radius:11px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;
+  background:rgba(77,201,138,.14);color:#4dc98a;border:1px solid rgba(77,201,138,.3);
+}
+.mod-hab .pe-actions button:active{transform:scale(.97)}
+.mod-hab .pe-del{background:rgba(193,71,71,.14)!important;color:#e07070!important;border-color:rgba(193,71,71,.3)!important;flex:0 0 auto!important;width:96px}
+/* Los premios se administran desde la pestaña Premios: ocultamos la sección vieja de Ajustes */
+.mod-hab .cfg-section.roja{display:none}
+/* Botón de mostrar/ocultar calendario en Progreso */
+.mod-hab .cal-toggle{margin-bottom:12px}
+
 /* ── Sheet del día ── */
 .mod-hab .trk-sheet-bg{
   position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
@@ -3621,8 +3658,19 @@ function load(){
     if(!T.metas[k]) T.metas[k]=s.metas[k];
     else Object.keys(s.metas[k]).forEach(function(p){ if(T.metas[k][p]==null) T.metas[k][p]=s.metas[k][p]; });
   });
+  // ── Premios editables (unificados en el tracker) ──
+  if(!Array.isArray(T.premios)){
+    T.premios = [
+      {id:pid(), nombre:'Azúcar',    costo:100, restr:{tipo:'dias',       dias:[6,0]}},
+      {id:pid(), nombre:'Chess',     costo:50,  restr:{tipo:'horario',    desde:19, hasta:22}},
+      {id:pid(), nombre:'Instagram', costo:250, restr:{tipo:'frecuencia', cadaDias:14}}
+    ];
+    try{ localStorage.setItem(KEY,JSON.stringify(T)); }catch(e){}   // persistir la semilla
+  }
   return T;
 }
+/* id corto para premios (el uid() del otro módulo no vive en este scope) */
+function pid(){ return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(T)); }catch(e){ msg('No se pudo guardar'); } }
 
 /* Ancla del heatmap: el LUNES de esta semana, fijo y guardado en
@@ -3670,6 +3718,7 @@ function editar(k,fn){
   var d=T.dias[k];
   var vacio = !d.med && !d.chess && !d.sue && !d.insta && !d.az && !d.nota
     && !d.cre && !d.b12 && !d.lio && !d.dien && !d.ent
+    && (!d.prem || !Object.keys(d.prem).length)
     && (!d.lec || !Object.keys(d.lec).some(function(id){ return d.lec[id]>0; }));
   if(vacio) delete T.dias[k];
   save();
@@ -3770,7 +3819,35 @@ function costoDe(d,campo){
 }
 function gastadosDia(k){
   var d=dia(k);
-  return costoDe(d,'chess') + costoDe(d,'az') + costoDe(d,'insta');
+  var prem=0; if(d.prem) Object.keys(d.prem).forEach(function(id){ prem+=Number(d.prem[id])||0; });
+  return costoDe(d,'chess') + costoDe(d,'az') + costoDe(d,'insta') + prem;   // legado + premios nuevos
+}
+
+/* ── Premios editables (T.premios) + tracker único "tomado hoy" ── */
+function premiosList(){ if(!Array.isArray(T.premios)) T.premios=[]; return T.premios; }
+function diasConPrem(id){ return claves().filter(function(k){ var p=dia(k).prem; return p && p[id]; }); }
+function premTomado(k,id){ var p=dia(k).prem; return !!(p&&p[id]); }
+function nombresDias(arr){
+  var N=['dom','lun','mar','mié','jue','vie','sáb'];
+  return (arr||[]).slice().sort().map(function(d){ return N[d]; }).join(', ');
+}
+function premioDisp(prem){
+  var r=prem.restr||{tipo:'libre'}, k=hoyKey();
+  if(r.tipo==='dias'){
+    var ok=(r.dias||[]).indexOf(dow(k))>=0;
+    return {ok:ok, nota: ok?'disponible hoy':'sólo '+(nombresDias(r.dias)||'—')};
+  }
+  if(r.tipo==='horario'){
+    var h=horaAhora(), ok=h>=Number(r.desde)&&h<Number(r.hasta);
+    return {ok:ok, nota:(ok?'abierto · ':'franja ')+p2(r.desde)+'–'+p2(r.hasta)+'h'};
+  }
+  if(r.tipo==='frecuencia'){
+    var t=diasConPrem(prem.id);
+    if(!t.length) return {ok:true, nota:'cada '+r.cadaDias+' días'};
+    var d=difDias(t[t.length-1],k), ok=d>=Number(r.cadaDias);
+    return {ok:ok, nota: ok?'disponible · cada '+r.cadaDias+'d':'en '+(Number(r.cadaDias)-d)+' días'};
+  }
+  return {ok:true, nota:'sin restricción'};
 }
 function netoPropio(){
   var n=0;
@@ -3868,6 +3945,11 @@ function render(){
   var h=hoyKey();
   if(!vis){ var f=fecha(h); vis={ y:f.getFullYear(), m:f.getMonth() }; }
   renderHead(); renderGrid(); renderStats();
+  // El calendario queda oculto por defecto; se abre con el botón de Progreso.
+  var open = !!(T.ui && T.ui.calOpen);
+  var ch=document.getElementById('calHead'), cg=document.getElementById('calGrid');
+  if(ch) ch.style.display = open?'':'none';
+  if(cg) cg.style.display = open?'':'none';
 }
 
 function renderHead(){
@@ -3994,6 +4076,8 @@ function renderStats(){
   var rk=h, racha=0;
   if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
   while(ganadosDia(rk)>0){ racha++; rk=sumaDias(rk,-1); }
+  var calOpen=!!(T.ui && T.ui.calOpen);
+  s+='<button class="trk-link cal-toggle" id="calToggle">'+(calOpen?'▲ Ocultar calendario':'▾ Ver calendario del mes')+'</button>';
   s+='<div class="stat-row">'
     + '<div class="stat-card"><div class="sv warn">'+racha+'</div><div class="sl">racha días</div></div>'
     + '<div class="stat-card"><div class="sv good">'+activos+'<small>/'+dm.length+'</small></div><div class="sl">activos '+mes+'</div></div>'
@@ -4030,6 +4114,8 @@ function renderStats(){
     });
     cuerpoLib+='<div class="trk-sub" style="margin-top:6px">Global <b>' + pagsLeidas + '/' + pagsTot + ' páginas</b> · ' + pctLib + '%</div>';
   }
+  // Heatmap de días de lectura (páginas leídas ≥ mínimo del día)
+  cuerpoLib+=heat(function(k){ return paginasDia(dia(k)) >= P().lecMin; });
   var cardLib=tarjeta('lib', '#e8b84b', 'Leer ' + metaLib + ' libro' + (metaLib===1?'':'s'),
     '<div class="trk-big">' + termin + '<small>/' + metaLib + '</small></div>', cuerpoLib);
 
@@ -4070,51 +4156,31 @@ function renderStats(){
     + (semEnt ? '<br>Semanas cumplidas <b>' + semEnt.ok + '/' + semEnt.total + '</b> · ' + semEnt.pct + '%' : '') + '</div>'
     + heat(function(k){ return dia(k).ent; }));
 
-  // ── Azúcar ──
-  var faltasAz=azFaltas();
-  var cardAz=tarjeta('az', '#ff6b00', 'Azúcar sólo el finde',
-    '<div class="trk-big">' + findesRestantes() + '<small>findes</small></div>',
-    '<div class="trk-sub">Quedan <b>' + findesRestantes() + ' findes</b> y <b>' + semanasRestantes() + ' semanas</b> hasta fin de año'
-    + ' · aprovechados <b>' + findesUsados() + '</b>'
-    + ' · entre semana ' + (faltasAz ? '<span class="bad">' + faltasAz + ' ' + (faltasAz===1?'falta':'faltas') + '</span>' : '<span class="ok">impecable</span>')
-    + '</div>');
-
-  // ── Instagram ──
-  var us=usosInsta(), ult=us.length?us[us.length-1]:null, prox=proxInstaPermitido();
-  var habilitado = h>=prox;
-  var cardIg=tarjeta('ig', '#c14747', 'Instagram',
-    '<div class="trk-big">' + us.length + '<small>usos</small></div>',
-    '<div class="trk-sub">'
-    + (ult ? 'Último: <b>' + largo(ult) + '</b> · hace <b>' + difDias(ult,h) + ' días</b><br>' : 'Todavía sin registros.<br>')
-    + (habilitado ? '<span class="ok">Habilitado hoy</span>' : 'Próximo permitido: <b>' + largo(prox) + '</b>')
-    + ' · 1 vez cada ' + T.metas.insta.cadaDias + ' días, domingos, ' + T.metas.insta.maxMin + ' min</div>');
-
-  // ── Sueño y chess ──
+  // ── Sueño ──
   var pctSue=pctMes(function(k){ return sueOk(dia(k)); });
-  var pctChe=pctMes(function(k){ var d=dia(k); return d.chess && !chessExceso(d); });
-  var excesos=claves().filter(function(k){ return chessExceso(dia(k)); }).length;
   var cardSue=tarjeta('sue', '#a98fd8', 'Dormir ' + T.metas.sueno.min + ' h o más',
     '<div class="trk-big">' + (promSueno()||'—') + '<small>h promedio</small></div>',
     '<div class="trk-sub">Cumplido el <b>' + (pctSue||0) + '%</b> de los días de ' + mes + '.</div>'
     + heat(function(k){ return sueOk(dia(k)); }));
-  var cardChe=tarjeta('che', '#6aa9d8', 'Chess · máx ' + T.metas.chess.maxMin + ' min',
-    '<div class="trk-big">' + (pctChe||0) + '<small>% del mes</small></div>',
-    '<div class="trk-sub">' + (excesos ? '<span class="bad">' + excesos + ' ' + (excesos===1?'día excedido':'días excedidos') + '</span>' : '<span class="ok">Sin excesos</span>') + '</div>'
-    + heat(function(k){ var d=dia(k); return d.chess && !chessExceso(d); }));
 
   // ── Emisión agrupada por categoría (estructura tipo Atenea) ──
+  // Los límites (azúcar/chess/instagram) ahora viven en la ventana Premios.
   function catsec(em,nm){ return '<div class="catsec"><span class="em">'+em+'</span><span class="nm">'+nm+'</span><span class="ln"></span></div>'; }
   s+= catsec('🧘','Mente')              + cardMed
     + catsec('💪','Cuerpo & descanso')  + cardEnt + cardSue
     + catsec('💊','Suplementos')        + cardSup
-    + catsec('📚','Constancia')         + cardLib + cardHig
-    + catsec('🎯','Límites')            + cardChe + cardAz + cardIg;
+    + catsec('📚','Constancia')         + cardLib + cardHig;
 
   // Fuera de las tarjetas: siempre accesible
   s+='<button class="trk-link" id="trkLibros">Libros y metas</button>';
 
   var cont=document.getElementById('calStats');
   cont.innerHTML=s;
+  var ctgl=document.getElementById('calToggle');
+  if(ctgl) ctgl.addEventListener('click', function(){
+    if(!T.ui) T.ui={}; T.ui.calOpen=!T.ui.calOpen; save(); render();
+    var sc=document.getElementById('s-cal'); if(sc){ sc.scrollTop=0; } window.scrollTo(0,0);
+  });
   document.getElementById('trkLibros').addEventListener('click', abrirLibros);
   cont.querySelectorAll('.trk-card.colap > .trk-h').forEach(function(cab){
     cab.addEventListener('click', function(){
@@ -4241,10 +4307,12 @@ function renderPremios(){
   var cont=document.getElementById('premiosBody');
   if(!cont) return;
   if(!T) load();
-  var k=hoyKey(), d=dia(k), finde=esFinde(k), sal=saldo();
-  var techo=techoDia();
-  var ganMes=diasMes().reduce(function(a,x){ return a+ganadosDia(x); },0);
-  var gasMes=diasMes().reduce(function(a,x){ return a+gastadosDia(x); },0);
+  var k=hoyKey(), sal=saldo(), techo=techoDia();
+  // Ganado/gastado del mes en curso (sin depender de 'vis', que sólo se
+  // inicializa al entrar a Progreso).
+  var hd=fecha(k), my=hd.getFullYear(), mm=hd.getMonth(), ult=new Date(my,mm+1,0).getDate();
+  var ganMes=0, gasMes=0;
+  for(var dd=1; dd<=ult; dd++){ var kk=ymd(my,mm,dd); if(kk<=k){ ganMes+=ganadosDia(kk); gasMes+=gastadosDia(kk); } }
 
   // ── Hero: saldo de permisos ──
   var s='<div class="prem-hero'+(sal<0?' neg':'')+'">'
@@ -4254,65 +4322,124 @@ function renderPremios(){
     + (sal<0?' · <span class="bad">estás en deuda</span>':'')+'</div>'
     + '</div>';
 
-  // ── Permisos: los premios cargados, agrupados por categoría ──
-  var instaOk=instaValido(k);
-  var cheAbierto=chessAbierto();
-  var grupos=[
-    {campo:'az', titulo:'Azúcar', alias:['azúcar','azucar'],
-     nota: finde ? 'finde libre' : 'vuelve el ' + fecha(proxFinde()).toLocaleDateString('es-AR',{weekday:'long'}),
-     permitido:finde},
-    {campo:'chess', titulo:'Chess', alias:['chess','ajedrez'],
-     nota: motivoChess() + (cheAbierto ? ' · hasta ' + T.metas.chess.maxMin + ' min' : ''),
-     permitido:cheAbierto},
-    {campo:'insta', titulo:'Instagram', alias:['instagram','insta'],
-     nota: instaOk ? 'habilitado hoy' : 'próximo: ' + largo(proxInstaPermitido()),
-     permitido:instaOk}
-  ];
+  // ── Tracker único: todos los premios, tomado hoy o no ──
+  var lista=premiosList();
   s+='<div class="trk-res">';
-  s+='<div class="trk-res-sec" style="border-top:none;padding-top:0;margin-top:2px">Permisos · se pagan con puntos</div>';
-  grupos.forEach(function(g){
-    var lista=premiosDe(g.alias), usado=d[g.campo];
-    var idUsado=(usado && typeof usado==='object') ? usado.id : null;
-    s+='<div class="trk-res-cat'+(g.permitido?'':' bloq')+'">'+esc(g.titulo)+'<span>'+esc(g.nota)+'</span></div>';
-    if(!g.permitido && !usado) return;
-    if(!lista.length){
-      var costoGen=C()[g.campo];
-      s+='<div class="trk-res-row perm'+(usado?' on':'')+'" data-perm="'+g.campo+'" data-costo="'+costoGen+'">'
-        + '<span class="trk-res-pip"></span>'
-        + '<span class="trk-res-n">Sin premios cargados<span class="trk-res-nota">genérico</span></span>'
-        + '<span class="trk-res-chip cost">−'+costoGen+'</span>'
-        + '<span class="trk-res-chk"></span></div>';
-    } else lista.forEach(function(pr){
-      var on = !!usado && (idUsado===pr.id || (!idUsado && lista.length===1));
-      var alcanza = on || sal >= pr.costo;
-      s+='<div class="trk-res-row perm'+(on?' on':'')+'" data-perm="'+g.campo+'" data-priz="'+pr.id+'" data-costo="'+pr.costo+'">'
-        + '<span class="trk-res-pip"></span>'
-        + '<span class="trk-res-n">'+esc(pr.nombre)
-        +   (alcanza?'':'<span class="trk-res-nota bad">te faltan '+(pr.costo-sal)+'</span>')
-        + '</span>'
-        + '<span class="trk-res-chip cost">−'+pr.costo+'</span>'
-        + '<span class="trk-res-chk"></span></div>';
-    });
+  s+='<div class="trk-res-sec" style="border-top:none;padding-top:0;margin-top:2px">Premios de hoy · tomá o no</div>';
+  if(!lista.length){
+    s+='<div class="trk-res-nota" style="display:block;padding:12px 2px">Todavía no hay premios. Agregá abajo.</div>';
+  }
+  lista.forEach(function(pr){
+    var on=premTomado(k,pr.id), disp=premioDisp(pr);
+    var alcanza = on || sal>=pr.costo;
+    var col = on?'#4dc98a':(disp.ok?'#4dc98a':'#c98a8a');
+    s+='<div class="trk-res-row perm'+(on?' on':'')+'" data-prem="'+pr.id+'" data-costo="'+pr.costo+'" style="--c:'+col+'">'
+      + '<span class="trk-res-pip"></span>'
+      + '<span class="trk-res-n">'+esc(pr.nombre)
+      +   '<span class="trk-res-nota'+((disp.ok||on)?'':' bad')+'">'+esc(disp.nota)+(alcanza?'':' · te faltan '+(pr.costo-sal))+'</span>'
+      + '</span>'
+      + '<span class="trk-res-chip cost">−'+pr.costo+'</span>'
+      + '<span class="trk-res-chk"></span>'
+      + '</div>';
   });
   s+='</div>';
+
+  var editando = !!(T.ui && T.ui.premEdit);
+  s+='<button class="trk-link" id="premEditBtn">'+(editando?'✕ Cerrar edición':'⚙ Configurar premios')+'</button>';
+
+  function peForm(pr){
+    var r=(pr&&pr.restr)||{tipo:'libre'}, dias=r.dias||[];
+    function db(lbl,val){ return '<button type="button" class="pe-dia'+(dias.indexOf(val)>=0?' on':'')+'" data-dia="'+val+'">'+lbl+'</button>'; }
+    var h='<div class="pe-form'+(pr?'':' add')+'" data-id="'+(pr?pr.id:'')+'">';
+    h+= '<div class="pe-row"><input class="pe-nombre" placeholder="Nombre del premio" value="'+(pr?esc(pr.nombre):'')+'">'
+      + '<input class="pe-costo" type="number" inputmode="numeric" min="1" placeholder="pts" value="'+(pr?pr.costo:'')+'"></div>';
+    h+= '<div class="pe-row"><select class="pe-tipo">'
+      +   '<option value="libre"'+(r.tipo==='libre'?' selected':'')+'>Sin restricción</option>'
+      +   '<option value="dias"'+(r.tipo==='dias'?' selected':'')+'>Días permitidos</option>'
+      +   '<option value="horario"'+(r.tipo==='horario'?' selected':'')+'>Franja horaria</option>'
+      +   '<option value="frecuencia"'+(r.tipo==='frecuencia'?' selected':'')+'>Cada N días</option>'
+      + '</select></div>';
+    h+= '<div class="pe-params pe-p-dias" style="display:'+(r.tipo==='dias'?'flex':'none')+'">'
+      + db('L',1)+db('M',2)+db('M',3)+db('J',4)+db('V',5)+db('S',6)+db('D',0)+'</div>';
+    h+= '<div class="pe-params pe-p-horario" style="display:'+(r.tipo==='horario'?'flex':'none')+'">'
+      + '<label>desde <input class="pe-desde" type="number" min="0" max="23" value="'+(r.desde!=null?r.desde:19)+'"></label>'
+      + '<label>hasta <input class="pe-hasta" type="number" min="0" max="23" value="'+(r.hasta!=null?r.hasta:22)+'"></label></div>';
+    h+= '<div class="pe-params pe-p-frec" style="display:'+(r.tipo==='frecuencia'?'flex':'none')+'">'
+      + '<label>cada <input class="pe-cada" type="number" min="1" value="'+(r.cadaDias!=null?r.cadaDias:14)+'"> días</label></div>';
+    h+= '<div class="pe-actions">'
+      + (pr ? '<button type="button" class="pe-del">Eliminar</button><button type="button" class="pe-save">Guardar</button>'
+            : '<button type="button" class="pe-addbtn">+ Agregar premio</button>')
+      + '</div></div>';
+    return h;
+  }
+
+  if(editando){
+    s+='<div class="prem-editor"><div class="trk-res-sec">Nuevo premio</div>'+peForm(null);
+    if(lista.length){ s+='<div class="trk-res-sec">Editar premios</div>'; lista.forEach(function(pr){ s+=peForm(pr); }); }
+    s+='</div>';
+  }
   cont.innerHTML=s;
 
-  cont.querySelectorAll('[data-perm]').forEach(function(row){
+  // ── Wiring: tracker (tomar/destomar) ──
+  cont.querySelectorAll('[data-prem]').forEach(function(row){
     row.addEventListener('click', function(){
-      var campo=row.dataset.perm, priz=row.dataset.priz||null;
-      var costo=Number(row.dataset.costo)||0, yaEste=row.classList.contains('on');
-      if(!yaEste && saldo() < costo){
-        if(!confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
+      var id=row.dataset.prem, costo=Number(row.dataset.costo)||0, ya=row.classList.contains('on');
+      var pr=lista.filter(function(x){ return x.id===id; })[0];
+      if(!ya){
+        var disp=pr?premioDisp(pr):{ok:true,nota:''};
+        if(!disp.ok && !confirm('Está bloqueado ahora ('+disp.nota+').\n¿Marcarlo igual?')) return;
+        if(saldo()<costo && !confirm('No te alcanzan los puntos (saldo '+saldo()+', cuesta '+costo+').\n¿Registrarlo igual y quedar en deuda?')) return;
       }
       editar(k, function(x){
-        if(yaEste){ delete x[campo]; return; }
-        var v={pts:costo};
-        if(priz) v.id=priz;
-        if(campo==='chess') v.min=Number(T.metas.chess.maxMin);
-        if(campo==='insta') v.min=Number(T.metas.insta.maxMin);
-        x[campo]=v;   // uno por categoría y por día: elegir otro reemplaza
+        if(!x.prem) x.prem={};
+        if(ya) delete x.prem[id]; else x.prem[id]=costo;
+        if(!Object.keys(x.prem).length) delete x.prem;
       });
       repintar();
+    });
+  });
+
+  // ── Wiring: botón editar ──
+  var eb=document.getElementById('premEditBtn');
+  if(eb) eb.addEventListener('click', function(){ if(!T.ui) T.ui={}; T.ui.premEdit=!T.ui.premEdit; save(); renderPremios(); });
+
+  // ── Wiring: formularios del editor ──
+  function readForm(f){
+    var t=f.querySelector('.pe-tipo').value, restr={tipo:t};
+    if(t==='dias') restr.dias=[].map.call(f.querySelectorAll('.pe-dia.on'), function(b){ return Number(b.dataset.dia); });
+    if(t==='horario'){ restr.desde=Math.min(23,Math.max(0,Number(f.querySelector('.pe-desde').value)||0)); restr.hasta=Math.min(23,Math.max(0,Number(f.querySelector('.pe-hasta').value)||0)); }
+    if(t==='frecuencia') restr.cadaDias=Math.max(1,Number(f.querySelector('.pe-cada').value)||1);
+    return { nombre:(f.querySelector('.pe-nombre').value||'').trim(), costo:Number(f.querySelector('.pe-costo').value)||0, restr:restr };
+  }
+  cont.querySelectorAll('.pe-form').forEach(function(f){
+    var tipo=f.querySelector('.pe-tipo');
+    tipo.addEventListener('change', function(){
+      var t=tipo.value;
+      f.querySelector('.pe-p-dias').style.display   = t==='dias'?'flex':'none';
+      f.querySelector('.pe-p-horario').style.display= t==='horario'?'flex':'none';
+      f.querySelector('.pe-p-frec').style.display   = t==='frecuencia'?'flex':'none';
+    });
+    f.querySelectorAll('.pe-dia').forEach(function(b){ b.addEventListener('click', function(){ b.classList.toggle('on'); }); });
+    var add=f.querySelector('.pe-addbtn');
+    if(add) add.addEventListener('click', function(){
+      var v=readForm(f);
+      if(!v.nombre) return msg('Poné un nombre');
+      if(v.costo<1) return msg('Poné el costo');
+      premiosList().push({ id:pid(), nombre:v.nombre, costo:v.costo, restr:v.restr });
+      save(); renderPremios(); msg('Premio agregado ✓');
+    });
+    var sv=f.querySelector('.pe-save');
+    if(sv) sv.addEventListener('click', function(){
+      var v=readForm(f), pr=premiosList().filter(function(x){ return x.id===f.dataset.id; })[0];
+      if(!v.nombre) return msg('Poné un nombre');
+      if(v.costo<1) return msg('Poné el costo');
+      if(pr){ pr.nombre=v.nombre; pr.costo=v.costo; pr.restr=v.restr; save(); renderPremios(); msg('Guardado ✓'); }
+    });
+    var dl=f.querySelector('.pe-del');
+    if(dl) dl.addEventListener('click', function(){
+      if(!confirm('¿Eliminar este premio?')) return;
+      T.premios=premiosList().filter(function(x){ return x.id!==f.dataset.id; });
+      save(); renderPremios(); msg('Eliminado');
     });
   });
 }
