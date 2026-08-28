@@ -2415,6 +2415,11 @@ input,select,textarea{
   font-size:9px;color:#556070;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
   margin:14px 0 2px;padding-top:11px;border-top:1px solid rgba(255,255,255,.06);
 }
+/* Separador marcado entre actividades y premios */
+.mod-hab .trk-res-sec.sep{
+  margin-top:18px;padding-top:16px;color:#8a90a6;
+  border-top:2px solid rgba(255,255,255,.14);
+}
 
 /* ============================================================
    PROGRESO · anillo del día, stats y heatmaps
@@ -4197,10 +4202,16 @@ function renderStats(){
 /* ============================================================
    BLOQUE EN RESUMEN · marcar de un toque
    ============================================================ */
-/* Tracker de premios reutilizable (se usa en Hoy y en la pestaña Premios) */
-function premiosTrackerHTML(k, sal){
-  var lista=premiosList();
-  var s='<div class="trk-res-sec">Premios · tomá o no</div>';
+/* Tracker de premios reutilizable (se usa en Hoy y en la pestaña Premios).
+   Ordenados por costo (menor a mayor). Con soloDisp=true (Hoy) sólo se
+   muestran los disponibles según su restricción (o ya tomados hoy). */
+function premiosTrackerHTML(k, sal, soloDisp){
+  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
+  if(soloDisp){
+    lista=lista.filter(function(pr){ return premioDisp(pr).ok || premTomado(k,pr.id); });
+    if(!lista.length) return '';   // en Hoy no mostramos una sección vacía
+  }
+  var s='<div class="trk-res-sec sep">Premios · tomá o no</div>';
   if(!lista.length){
     return s+'<div class="trk-res-nota" style="display:block;padding:10px 2px">Sin premios. Agregalos en la pestaña Premios.</div>';
   }
@@ -4317,8 +4328,8 @@ function renderResumen(){
     + '<span class="trk-res-chk arrow">›</span>'
     + '</div>';
 
-  // ── Premios: debajo de las actividades ──
-  s+=premiosTrackerHTML(k, sal);
+  // ── Premios: debajo de las actividades (sólo los disponibles hoy) ──
+  s+=premiosTrackerHTML(k, sal, true);
 
   s+='</div>';
   cont.innerHTML=s;
@@ -4368,9 +4379,9 @@ function renderPremios(){
     + (sal<0?' · <span class="bad">estás en deuda</span>':'')+'</div>'
     + '</div>';
 
-  // ── Tracker único (mismo que en Hoy) ──
-  var lista=premiosList();
-  s+='<div class="trk-res">'+premiosTrackerHTML(k, sal)+'</div>';
+  // ── Tracker único (en la pestaña Premios se ven todos) ──
+  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
+  s+='<div class="trk-res">'+premiosTrackerHTML(k, sal, false)+'</div>';
 
   var editando = !!(T.ui && T.ui.premEdit);
   s+='<button class="trk-link" id="premEditBtn">'+(editando?'✕ Cerrar edición':'⚙ Configurar premios')+'</button>';
