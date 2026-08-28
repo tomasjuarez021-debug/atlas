@@ -2536,6 +2536,50 @@ input,select,textarea{
 /* Botón de mostrar/ocultar calendario en Progreso */
 .mod-hab .cal-toggle{margin-bottom:12px}
 
+/* ============ RANKING SEMANAL ============ */
+.mod-hab .rank-head{margin:2px 2px 16px}
+.mod-hab .rank-title{font-family:'Orbitron',sans-serif;font-size:19px;font-weight:800;letter-spacing:.04em;color:#e8eaf0;text-transform:uppercase}
+.mod-hab .rank-sub{font-size:11px;color:#7a7f8e;letter-spacing:.04em;margin-top:5px;text-transform:capitalize}
+/* Podio */
+.mod-hab .podium{display:grid;grid-template-columns:repeat(3,1fr);align-items:end;gap:10px;margin-bottom:18px}
+.mod-hab .pod{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);border:1px solid rgba(255,255,255,.09);
+  border-radius:14px 14px 0 0;padding:14px 6px 0;overflow:hidden}
+.mod-hab .pod.gold{padding-top:22px;border-color:rgba(232,184,75,.4)}
+.mod-hab .pod.silver{padding-top:14px}
+.mod-hab .pod.bronze{padding-top:8px}
+.mod-hab .pod.gold::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#e8b84b,transparent)}
+.mod-hab .pod.yo{border-color:rgba(77,201,138,.5)}
+.mod-hab .pod-av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  font-family:'Orbitron',sans-serif;font-weight:800;font-size:18px;color:#05060a;
+  background:var(--a,#4dc98a);box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.mod-hab .pod.gold .pod-av{width:56px;height:56px;font-size:22px}
+.mod-hab .pod-medal{font-size:20px;margin-top:6px;line-height:1}
+.mod-hab .pod-name{font-size:12px;font-weight:700;color:#e8eaf0;margin-top:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-hab .pod-pct{font-family:'Orbitron',sans-serif;font-weight:800;font-size:18px;color:#e8eaf0;margin:3px 0 10px}
+.mod-hab .pod-pct small{font-size:10px;color:#7a7f8e;margin-left:1px}
+.mod-hab .pod-base{width:100%;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.06)}
+.mod-hab .pod.gold .pod-base{height:30px;background:rgba(232,184,75,.1)}
+.mod-hab .pod.silver .pod-base{height:20px}
+.mod-hab .pod.bronze .pod-base{height:12px}
+/* Lista */
+.mod-hab .rank-list{display:flex;flex-direction:column;gap:8px}
+.mod-hab .rank-row{display:flex;align-items:center;gap:12px;background:linear-gradient(160deg,#131c26 0%,#0e151d 100%);
+  border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:11px 13px}
+.mod-hab .rank-row.yo{border-color:rgba(77,201,138,.5);background:linear-gradient(160deg,rgba(77,201,138,.08),#0e151d)}
+.mod-hab .rank-pos{width:20px;flex:0 0 auto;text-align:center;font-family:'Orbitron',sans-serif;font-weight:800;font-size:13px;color:#7a7f8e}
+.mod-hab .rank-row.yo .rank-pos{color:#4dc98a}
+.mod-hab .rank-av{width:36px;height:36px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  font-family:'Orbitron',sans-serif;font-weight:800;font-size:14px;color:#05060a;background:var(--a,#4dc98a)}
+.mod-hab .rank-main{flex:1;min-width:0}
+.mod-hab .rank-name{font-size:13px;font-weight:700;color:#e8eaf0;display:flex;align-items:center;gap:7px}
+.mod-hab .rank-you{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#4dc98a;background:rgba(77,201,138,.15);padding:2px 6px;border-radius:6px;font-weight:800}
+.mod-hab .rank-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:7px}
+.mod-hab .rank-bar i{display:block;height:100%;border-radius:4px;background:var(--a,#4dc98a);transition:width .5s}
+.mod-hab .rank-pct{flex:0 0 auto;font-family:'Orbitron',sans-serif;font-weight:800;font-size:15px;color:#e8eaf0;min-width:44px;text-align:right}
+.mod-hab .rank-pct small{font-size:9px;color:#7a7f8e;margin-left:1px}
+.mod-hab .rank-note{font-size:10.5px;color:#556070;line-height:1.5;text-align:center;margin:18px 8px 4px;letter-spacing:.02em}
+
 /* ── Sheet del día ── */
 .mod-hab .trk-sheet-bg{
   position:fixed;inset:0;z-index:300;display:none;align-items:flex-end;justify-content:center;
@@ -2750,6 +2794,11 @@ input,select,textarea{
   <div id="premiosBody"></div>
 </div>
 
+<!-- RANKING semanal (cumplimiento entre usuarios) -->
+<div class="scr" id="s-rank">
+  <div id="rankBody"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- SHEET DE CATEGORÍA (menú ⋮) -->
@@ -2782,16 +2831,18 @@ input,select,textarea{
   function $(id){return document.getElementById(id);}
   function $$(sel){return document.querySelectorAll(sel);}
 
-  const SUB_LABELS = { hoy:'Hábitos · Hoy', cal:'Hábitos · Progreso', premios:'Hábitos · Premios', config:'Hábitos · Ajustes' };
+  const SUB_LABELS = { hoy:'Hábitos · Hoy', cal:'Hábitos · Progreso', rank:'Hábitos · Ranking', premios:'Hábitos · Premios', config:'Hábitos · Ajustes' };
   const ICO_DASH   = '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>';
   const ICO_CHECK  = '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>';
   const ICO_GIFT   = '<path d="M20 12v8a1 1 0 01-1 1H5a1 1 0 01-1-1v-8"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>';
+  const ICO_TROPHY = '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/>';
   const ICO_CFG    = '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 01-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 01-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 010-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 012.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 014 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 012.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 010 4h-.1a1.6 1.6 0 00-1.5 1z"/>';
   const ICO_CAL    = '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h1M11.5 14h1M15.5 14h1M7.5 17.5h1M11.5 17.5h1"/>';
 
   const TABS = [
     {sub:'hoy',     label:'Hoy',      svg: ICO_CHECK},
     {sub:'cal',     label:'Progreso', svg: ICO_CAL},
+    {sub:'rank',    label:'Ranking',  svg: ICO_TROPHY},
     {sub:'premios', label:'Premios',  svg: ICO_GIFT},
     {sub:'config',  label:'Ajustes',  svg: ICO_CFG}
   ];
@@ -3527,6 +3578,7 @@ function go(scr,btn){
   if(scr==='hoy'){renderHoy();if(window.Track)window.Track.renderResumen();}
   if(scr==='cal'&&window.Track)window.Track.render();
   if(scr==='premios'&&window.Track)window.Track.renderPremios();
+  if(scr==='rank'&&window.Track)window.Track.renderRanking();
 }
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
 
@@ -3588,6 +3640,7 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
         else if(name === 'config') renderConfig();
         else if(name === 'cal' && window.Track) window.Track.render();
         else if(name === 'premios' && window.Track) window.Track.renderPremios();
+        else if(name === 'rank' && window.Track) window.Track.renderRanking();
       } catch(e){ console.warn('hab render', e); }
     },
     netoPropio: netoPropio,
@@ -4475,6 +4528,88 @@ function repintar(){
   if(cal && cal.classList.contains('on')) render();
   var prem=document.getElementById('s-premios');
   if(prem && prem.classList.contains('on')) renderPremios();
+  var rk=document.getElementById('s-rank');
+  if(rk && rk.classList.contains('on')) renderRanking();
+}
+
+/* ============================================================
+   RANKING SEMANAL · cumplimiento entre usuarios
+   (datos de ejemplo por ahora; luego se conecta a Firebase)
+   ============================================================ */
+// % de cumplimiento de la semana en curso (lunes→hoy) del usuario actual.
+function diasSemanaActual(){
+  var lun=lunesDe(hoyKey()), h=hoyKey(), out=[];
+  for(var i=0;i<7;i++){ var k=sumaDias(lun,i); if(k<=h) out.push(k); }
+  return out;
+}
+function cumplimientoSemana(){
+  var ks=diasSemanaActual(), techo=techoDia();
+  if(!ks.length || !techo) return 0;
+  var gan=ks.reduce(function(a,k){ return a+Math.min(ganadosDia(k), techo); }, 0);
+  return Math.min(100, Math.round(gan/(techo*ks.length)*100));
+}
+function renderRanking(){
+  var cont=document.getElementById('rankBody');
+  if(!cont) return;
+  if(!T) load();
+  var lun=lunesDe(hoyKey());
+  var f=function(k){ return fecha(k).toLocaleDateString('es-AR',{day:'2-digit',month:'short'}); };
+  var rango=f(lun)+' – '+f(sumaDias(lun,6));
+  var miPct=cumplimientoSemana();
+
+  // Participantes: yo (real) + ejemplos (hasta tener Firebase)
+  var users=[
+    {n:'Sofía',     p:92},
+    {n:'Mateo',     p:85},
+    {n:'Valentina', p:78},
+    {n:'Bruno',     p:70},
+    {n:'Lucía',     p:61},
+    {n:'Diego',     p:47},
+    {n:'Vos',       p:miPct, yo:true}
+  ];
+  users.sort(function(a,b){ return b.p-a.p || (a.yo?-1:1); });
+  users.forEach(function(u,i){ u.rank=i+1; });
+
+  var medalla=['🥇','🥈','🥉'];
+  function ini(n){ return (n==='Vos'?'V':n.charAt(0)).toUpperCase(); }
+  function col(n){ var c=['#4dc98a','#ff8a3d','#a98fd8','#5fc9c2','#e8b84b','#6aa9d8','#c98a8a']; var s=0; for(var i=0;i<n.length;i++) s+=n.charCodeAt(i); return c[s%c.length]; }
+
+  var s='<div class="rank-head">'
+    + '<div class="rank-title">Ranking semanal</div>'
+    + '<div class="rank-sub">Cumplimiento de hábitos · '+rango+'</div>'
+    + '</div>';
+
+  // Podio (top 3)
+  var top=users.slice(0,3), orden=[1,0,2];   // 2º, 1º, 3º
+  s+='<div class="podium">';
+  orden.forEach(function(idx){
+    var u=top[idx]; if(!u) return;
+    var cls=idx===0?'gold':(idx===1?'silver':'bronze');
+    s+='<div class="pod '+cls+(u.yo?' yo':'')+'">'
+      + '<div class="pod-av" style="--a:'+col(u.n)+'">'+ini(u.n)+'</div>'
+      + '<div class="pod-medal">'+medalla[u.rank-1]+'</div>'
+      + '<div class="pod-name">'+esc(u.n)+'</div>'
+      + '<div class="pod-pct">'+u.p+'<small>%</small></div>'
+      + '<div class="pod-base"></div>'
+      + '</div>';
+  });
+  s+='</div>';
+
+  // Lista completa
+  s+='<div class="rank-list">';
+  users.forEach(function(u){
+    s+='<div class="rank-row'+(u.yo?' yo':'')+'">'
+      + '<div class="rank-pos">'+u.rank+'</div>'
+      + '<div class="rank-av" style="--a:'+col(u.n)+'">'+ini(u.n)+'</div>'
+      + '<div class="rank-main"><div class="rank-name">'+esc(u.n)+(u.yo?' <span class="rank-you">vos</span>':'')+'</div>'
+      +   '<div class="rank-bar"><i style="width:'+u.p+'%;--a:'+col(u.n)+'"></i></div></div>'
+      + '<div class="rank-pct">'+u.p+'<small>%</small></div>'
+      + '</div>';
+  });
+  s+='</div>';
+
+  s+='<div class="rank-note">Los demás usuarios son de ejemplo. Pronto vas a competir con tus amigos de verdad (Firebase).</div>';
+  cont.innerHTML=s;
 }
 
 /* ============================================================
@@ -4853,6 +4988,7 @@ window.Track = {
   netoPropio: netoPropio,
   renderResumen: renderResumen,
   renderPremios: renderPremios,
+  renderRanking: renderRanking,
   abrirDia: abrirDia,
   saldo: saldo,
   ganadosDia: ganadosDia,
