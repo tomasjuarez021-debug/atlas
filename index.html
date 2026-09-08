@@ -2251,7 +2251,7 @@ input,select,textarea{
    TRACKER · calendario mensual de hábitos
    ============================================================ */
 .mod-hab .trk{--h-med:#4dc98a;--h-che:#6aa9d8;--h-sue:#a98fd8;--h-lec:#e8b84b;--h-mal:#c14747;
-  --h-sup:#5fc9c2;--h-hig:#b8c4d4;--h-ent:#ff8a3d}
+  --h-sup:#5fc9c2;--h-hig:#b8c4d4;--h-ent:#ff8a3d;--h-nreels:#c084fc}
 
 /* ── Cabecera de mes ── */
 .mod-hab .cal-head{
@@ -2309,6 +2309,7 @@ input,select,textarea{
 .mod-hab .cal-dot.sup{background:var(--h-sup)}
 .mod-hab .cal-dot.hig{background:var(--h-hig)}
 .mod-hab .cal-dot.ent{background:var(--h-ent)}
+.mod-hab .cal-dot.nreels{background:var(--h-nreels)}
 .mod-hab .cal-dot.mal{background:var(--h-mal)}
 .mod-hab .cal-leyenda{
   display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
@@ -3699,7 +3700,7 @@ function seed(){
       entren:{porSemana:5},
       // Economía: los hábitos dan puntos, los permisos los gastan.
       // Día completo con entrenamiento = 90 pts. Semana realista ≈ 440.
-      puntos:{med:15,sue:15,dien:5,cre:5,lio:5,b12:5,ent:25,lec:15,lecMin:10},
+      puntos:{med:15,sue:15,dien:5,cre:5,lio:5,b12:5,ent:25,lec:15,lecMin:10,nreels:10},
       costos:{chess:50,az:100,insta:250}
     }
   };
@@ -3775,7 +3776,7 @@ function editar(k,fn){
   fn(T.dias[k]);
   var d=T.dias[k];
   var vacio = !d.med && !d.chess && !d.sue && !d.insta && !d.az && !d.nota
-    && !d.cre && !d.b12 && !d.lio && !d.dien && !d.ent
+    && !d.cre && !d.b12 && !d.lio && !d.dien && !d.ent && !d.nreels
     && (!d.prem || !Object.keys(d.prem).length)
     && (!d.lec || !Object.keys(d.lec).some(function(id){ return d.lec[id]>0; }));
   if(vacio) delete T.dias[k];
@@ -3866,6 +3867,7 @@ function ganadosDia(k){
   if(d.lio) n+=p.lio;
   if(d.b12) n+=p.b12;
   if(d.ent) n+=p.ent;
+  if(d.nreels) n+=p.nreels;
   if(paginasDia(d) >= p.lecMin) n+=p.lec;
   return n;
 }
@@ -3924,7 +3926,7 @@ function premiosDe(cats){
 }
 function techoDia(){
   var p=P();
-  return p.med+p.sue+p.dien*Number(T.metas.higiene.dientesDia)+p.cre+p.lio+p.ent+p.lec;
+  return p.med+p.sue+p.dien*Number(T.metas.higiene.dientesDia)+p.cre+p.lio+p.ent+p.lec+(Number(p.nreels)||0);
 }
 
 /* ── Métricas (siempre calculadas) ── */
@@ -4050,6 +4052,7 @@ function renderGrid(){
     if(supOk(dd)) dots+='<i class="cal-dot sup"></i>';
     if(dientesOk(dd)) dots+='<i class="cal-dot hig"></i>';
     if(dd.ent) dots+='<i class="cal-dot ent"></i>';
+    if(dd.nreels) dots+='<i class="cal-dot nreels"></i>';
     if(hayFalta(k) || chessExceso(dd) || (dd.sue && !sueOk(dd))) dots+='<i class="cal-dot mal"></i>';
     var cls='cal-cell';
     if(esFinde(k)) cls+=' finde';
@@ -4069,6 +4072,7 @@ function renderGrid(){
     +   '<span class="cal-leg"><i class="cal-dot sup"></i>suplementos</span>'
     +   '<span class="cal-leg"><i class="cal-dot hig"></i>dientes</span>'
     +   '<span class="cal-leg"><i class="cal-dot ent"></i>entrené</span>'
+    +   '<span class="cal-leg"><i class="cal-dot nreels"></i>sin reels</span>'
     +   '<span class="cal-leg"><i class="cal-dot mal"></i>falta</span>'
     + '</div></div>';
   var wrap=document.getElementById('calGrid');
@@ -4152,6 +4156,15 @@ function renderStats(){
     + ' · este mes <b>' + (pctMes(function(k){ return dia(k).med; }) || 0) + '%</b></div>'
     + heat(function(k){ return dia(k).med; }));
 
+  // ── Sin reels ──
+  var diasReels=diasMes().filter(function(k){ return dia(k).nreels; }).length;
+  var pctReels=pctMes(function(k){ return dia(k).nreels; })||0;
+  var cardReels=tarjeta('nreels', '#c084fc', 'Sin reels en el día',
+    '<div class="trk-big">' + pctReels + '<small>% del mes</small></div>',
+    '<div class="trk-bar"><div class="trk-bar-f" style="width:' + pctReels + '%"></div></div>'
+    + '<div class="trk-sub">Días sin reels <b>' + diasReels + '</b> en ' + mes + ' · +' + (P().nreels||0) + ' pts cada uno</div>'
+    + heat(function(k){ return dia(k).nreels; }));
+
   // ── Libros ──
   var metaLib=Number(T.metas.libros.meta)||2;
   var pagsTot=T.libros.reduce(function(a,b){ return a+Number(b.paginas||0); },0);
@@ -4224,7 +4237,7 @@ function renderStats(){
   // ── Emisión agrupada por categoría (estructura tipo Atenea) ──
   // Los límites (azúcar/chess/instagram) ahora viven en la ventana Premios.
   function catsec(em,nm){ return '<div class="catsec"><span class="em">'+em+'</span><span class="nm">'+nm+'</span><span class="ln"></span></div>'; }
-  s+= catsec('🧘','Mente')              + cardMed
+  s+= catsec('🧘','Mente')              + cardMed + cardReels
     + catsec('💪','Cuerpo & descanso')  + cardEnt + cardSue
     + catsec('💊','Suplementos')        + cardSup
     + catsec('📚','Constancia')         + cardLib + cardHig;
@@ -4317,6 +4330,7 @@ function renderResumen(){
     {campo:'ent', nombre:'Entrenar',    pts:p.ent, on:!!d.ent, color:'#ff8a3d',
      nota:'semana '+entrenSemana(k)+'/'+T.metas.entren.porSemana},
     {campo:'sue', nombre:'Dormir '+T.metas.sueno.min+' h o más', pts:p.sue, on:sueOk(d), color:'#a98fd8'},
+    {campo:'nreels', nombre:'Sin reels en el día', pts:(p.nreels||0), on:!!d.nreels, color:'#c084fc'},
     {campo:'cre', nombre:'Creatina',    pts:p.cre, on:!!d.cre, color:'#5fc9c2'},
     {campo:'lio', nombre:'Lions mane',  pts:p.lio, on:!!d.lio, color:'#5fc9c2'},
     {campo:'b12', nombre:'B12',         pts:p.b12, on:!!d.b12, color:'#5fc9c2',
