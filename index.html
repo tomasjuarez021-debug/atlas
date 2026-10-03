@@ -3017,6 +3017,113 @@ body{
 .mod-hab .fab{color:#2a1408}
 .mod-hab .trk-btn.ok,.mod-hab .cs-btn.ok{color:#2a1408}
 
+/* ============================================================
+   PREMIOS · tienda de gustos
+   ============================================================ */
+.pz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:4px 2px 18px}
+.pz-lbl{font-size:13px;font-weight:600;color:var(--ink3)}
+.pz-saldo{display:flex;align-items:center;gap:10px;font-size:44px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.05;margin-top:4px}
+.pz-saldo.neg{color:var(--coral)}
+.pz-saldo svg{filter:drop-shadow(0 4px 12px rgba(255,197,61,.45))}
+.pz-hint{font-size:14px;color:var(--ink2);margin-top:6px}
+.pz-hint b{color:#ffc53d}
+.pz-gear{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:var(--ink3);background:var(--surface);border:1px solid var(--line);flex-shrink:0}
+.pz-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pz-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px 14px 13px;min-height:170px;text-align:left;
+  border-radius:22px;background:var(--surface);border:1px solid var(--line);overflow:hidden;transition:transform .12s}
+.pz-card:active{transform:scale(.96)}
+.pz-ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;color:var(--pc);margin-bottom:4px;
+  background:color-mix(in srgb, var(--pc) 16%, transparent)}
+.pz-n{font-size:15px;font-weight:700;color:var(--ink);line-height:1.2}
+.pz-price{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:800;color:var(--ink2)}
+.pz-card .pz-cta,.pz-card .pz-done,.pz-card .pz-lock,.pz-card .pz-faltan{margin-top:auto}
+.pz-cta{align-self:stretch;text-align:center;padding:8px;border-radius:12px;font-size:13px;font-weight:800;color:#1a1512;background:var(--pc)}
+.pz-done{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--mint)}
+.pz-lock{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--ink3)}
+.pz-bar{display:block;align-self:stretch;height:6px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:auto}
+.pz-bar i{display:block;height:100%;border-radius:999px;background:var(--pc)}
+.pz-faltan{font-size:12px;color:var(--ink3);margin-top:0 !important}
+/* estados */
+.pz-card.listo{border-color:color-mix(in srgb, var(--pc) 45%, transparent);
+  background:radial-gradient(180px 120px at 0% 0%, color-mix(in srgb, var(--pc) 22%, transparent), transparent 70%), var(--surface);
+  box-shadow:0 10px 30px -14px var(--pc)}
+.pz-card.listo .pz-ic{background:var(--pc);color:#1a1512;animation:pzWig 3.2s ease-in-out infinite}
+@keyframes pzWig{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-8deg)}94%{transform:rotate(7deg)}97%{transform:rotate(-4deg)}}
+.pz-card.listo .pz-price{color:var(--ink)}
+.pz-card.hecho{opacity:.75}
+.pz-card.bloq .pz-ic{filter:grayscale(1);opacity:.5}
+.pz-card.bloq .pz-n{color:var(--ink3)}
+.pz-card.nuevo{align-items:center;justify-content:center;border-style:dashed;border-color:var(--line2);background:transparent;--pc:var(--ink3)}
+.pz-card.nuevo .pz-n{color:var(--ink3)}
+
+/* hoja */
+.pz-bg{position:fixed;inset:0;z-index:310;display:none;align-items:flex-end;justify-content:center;background:rgba(10,8,6,.7);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.pz-bg.on{display:flex;animation:fadeIn .2s ease-out}
+.pz-sheet{position:relative;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;overflow-x:hidden;text-align:center;
+  background:var(--surface);border:1px solid var(--line2);border-bottom:none;border-radius:28px 28px 0 0;
+  padding:10px 20px calc(22px + env(safe-area-inset-bottom));animation:trkUp .3s cubic-bezier(.34,1.2,.64,1) both}
+.pz-grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.15);margin:0 auto 18px}
+.pz-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--ink3);background:rgba(255,255,255,.06)}
+.pz-hero{width:112px;height:112px;margin:6px auto 0;border-radius:34px;display:grid;place-items:center;color:#1a1512;
+  background:radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--pc) 75%, #fff), var(--pc) 65%);
+  box-shadow:0 18px 40px -16px var(--pc)}
+.pz-hero.sm{width:76px;height:76px;border-radius:24px}
+.pz-hero.win{animation:lvPop .6s cubic-bezier(.2,1.6,.4,1)}
+.pz-ht{font-size:24px;font-weight:800;color:var(--ink);margin-top:16px;letter-spacing:-.02em}
+.pz-hp{display:inline-flex;align-items:center;gap:6px;font-size:18px;font-weight:800;color:var(--ink2);margin-top:6px}
+.pz-hp.big{font-size:30px;color:var(--ink);margin-top:14px}
+.pz-msg{display:flex;align-items:center;justify-content:center;gap:6px;font-size:14.5px;color:var(--ink2);margin-top:14px}
+.pz-msg b{color:var(--ink)}
+.pz-after{font-size:14px;color:var(--ink3);margin-top:16px}
+.pz-after b{color:var(--ink)}
+.pz-hold{position:relative;overflow:hidden;width:100%;margin-top:14px;padding:18px;border-radius:20px;font-size:16px;font-weight:800;color:#1a1512;
+  background:color-mix(in srgb, var(--pc) 45%, #2b2622);user-select:none;-webkit-user-select:none;touch-action:none}
+.pz-hold i{position:absolute;inset:0;width:0;background:var(--pc);transition:width .15s ease-out}
+.pz-hold.holding i{width:100%;transition:width .9s linear}
+.pz-hold span{position:relative;color:#fff}
+.pz-hold.holding span,.pz-hold.ok span{color:#1a1512}
+.pz-hold.holding{transform:scale(.98)}
+.pz-btn{display:block;width:100%;margin-top:18px;padding:16px;border-radius:18px;font-size:15px;font-weight:800;color:#2a1408;background:var(--grad)}
+.pz-btn.ghost{background:rgba(255,255,255,.06);color:var(--ink2)}
+.pz-link{display:block;margin:14px auto 0;font-size:13.5px;font-weight:600;color:var(--ink3);text-decoration:underline;text-underline-offset:3px}
+.pz-link.bad{color:var(--coral)}
+.pz-ring{width:96px;height:96px;margin:16px auto 0;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--pc) calc(var(--p)*1%), rgba(255,255,255,.08) 0)}
+.pz-ring span{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;background:var(--surface);font-size:20px;font-weight:800;color:var(--ink)}
+.pz-conf{position:absolute;inset:0;pointer-events:none}
+.pz-conf i{position:absolute;top:-12px;width:8px;height:13px;border-radius:2px;animation:conf 1.9s ease-in forwards}
+/* config */
+.pz-st{font-size:20px;font-weight:800;color:var(--ink);text-align:left;margin:4px 0 12px}
+.pz-cl{display:flex;flex-direction:column;gap:6px}
+.pz-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.035);text-align:left}
+.pz-ric{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--pc);background:color-mix(in srgb, var(--pc) 16%, transparent)}
+.pz-rn{flex:1;font-size:15px;font-weight:600;color:var(--ink)}
+.pz-rp{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:800;color:var(--ink2)}
+.pz-in{width:100%;margin-top:18px;padding:14px 16px;border-radius:16px;text-align:center;font-weight:700;
+  background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--ink);outline:none}
+.pz-in:focus{border-color:var(--brand)}
+.pz-icons{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.pz-ico{aspect-ratio:1;border-radius:13px;display:grid;place-items:center;color:var(--ink3);background:rgba(255,255,255,.04);border:1.5px solid transparent}
+.pz-ico.on{color:var(--pc);background:color-mix(in srgb, var(--pc) 16%, transparent);border-color:var(--pc)}
+.pz-f{font-size:13px;font-weight:700;color:var(--ink3);text-align:left;margin:20px 2px 8px}
+.pz-price-ed{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pz-price-ed span{display:inline-flex;align-items:center;gap:8px;font-size:32px;font-weight:800;color:var(--ink)}
+.pz-step{width:46px;height:46px;border-radius:15px;font-size:22px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.07)}
+.pz-step:active{background:rgba(255,255,255,.14)}
+.pz-chips{display:flex;gap:6px;margin-top:10px}
+.pz-chip{flex:1;padding:9px 0;border-radius:12px;font-size:13px;font-weight:700;color:var(--ink3);background:rgba(255,255,255,.04)}
+.pz-chip.on{color:#1a1512;background:#ffc53d}
+.pz-seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border-radius:15px;background:rgba(255,255,255,.04)}
+.pz-seg button{padding:10px 0;border-radius:11px;font-size:13px;font-weight:700;color:var(--ink3)}
+.pz-seg button.on{background:var(--surface2);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.pz-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.pz-days button{aspect-ratio:1;border-radius:50%;font-size:14px;font-weight:800;color:var(--ink3);background:rgba(255,255,255,.05)}
+.pz-days button.on{color:#1a1512;background:var(--brand)}
+.pz-rng{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px}
+.pz-rng span{font-size:14px;color:var(--ink3);min-width:44px}
+.pz-rng b{font-size:20px;font-weight:800;color:var(--ink);min-width:56px}
+
 </style>
 </head>
 
@@ -3180,6 +3287,7 @@ body{
 <div class="toast-global" id="toastGlobal"></div>
 
 <div class="lvup-bg" id="lvupBg"></div>
+<div class="pz-bg" id="pzBg"></div>
 
 <script>
 /* ============================================================
@@ -4800,114 +4908,278 @@ function renderResumen(){
 }
 
 /* ============================================================
-   PREMIOS · saldo de permisos + permisos por categoría
-   (ventana propia, al estilo de Atenea)
+   PREMIOS · tienda de gustos
+   Tarjetas con ícono propio, saldo animado, canje manteniendo
+   apretado y festejo. La configuración vive detrás del engranaje.
    ============================================================ */
+function pzI(d, sz, sw){
+  return '<svg viewBox="0 0 24 24" width="'+(sz||24)+'" height="'+(sz||24)+'" fill="none" stroke="currentColor" stroke-width="'+(sw||1.9)+'" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';
+}
+var PZ_IC={
+  dulce:   {c:'#f472b6', d:'<path d="M5 11h14l-1.6 8.2a2 2 0 01-2 1.8H8.6a2 2 0 01-2-1.8z"/><path d="M5 11a7 7 0 0114 0"/><path d="M12 4v-1M9 11v-2M15 11v-2"/><path d="M9 15l.5 4M15 15l-.5 4M12 15v4"/>'},
+  ajedrez: {c:'#60a5fa', d:'<path d="M8 21h9M9 18h7l-1-4c2-1 3-3 3-5.5C18 5 15.5 3 12.5 3L10 5 7 6.5 8 9l3-.5-2.5 4.5z"/><circle cx="12.5" cy="6.8" r=".6" fill="currentColor"/>'},
+  celular: {c:'#a78bfa', d:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/><circle cx="12" cy="10" r="2.6"/><circle cx="14.6" cy="6.6" r=".5" fill="currentColor"/>'},
+  juego:   {c:'#34d399', d:'<path d="M6.5 8h11a4 4 0 014 4.3l-.4 3.6a2.5 2.5 0 01-4.4 1.3L15 15H9l-1.7 2.2a2.5 2.5 0 01-4.4-1.3l-.4-3.6A4 4 0 016.5 8z"/><path d="M7.5 11v3M6 12.5h3"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.5" r=".6" fill="currentColor"/>'},
+  peli:    {c:'#fb7185', d:'<path d="M5 9h14l-1.5 11.5h-11z"/><path d="M9 9l.8 11.5M15 9l-.8 11.5"/><path d="M6 9a2.5 2.5 0 012-4 3 3 0 015-1 2.6 2.6 0 014 1 2.5 2.5 0 012 4"/>'},
+  cafe:    {c:'#d6a46b', d:'<path d="M4 10h13v4a6 6 0 01-6 6h-1a6 6 0 01-6-6z"/><path d="M17 11h1.5a2.5 2.5 0 010 5H17"/><path d="M8 3c-.5 1 .5 2 0 3M12 3c-.5 1 .5 2 0 3"/>'},
+  pizza:   {c:'#fb923c', d:'<path d="M12 21L3.5 6.5C6 4.9 9 4 12 4s6 .9 8.5 2.5z"/><path d="M5 9c2.2-1.2 4.5-1.8 7-1.8s4.8.6 7 1.8"/><circle cx="10" cy="11.5" r="1"/><circle cx="14" cy="14" r="1"/><circle cx="11.5" cy="16.5" r=".8"/>'},
+  compras: {c:'#facc15', d:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6.5a3 3 0 016 0V8"/><path d="M9 12a3 3 0 006 0"/>'},
+  viaje:   {c:'#38bdf8', d:'<path d="M3 13.5l7-1.5 4.5-7.5a1.6 1.6 0 012.8 1.6L15 13l5 1.2-.6 2.3-6-.4-3.4 4.4-1.6-.5.9-4.5-5.4-1z"/>'},
+  musica:  {c:'#c084fc', d:'<path d="M9 18V5.5l11-2.5v12.5"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/>'},
+  copa:    {c:'#f87171', d:'<path d="M7 3h10l-1 6a4 4 0 01-8 0z"/><path d="M12 13v7M8.5 21h7M7.3 6.5h9.4"/>'},
+  siesta:  {c:'#818cf8', d:'<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/><path d="M15 4h3.5L15 7.5h3.5"/>'},
+  regalo:  {c:'#ff8a5b', d:'<path d="M4 11h16v10H4zM3 7h18v4H3zM12 7v14"/><path d="M12 7H8.5a2.3 2.3 0 010-4.6C11 2.4 12 7 12 7zM12 7h3.5a2.3 2.3 0 000-4.6C13 2.4 12 7 12 7z"/>'}
+};
+var PZ_ORD=['regalo','dulce','ajedrez','celular','juego','peli','cafe','pizza','compras','viaje','musica','copa','siesta'];
+var PZ_COIN='<svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" fill="#ffc53d"/><circle cx="12" cy="12" r="7" fill="none" stroke="#e09a12" stroke-width="1.6"/><path d="M12 8v8M10 10h3.2a1.6 1.6 0 010 3.2H10.5" fill="none" stroke="#a96a05" stroke-width="1.6" stroke-linecap="round"/></svg>';
+var PZ_LOCK='<path d="M6 11h12v9H6z"/><path d="M8.5 11V8a3.5 3.5 0 017 0v3"/>';
+var PZ_GEAR='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 01-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 01-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 010-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 012.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 014 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 012.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 010 4h-.1a1.6 1.6 0 00-1.5 1z"/>';
+
+function pzIcono(pr){
+  if(pr.ic && PZ_IC[pr.ic]) return pr.ic;
+  var n=(pr.nombre||'').toLowerCase();
+  if(/az[uú]car|dulce|helado|choco|postre|torta/.test(n)) return 'dulce';
+  if(/chess|ajedrez/.test(n)) return 'ajedrez';
+  if(/insta|tiktok|reel|redes|celu|youtube/.test(n)) return 'celular';
+  if(/juego|play|game|consola/.test(n)) return 'juego';
+  if(/peli|serie|netflix|cine/.test(n)) return 'peli';
+  if(/caf[eé]|mate/.test(n)) return 'cafe';
+  if(/pizza|burger|hamburg|comida|delivery/.test(n)) return 'pizza';
+  if(/compra|ropa|zapa/.test(n)) return 'compras';
+  if(/viaje|escapada/.test(n)) return 'viaje';
+  if(/m[uú]sica|recital|show/.test(n)) return 'musica';
+  if(/birra|cerveza|vino|trago|fernet/.test(n)) return 'copa';
+  if(/siesta|dormir/.test(n)) return 'siesta';
+  return 'regalo';
+}
+function pzEtiqueta(pr){
+  var r=pr.restr||{tipo:'libre'}, d=premioDisp(pr);
+  if(d.ok) return '';
+  if(r.tipo==='dias') return nombresDias(r.dias);
+  if(r.tipo==='horario') return p2(r.desde)+'–'+p2(r.hasta)+'h';
+  if(r.tipo==='frecuencia') return d.nota;
+  return '';
+}
+var pzSaldoVisto=null;
+
 function renderPremios(){
   var cont=document.getElementById('premiosBody');
   if(!cont) return;
   if(!T) load();
-  var k=hoyKey(), sal=saldo(), techo=techoDia();
-  // Ganado/gastado del mes en curso (sin depender de 'vis', que sólo se
-  // inicializa al entrar a Progreso).
-  var hd=fecha(k), my=hd.getFullYear(), mm=hd.getMonth(), ult=new Date(my,mm+1,0).getDate();
-  var ganMes=0, gasMes=0;
-  for(var dd=1; dd<=ult; dd++){ var kk=ymd(my,mm,dd); if(kk<=k){ ganMes+=ganadosDia(kk); gasMes+=gastadosDia(kk); } }
+  var k=hoyKey(), sal=saldo();
+  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
+  function estado(pr){
+    if(premTomado(k,pr.id)) return 'hecho';
+    if(!premioDisp(pr).ok) return 'bloq';
+    return sal>=Number(pr.costo) ? 'listo' : 'falta';
+  }
+  var orden={listo:0,falta:1,hecho:2,bloq:3};
+  lista.sort(function(a,b){ return orden[estado(a)]-orden[estado(b)] || Number(a.costo)-Number(b.costo); });
+  var alcanza=lista.filter(function(pr){ return estado(pr)==='listo'; }).length;
 
-  // ── Hero: saldo de permisos ──
-  var s='<div class="prem-hero'+(sal<0?' neg':'')+'">'
-    + '<div class="prem-hero-n">'+sal+'<small>pts</small></div>'
-    + '<div class="prem-hero-l">Tu saldo</div>'
-    + '<div class="prem-hero-sub">Este mes <b>+'+ganMes+'</b> · <b>−'+gasMes+'</b>'
-    + (sal<0?' · <span class="bad">en deuda</span>':'')+'</div>'
+  var s='<div class="pz-top">'
+    + '<div><div class="pz-lbl">Tu saldo</div>'
+    + '<div class="pz-saldo'+(sal<0?' neg':'')+'">'+PZ_COIN.replace('width="16" height="16"','width="30" height="30"')+'<span id="pzSaldoN">'+sal+'</span></div>'
+    + '<div class="pz-hint">'+(alcanza ? 'Te podés dar <b>'+alcanza+'</b> '+(alcanza===1?'gusto':'gustos')+' hoy' : 'Seguí sumando para tu próximo gusto')+'</div></div>'
+    + '<button class="pz-gear" id="pzGear" aria-label="Configurar premios">'+pzI(PZ_GEAR,20,1.8)+'</button>'
     + '</div>';
 
-  // ── Tracker único (en la pestaña Premios se ven todos) ──
-  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
-  s+='<div class="trk-res">'+premiosTrackerHTML(k, sal, false)+'</div>';
-
-  var editando = !!(T.ui && T.ui.premEdit);
-  s+='<button class="trk-link" id="premEditBtn">'+(editando?'Listo':'Editar premios')+'</button>';
-
-  function peForm(pr){
-    var r=(pr&&pr.restr)||{tipo:'libre'}, dias=r.dias||[];
-    function db(lbl,val){ return '<button type="button" class="pe-dia'+(dias.indexOf(val)>=0?' on':'')+'" data-dia="'+val+'">'+lbl+'</button>'; }
-    var h='<div class="pe-form'+(pr?'':' add')+'" data-id="'+(pr?pr.id:'')+'">';
-    h+= '<div class="pe-row"><input class="pe-nombre" placeholder="Nombre del premio" value="'+(pr?esc(pr.nombre):'')+'">'
-      + '<input class="pe-costo" type="number" inputmode="numeric" min="1" placeholder="pts" value="'+(pr?pr.costo:'')+'"></div>';
-    h+= '<div class="pe-row"><select class="pe-tipo">'
-      +   '<option value="libre"'+(r.tipo==='libre'?' selected':'')+'>Sin restricción</option>'
-      +   '<option value="dias"'+(r.tipo==='dias'?' selected':'')+'>Días permitidos</option>'
-      +   '<option value="horario"'+(r.tipo==='horario'?' selected':'')+'>Franja horaria</option>'
-      +   '<option value="frecuencia"'+(r.tipo==='frecuencia'?' selected':'')+'>Cada N días</option>'
-      + '</select></div>';
-    h+= '<div class="pe-params pe-p-dias" style="display:'+(r.tipo==='dias'?'flex':'none')+'">'
-      + db('L',1)+db('M',2)+db('M',3)+db('J',4)+db('V',5)+db('S',6)+db('D',0)+'</div>';
-    h+= '<div class="pe-params pe-p-horario" style="display:'+(r.tipo==='horario'?'flex':'none')+'">'
-      + '<label>desde <input class="pe-desde" type="number" min="0" max="23" value="'+(r.desde!=null?r.desde:19)+'"></label>'
-      + '<label>hasta <input class="pe-hasta" type="number" min="0" max="23" value="'+(r.hasta!=null?r.hasta:22)+'"></label></div>';
-    h+= '<div class="pe-params pe-p-frec" style="display:'+(r.tipo==='frecuencia'?'flex':'none')+'">'
-      + '<label>cada <input class="pe-cada" type="number" min="1" value="'+(r.cadaDias!=null?r.cadaDias:14)+'"> días</label></div>';
-    h+= '<div class="pe-actions">'
-      + (pr ? '<button type="button" class="pe-del">Eliminar</button><button type="button" class="pe-save">Guardar</button>'
-            : '<button type="button" class="pe-addbtn">+ Agregar premio</button>')
-      + '</div></div>';
-    return h;
-  }
-
-  if(editando){
-    s+='<div class="prem-editor"><div class="trk-res-sec">Nuevo premio</div>'+peForm(null);
-    if(lista.length){ s+='<div class="trk-res-sec">Editar premios</div>'; lista.forEach(function(pr){ s+=peForm(pr); }); }
-    s+='</div>';
-  }
+  s+='<div class="pz-grid">';
+  lista.forEach(function(pr){
+    var st=estado(pr), ic=pzIcono(pr), col=PZ_IC[ic].c, costo=Number(pr.costo);
+    var pie='';
+    if(st==='listo') pie='<span class="pz-cta">Canjear</span>';
+    else if(st==='hecho') pie='<span class="pz-done">'+pzI('<path d="M5 12.5l4.5 4.5L19 7.5"/>',14,2.6)+'Disfrutado</span>';
+    else if(st==='bloq') pie='<span class="pz-lock">'+pzI(PZ_LOCK,13,2.2)+esc(pzEtiqueta(pr))+'</span>';
+    else pie='<span class="pz-bar"><i style="width:'+Math.max(4,Math.min(100,Math.round(Math.max(0,sal)/costo*100)))+'%"></i></span><span class="pz-faltan">faltan '+(costo-Math.max(0,sal))+'</span>';
+    s+='<button class="pz-card '+st+'" data-pz="'+pr.id+'" style="--pc:'+col+'">'
+      + '<span class="pz-ic">'+pzI(PZ_IC[ic].d,30,1.8)+'</span>'
+      + '<span class="pz-n">'+esc(pr.nombre)+'</span>'
+      + '<span class="pz-price">'+PZ_COIN+costo+'</span>'
+      + pie
+      + '</button>';
+  });
+  s+='<button class="pz-card nuevo" id="pzNuevo"><span class="pz-ic">'+pzI('<path d="M12 5v14M5 12h14"/>',26,2)+'</span><span class="pz-n">Nuevo gusto</span></button>';
+  s+='</div>';
   cont.innerHTML=s;
 
-  // ── Wiring: tracker (tomar/destomar) ──
-  wirePremiosRows(cont, k);
+  // saldo que "cuenta" hasta el valor nuevo
+  var nEl=document.getElementById('pzSaldoN');
+  if(pzSaldoVisto!=null && pzSaldoVisto!==sal) pzContar(nEl, pzSaldoVisto, sal, 700);
+  pzSaldoVisto=sal;
 
-  // ── Wiring: botón editar ──
-  var eb=document.getElementById('premEditBtn');
-  if(eb) eb.addEventListener('click', function(){ if(!T.ui) T.ui={}; T.ui.premEdit=!T.ui.premEdit; save(); renderPremios(); });
-
-  // ── Wiring: formularios del editor ──
-  function readForm(f){
-    var t=f.querySelector('.pe-tipo').value, restr={tipo:t};
-    if(t==='dias') restr.dias=[].map.call(f.querySelectorAll('.pe-dia.on'), function(b){ return Number(b.dataset.dia); });
-    if(t==='horario'){ restr.desde=Math.min(23,Math.max(0,Number(f.querySelector('.pe-desde').value)||0)); restr.hasta=Math.min(23,Math.max(0,Number(f.querySelector('.pe-hasta').value)||0)); }
-    if(t==='frecuencia') restr.cadaDias=Math.max(1,Number(f.querySelector('.pe-cada').value)||1);
-    return { nombre:(f.querySelector('.pe-nombre').value||'').trim(), costo:Number(f.querySelector('.pe-costo').value)||0, restr:restr };
-  }
-  cont.querySelectorAll('.pe-form').forEach(function(f){
-    var tipo=f.querySelector('.pe-tipo');
-    tipo.addEventListener('change', function(){
-      var t=tipo.value;
-      f.querySelector('.pe-p-dias').style.display   = t==='dias'?'flex':'none';
-      f.querySelector('.pe-p-horario').style.display= t==='horario'?'flex':'none';
-      f.querySelector('.pe-p-frec').style.display   = t==='frecuencia'?'flex':'none';
-    });
-    f.querySelectorAll('.pe-dia').forEach(function(b){ b.addEventListener('click', function(){ b.classList.toggle('on'); }); });
-    var add=f.querySelector('.pe-addbtn');
-    if(add) add.addEventListener('click', function(){
-      var v=readForm(f);
-      if(!v.nombre) return msg('Poné un nombre');
-      if(v.costo<1) return msg('Poné el costo');
-      premiosList().push({ id:pid(), nombre:v.nombre, costo:v.costo, restr:v.restr });
-      save(); renderPremios(); msg('Premio agregado ✓');
-    });
-    var sv=f.querySelector('.pe-save');
-    if(sv) sv.addEventListener('click', function(){
-      var v=readForm(f), pr=premiosList().filter(function(x){ return x.id===f.dataset.id; })[0];
-      if(!v.nombre) return msg('Poné un nombre');
-      if(v.costo<1) return msg('Poné el costo');
-      if(pr){ pr.nombre=v.nombre; pr.costo=v.costo; pr.restr=v.restr; save(); renderPremios(); msg('Guardado ✓'); }
-    });
-    var dl=f.querySelector('.pe-del');
-    if(dl) dl.addEventListener('click', function(){
-      if(!confirm('¿Eliminar este premio?')) return;
-      T.premios=premiosList().filter(function(x){ return x.id!==f.dataset.id; });
-      save(); renderPremios(); msg('Eliminado');
-    });
+  cont.querySelectorAll('[data-pz]').forEach(function(b){
+    b.addEventListener('click', function(){ pzAbrir(b.dataset.pz); });
   });
+  document.getElementById('pzNuevo').addEventListener('click', function(){ pzEditor(null); });
+  document.getElementById('pzGear').addEventListener('click', pzConfig);
+}
+function pzContar(el, desde, hasta, ms){
+  if(!el) return;
+  var t0=null;
+  function paso(t){
+    if(!t0) t0=t;
+    var p=Math.min(1,(t-t0)/ms), e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(desde+(hasta-desde)*e);
+    if(p<1) requestAnimationFrame(paso);
+  }
+  requestAnimationFrame(paso);
+}
+
+/* ── Hoja propia ── */
+function pzHoja(html){
+  var bg=document.getElementById('pzBg');
+  bg.innerHTML='<div class="pz-sheet"><div class="pz-grab"></div>'+html+'</div>';
+  bg.classList.add('on');
+  return bg.firstChild;
+}
+function pzCerrar(){ var bg=document.getElementById('pzBg'); if(bg) bg.classList.remove('on'); }
+
+/* ── ¿Te lo regalás? ── */
+function pzAbrir(id){
+  var pr=premiosList().filter(function(x){ return x.id===id; })[0];
+  if(!pr) return;
+  var k=hoyKey(), sal=saldo(), costo=Number(pr.costo), ic=pzIcono(pr), col=PZ_IC[ic].c;
+  var tomado=premTomado(k,id), disp=premioDisp(pr), alcanza=sal>=costo;
+  var h='<div class="pz-hero" style="--pc:'+col+'"><span class="pz-hic">'+pzI(PZ_IC[ic].d,54,1.6)+'</span></div>'
+    + '<div class="pz-ht">'+esc(pr.nombre)+'</div>'
+    + '<div class="pz-hp">'+PZ_COIN.replace('width="16" height="16"','width="20" height="20"')+costo+'</div>';
+  if(tomado){
+    h+='<div class="pz-msg">Ya te lo diste hoy. ¡Disfrutalo!</div>'
+      + '<button class="pz-btn ghost" id="pzUndo">Deshacer canje</button>';
+  } else if(!disp.ok){
+    h+='<div class="pz-msg">'+pzI(PZ_LOCK,15,2.2)+' Disponible '+esc(disp.nota)+'</div>'
+      + '<button class="pz-link" id="pzForzar">Canjear igual</button>';
+  } else if(!alcanza){
+    var tc=techoDia(), f=costo-Math.max(0,sal);
+    h+='<div class="pz-ring" style="--p:'+Math.round(Math.max(0,sal)/costo*100)+';--pc:'+col+'"><span>'+Math.round(Math.max(0,sal)/costo*100)+'%</span></div>'
+      + '<div class="pz-msg">Te faltan <b>'+f+'</b>'+(tc?' · ≈ '+Math.ceil(f/tc)+' '+(Math.ceil(f/tc)===1?'día':'días')+' de rutina':'')+'</div>';
+  } else {
+    h+='<div class="pz-after">Te quedan <b>'+(sal-costo)+'</b> después</div>'
+      + '<button class="pz-hold" id="pzHold" style="--pc:'+col+'"><i></i><span>Mantené para canjear</span></button>';
+  }
+  h+='<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
+  var sh=pzHoja(h);
+  sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+  var undo=sh.querySelector('#pzUndo');
+  if(undo) undo.addEventListener('click', function(){ pzCanjear(pr,true); pzCerrar(); });
+  var fz=sh.querySelector('#pzForzar');
+  if(fz) fz.addEventListener('click', function(){ if(confirm('Está fuera de su regla. ¿Canjear igual?')) pzCanjear(pr); });
+  var hold=sh.querySelector('#pzHold');
+  if(hold) pzMantener(hold, function(){ pzCanjear(pr); });
+}
+/* Botón de "mantener apretado": llena una barra y dispara al completar */
+function pzMantener(btn, fn){
+  var tm=null, hecho=false;
+  function ini(e){ if(hecho) return; e.preventDefault(); btn.classList.add('holding'); if(navigator.vibrate) navigator.vibrate(10);
+    tm=setTimeout(function(){ hecho=true; btn.classList.add('ok'); if(navigator.vibrate) navigator.vibrate([20,40,30]); fn(); }, 900); }
+  function fin(){ if(hecho) return; clearTimeout(tm); btn.classList.remove('holding'); }
+  btn.addEventListener('pointerdown', ini);
+  btn.addEventListener('pointerup', fin);
+  btn.addEventListener('pointerleave', fin);
+  btn.addEventListener('pointercancel', fin);
+  btn.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+}
+function pzCanjear(pr, deshacer){
+  var k=hoyKey(), antes=saldo(), costo=Number(pr.costo);
+  editar(k, function(x){
+    if(!x.prem) x.prem={};
+    if(deshacer) delete x.prem[pr.id]; else x.prem[pr.id]=costo;
+    if(!Object.keys(x.prem).length) delete x.prem;
+  });
+  repintar();
+  if(deshacer) return;
+  var ic=pzIcono(pr), col=PZ_IC[ic].c, conf='', cols=[col,'#ffc53d','#ff8a5b','#34d399','#fde68a'];
+  for(var i=0;i<34;i++) conf+='<i style="left:'+Math.round(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.4).toFixed(2)+'s"></i>';
+  var sh=pzHoja('<div class="pz-conf">'+conf+'</div>'
+    + '<div class="pz-hero win" style="--pc:'+col+'"><span class="pz-hic">'+pzI(PZ_IC[ic].d,58,1.6)+'</span></div>'
+    + '<div class="pz-ht">¡Te lo ganaste!</div>'
+    + '<div class="pz-msg">Disfrutá: <b>'+esc(pr.nombre)+'</b></div>'
+    + '<div class="pz-hp big">'+PZ_COIN.replace('width="16" height="16"','width="22" height="22"')+'<span id="pzCnt">'+antes+'</span></div>'
+    + '<button class="pz-btn" id="pzOk">Listo</button>');
+  pzContar(sh.querySelector('#pzCnt'), antes, antes-costo, 900);
+  sh.querySelector('#pzOk').addEventListener('click', pzCerrar);
+}
+
+/* ── Configuración (detrás del engranaje) ── */
+function pzConfig(){
+  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
+  var h='<div class="pz-st">Tus gustos</div><div class="pz-cl">';
+  lista.forEach(function(pr){
+    var ic=pzIcono(pr);
+    h+='<button class="pz-row" data-ed="'+pr.id+'" style="--pc:'+PZ_IC[ic].c+'">'
+      + '<span class="pz-ric">'+pzI(PZ_IC[ic].d,20,1.9)+'</span>'
+      + '<span class="pz-rn">'+esc(pr.nombre)+'</span>'
+      + '<span class="pz-rp">'+PZ_COIN+pr.costo+'</span></button>';
+  });
+  h+='</div><button class="pz-btn" id="pzAdd">+ Nuevo gusto</button>'
+    + '<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
+  var sh=pzHoja(h);
+  sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+  sh.querySelector('#pzAdd').addEventListener('click', function(){ pzEditor(null); });
+  sh.querySelectorAll('[data-ed]').forEach(function(b){
+    b.addEventListener('click', function(){ pzEditor(premiosList().filter(function(x){ return x.id===b.dataset.ed; })[0]); });
+  });
+}
+function pzEditor(pr){
+  var v={ nombre:pr?pr.nombre:'', costo:pr?Number(pr.costo):50, ic:pr?pzIcono(pr):'regalo',
+          restr: JSON.parse(JSON.stringify((pr&&pr.restr)||{tipo:'libre'})) };
+  if(!v.restr.dias) v.restr.dias=[6,0];
+  if(v.restr.desde==null) v.restr.desde=19;
+  if(v.restr.hasta==null) v.restr.hasta=22;
+  if(v.restr.cadaDias==null) v.restr.cadaDias=7;
+  function pintar(){
+    var col=PZ_IC[v.ic].c, r=v.restr;
+    var h='<div class="pz-hero sm" style="--pc:'+col+'"><span class="pz-hic">'+pzI(PZ_IC[v.ic].d,40,1.7)+'</span></div>'
+      + '<input class="pz-in" id="pzNom" placeholder="¿Qué te querés regalar?" value="'+esc(v.nombre)+'">'
+      + '<div class="pz-icons">'+PZ_ORD.map(function(k){ return '<button class="pz-ico'+(k===v.ic?' on':'')+'" data-ic="'+k+'" style="--pc:'+PZ_IC[k].c+'">'+pzI(PZ_IC[k].d,22,1.8)+'</button>'; }).join('')+'</div>'
+      + '<div class="pz-f">Precio</div>'
+      + '<div class="pz-price-ed"><button class="pz-step" data-d="-10">−</button><span>'+PZ_COIN.replace('width="16" height="16"','width="22" height="22"')+'<b id="pzCost">'+v.costo+'</b></span><button class="pz-step" data-d="10">+</button></div>'
+      + '<div class="pz-chips">'+[25,50,100,250,500].map(function(n){ return '<button class="pz-chip'+(n===v.costo?' on':'')+'" data-c="'+n+'">'+n+'</button>'; }).join('')+'</div>'
+      + '<div class="pz-f">Cuándo</div>'
+      + '<div class="pz-seg">'+[['libre','Siempre'],['dias','Días'],['horario','Horario'],['frecuencia','Cada tanto']].map(function(o){ return '<button class="'+(r.tipo===o[0]?'on':'')+'" data-t="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div>';
+    if(r.tipo==='dias') h+='<div class="pz-days">'+[[1,'L'],[2,'M'],[3,'M'],[4,'J'],[5,'V'],[6,'S'],[0,'D']].map(function(d){ return '<button class="'+(r.dias.indexOf(d[0])>=0?'on':'')+'" data-dw="'+d[0]+'">'+d[1]+'</button>'; }).join('')+'</div>';
+    if(r.tipo==='horario') ['desde','hasta'].forEach(function(c){
+      h+='<div class="pz-rng"><span>'+c+'</span><button class="pz-step" data-h="'+c+'" data-d="-1">−</button><b>'+p2(r[c])+'h</b><button class="pz-step" data-h="'+c+'" data-d="1">+</button></div>';
+    });
+    if(r.tipo==='frecuencia') h+='<div class="pz-rng"><button class="pz-step" data-n="-1">−</button><span>cada</span><b>'+r.cadaDias+'</b><span>días</span><button class="pz-step" data-n="1">+</button></div>';
+    h+='<button class="pz-btn" id="pzSave">'+(pr?'Guardar':'Agregar gusto')+'</button>'
+      + (pr?'<button class="pz-link bad" id="pzDel">Eliminar</button>':'')
+      + '<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
+    var sh=pzHoja(h);
+    var nom=sh.querySelector('#pzNom');
+    nom.addEventListener('input', function(){ v.nombre=nom.value; });
+    sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+    sh.querySelectorAll('[data-ic]').forEach(function(b){ b.addEventListener('click', function(){ v.ic=b.dataset.ic; pintar(); }); });
+    sh.querySelectorAll('.pz-step[data-d]:not([data-h])').forEach(function(b){ b.addEventListener('click', function(){ v.costo=Math.max(5,v.costo+Number(b.dataset.d)); pintar(); }); });
+    sh.querySelectorAll('[data-c]').forEach(function(b){ b.addEventListener('click', function(){ v.costo=Number(b.dataset.c); pintar(); }); });
+    sh.querySelectorAll('[data-t]').forEach(function(b){ b.addEventListener('click', function(){ v.restr.tipo=b.dataset.t; pintar(); }); });
+    sh.querySelectorAll('[data-dw]').forEach(function(b){ b.addEventListener('click', function(){
+      var d=Number(b.dataset.dw), i=v.restr.dias.indexOf(d); if(i>=0) v.restr.dias.splice(i,1); else v.restr.dias.push(d); pintar(); }); });
+    sh.querySelectorAll('[data-h]').forEach(function(b){ b.addEventListener('click', function(){
+      var c=b.dataset.h; v.restr[c]=Math.max(0,Math.min(24,Number(v.restr[c])+Number(b.dataset.d)));
+      if(v.restr.desde>=v.restr.hasta){ if(c==='desde') v.restr.desde=v.restr.hasta-1; else v.restr.hasta=v.restr.desde+1; }
+      pintar(); }); });
+    sh.querySelectorAll('[data-n]').forEach(function(b){ b.addEventListener('click', function(){ v.restr.cadaDias=Math.max(1,v.restr.cadaDias+Number(b.dataset.n)); pintar(); }); });
+    sh.querySelector('#pzSave').addEventListener('click', function(){
+      var n=(v.nombre||'').trim();
+      if(!n) return msg('Ponele un nombre');
+      var t=v.restr.tipo, restr={tipo:t};
+      if(t==='dias') restr.dias=v.restr.dias.slice();
+      if(t==='horario'){ restr.desde=v.restr.desde; restr.hasta=v.restr.hasta; }
+      if(t==='frecuencia') restr.cadaDias=v.restr.cadaDias;
+      if(pr){ pr.nombre=n; pr.costo=v.costo; pr.restr=restr; pr.ic=v.ic; }
+      else premiosList().push({ id:pid(), nombre:n, costo:v.costo, restr:restr, ic:v.ic });
+      save(); renderPremios(); pzCerrar(); msg(pr?'Guardado':'¡Nuevo gusto agregado!');
+    });
+    var del=sh.querySelector('#pzDel');
+    if(del) del.addEventListener('click', function(){
+      if(!confirm('¿Eliminar "'+pr.nombre+'"?')) return;
+      T.premios=premiosList().filter(function(x){ return x.id!==pr.id; });
+      save(); renderPremios(); pzCerrar(); msg('Eliminado');
+    });
+  }
+  pintar();
 }
 function repintar(){
   renderResumen();
@@ -5364,6 +5636,8 @@ function msg(t){
 
 /* ── Arranque ── */
 load();
+var pzBg=document.getElementById('pzBg');
+if(pzBg) pzBg.addEventListener('click', function(e){ if(e.target===pzBg) pzCerrar(); });
 try{ renderResumen(); }catch(e){ console.warn('trk resumen', e); }
 var bg=document.getElementById('trkSheetBg');
 if(bg) bg.addEventListener('click', function(e){ if(e.target===bg) cerrarSheet(); });
