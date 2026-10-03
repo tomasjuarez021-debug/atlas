@@ -3157,6 +3157,97 @@ body{
 .pz-card.nuevo{justify-content:center;min-height:150px}
 .pz-card.nuevo .pz-ic{color:var(--ink3)}
 
+/* ============================================================
+   PREMIOS · tickets de papel
+   ============================================================ */
+.pz-wallet{display:flex;align-items:center;gap:12px}
+.pz-coins{display:grid;place-items:center;width:58px;height:58px;border-radius:20px;background:rgba(255,197,61,.1);perspective:200px}
+.pz-coins svg{animation:coinFlip 1s cubic-bezier(.3,1.4,.5,1) .15s both}
+@keyframes coinFlip{from{transform:rotateY(-540deg) scale(.6)}to{transform:rotateY(0) scale(1)}}
+.pz-top .pz-saldo{font-size:40px;line-height:1}
+.pz-hint{font-size:13.5px;margin-top:4px}
+
+.tk-list{display:flex;flex-direction:column;gap:12px}
+.tk-btn{display:block;width:100%;padding:0;animation:pzIn .5s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d,0ms)}
+.tk-btn:active .tk{transform:scale(.97) rotate(-.6deg)}
+.tk{--stub:94px;--paper:#f6e7d0;--ink-p:#2a1d14;--notch:#141210;position:relative;display:flex;height:82px;transition:transform .15s;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.tk-main,.tk-stub{background:var(--paper);color:var(--ink-p)}
+.tk-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:0 12px 0 14px;border-radius:18px 6px 6px 18px}
+.tk-stub{position:relative;width:var(--stub);flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:5px;
+  border-radius:6px 18px 18px 6px;border-left:2px dashed rgba(42,29,20,.28)}
+.tk-stub::before,.tk-stub::after{content:'';position:absolute;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--notch)}
+.tk-stub::before{top:-10px}.tk-stub::after{bottom:-10px}
+.tk-stub b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.tk-ic{width:48px;height:48px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:var(--ink-p);color:#ffd9a8}
+.tk-txt{display:flex;flex-direction:column;min-width:0;text-align:left;gap:2px}
+.tk-txt b{font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tk-txt small{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;opacity:.6}
+/* no alcanza / bloqueado: ticket en borrador */
+.tk.falta,.tk.bloq{--paper:#221e1b;--ink-p:var(--ink2);filter:none}
+.tk.falta .tk-stub,.tk.bloq .tk-stub{border-left-color:rgba(255,255,255,.12)}
+.tk.falta .tk-ic,.tk.bloq .tk-ic{background:rgba(255,255,255,.07);color:var(--ink3)}
+.tk.falta .tk-stub{flex-direction:column;gap:1px}
+.tk.falta .tk-stub b{font-size:17px}
+.tk-faltan{font-size:10.5px;font-weight:600;opacity:.6}
+.tk-mini{width:54px;height:4px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px}
+.tk-mini i{display:block;height:100%;background:#ffc53d}
+.tk.bloq .tk-stub{opacity:.6}
+/* canjeado hoy: sello */
+.tk.hecho{opacity:.82}
+.tk-stamp{position:absolute;right:20px;top:50%;margin-top:-17px;padding:5px 10px;border:3px solid #d9573b;border-radius:8px;
+  color:#d9573b;font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;transform:rotate(-12deg);opacity:0;pointer-events:none}
+.tk.hecho .tk-stamp{opacity:.9}
+/* nuevo */
+.tk.nuevo{filter:none}
+.tk.nuevo .tk-main{background:none;border:2px dashed var(--line2);border-radius:18px;color:var(--ink3)}
+.tk.nuevo .tk-ic{background:rgba(255,255,255,.06);color:var(--ink3)}
+
+/* ticket grande en la hoja */
+.tk-stage{padding:30px 2px 4px}
+.tk.big{--stub:112px;--notch:var(--surface);height:108px}
+.tk.big .tk-ic{width:62px;height:62px}
+.tk.big .tk-txt b{font-size:20px}
+.tk.big .tk-stub b{font-size:26px}
+.tk.tension{animation:tkShake .1s linear infinite}
+@keyframes tkShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.5px) rotate(-.5deg)}75%{transform:translateX(1.5px) rotate(.5deg)}}
+.tk.torn .tk-stub{animation:tkTear .8s cubic-bezier(.5,0,.8,.4) forwards;transform-origin:0 0}
+@keyframes tkTear{0%{transform:none}25%{transform:translateX(8px) rotate(8deg)}100%{transform:translate(50px,240px) rotate(40deg);opacity:0}}
+.tk.stamped .tk-stamp{animation:tkStamp .4s cubic-bezier(.2,1.6,.4,1) forwards;right:auto;left:50%;margin-left:-62px}
+@keyframes tkStamp{from{opacity:0;transform:rotate(-12deg) scale(2.6)}to{opacity:.95;transform:rotate(-12deg) scale(1.15)}}
+.pz-after{display:flex;align-items:center;justify-content:center;gap:8px;font-size:18px;margin-top:22px;color:var(--ink3)}
+.pz-after b{color:var(--ink);font-weight:800}
+.pz-win{animation:pzIn .5s cubic-bezier(.2,1.5,.4,1) .35s both}
+.pz-win .pz-ht{margin-top:22px}
+
+/* muescas recortadas (sin círculos pintados) */
+.tk-stub::before,.tk-stub::after{display:none}
+.tk-main{border-radius:18px 0 0 18px;
+  -webkit-mask:radial-gradient(circle 10px at 100% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 10px at 100% 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 10px at 100% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 10px at 100% 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.tk-stub{border-radius:0 18px 18px 0;
+  -webkit-mask:radial-gradient(circle 10px at 0 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 10px at 0 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 10px at 0 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 10px at 0 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.tk.nuevo .tk-main{-webkit-mask:none;mask:none}
+.tk-stamp{right:auto;left:50%;margin-left:-62px}
+.tk.big .tk-txt b{white-space:normal;line-height:1.15}
+.pz-hold{background:#2c2622}
+.pz-hold span{color:var(--ink)}
+
+.tk-list .tk{filter:none}
+.tk-list .tk.hecho .tk-stub>*{visibility:hidden}
+.tk-list .tk-stamp{left:auto;right:8px;margin-left:0;font-size:12px;padding:4px 7px}
+
+.tk-list{gap:16px}
+.tk-list .tk-main{-webkit-mask:radial-gradient(circle 7px at 100% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 7px at 100% 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 7px at 100% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 7px at 100% 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.tk-list .tk-stub{-webkit-mask:radial-gradient(circle 7px at 0 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 7px at 0 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 7px at 0 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 7px at 0 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.tk-list .tk.nuevo .tk-main{-webkit-mask:none;mask:none}
+
+.tk-list .tk-main,.tk-list .tk-stub{-webkit-mask:none;mask:none}
+.tk-list{gap:12px}
+
 </style>
 </head>
 
@@ -4985,57 +5076,72 @@ function pzIcono(pr){
   if(/siesta|dormir/.test(n)) return 'siesta';
   return 'regalo';
 }
+function pzRegla(pr){
+  var r=pr.restr||{tipo:'libre'};
+  if(r.tipo==='dias') return (r.dias&&r.dias.length) ? nombresDias(r.dias).replace(/, ([^,]*)$/,' y $1') : 'sin días';
+  if(r.tipo==='horario') return 'de '+r.desde+' a '+r.hasta+' h';
+  if(r.tipo==='frecuencia') return 'cada '+r.cadaDias+' días';
+  return 'cuando quieras';
+}
 function pzEtiqueta(pr){
   var r=pr.restr||{tipo:'libre'}, d=premioDisp(pr);
   if(d.ok) return '';
-  if(r.tipo==='dias') return nombresDias(r.dias);
-  if(r.tipo==='horario') return p2(r.desde)+'–'+p2(r.hasta)+'h';
   if(r.tipo==='frecuencia') return d.nota;
-  return '';
+  return pzRegla(pr);
 }
 var pzSaldoVisto=null;
+
+/* Un premio = un ticket. st: listo | falta | bloq | hecho */
+function pzTicket(pr, st, sal, extra){
+  var costo=Number(pr.costo), ic=pzIcono(pr), falta=costo-Math.max(0,sal);
+  var sub = st==='bloq' ? pzI(PZ_LOCK,12,2.4)+' '+esc(pzEtiqueta(pr)) : esc(pzRegla(pr));
+  var talon;
+  if(st==='falta') talon='<span class="tk-faltan">faltan</span><b>'+falta+'</b>'
+    + '<span class="tk-mini"><i style="width:'+Math.max(6,Math.min(100,Math.round(Math.max(0,sal)/costo*100)))+'%"></i></span>';
+  else talon=PZ_COIN.replace('width="16" height="16"','width="22" height="22"')+'<b>'+costo+'</b>';
+  return '<div class="tk '+st+(extra||'')+'">'
+    + '<span class="tk-main">'
+    +   '<span class="tk-ic">'+pzI(PZ_IC[ic].d,26,2)+'</span>'
+    +   '<span class="tk-txt"><b>'+esc(pr.nombre)+'</b><small>'+sub+'</small></span>'
+    + '</span>'
+    + '<span class="tk-stub">'+talon+'</span>'
+    + '<span class="tk-stamp">Canjeado</span>'
+    + '</div>';
+}
 
 function renderPremios(){
   var cont=document.getElementById('premiosBody');
   if(!cont) return;
   if(!T) load();
   var k=hoyKey(), sal=saldo();
-  var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
   function estado(pr){
     if(premTomado(k,pr.id)) return 'hecho';
     if(!premioDisp(pr).ok) return 'bloq';
     return sal>=Number(pr.costo) ? 'listo' : 'falta';
   }
-  var orden={listo:0,falta:1,hecho:2,bloq:3};
-  lista.sort(function(a,b){ return orden[estado(a)]-orden[estado(b)] || Number(a.costo)-Number(b.costo); });
+  var orden={listo:0,falta:1,bloq:2,hecho:3};
+  var lista=premiosList().slice().sort(function(a,b){ return orden[estado(a)]-orden[estado(b)] || Number(a.costo)-Number(b.costo); });
   var alcanza=lista.filter(function(pr){ return estado(pr)==='listo'; }).length;
 
   var s='<div class="pz-top">'
-    + '<div>'
-    + '<div class="pz-saldo'+(sal<0?' neg':'')+'">'+PZ_COIN.replace('width="16" height="16"','width="30" height="30"')+'<span id="pzSaldoN">'+sal+'</span></div>'
-    + '<div class="pz-hint">'+(alcanza ? '<b>'+alcanza+'</b> '+(alcanza===1?'gusto disponible':'gustos disponibles') : 'Seguí sumando')+'</div></div>'
+    + '<div class="pz-wallet">'
+    +   '<span class="pz-coins">'+PZ_COIN.replace('width="16" height="16"','width="34" height="34"')+'</span>'
+    +   '<div><div class="pz-saldo'+(sal<0?' neg':'')+'"><span id="pzSaldoN">'+sal+'</span></div>'
+    +   '<div class="pz-hint">'+(alcanza ? '<b>'+alcanza+'</b> '+(alcanza===1?'ticket listo':'tickets listos')+' para canjear' : 'Juntá monedas para tu próximo ticket')+'</div></div>'
+    + '</div>'
     + '<button class="pz-gear" id="pzGear" aria-label="Configurar premios">'+pzI(PZ_GEAR,20,1.8)+'</button>'
     + '</div>';
 
-  s+='<div class="pz-grid">';
-  lista.forEach(function(pr){
-    var st=estado(pr), ic=pzIcono(pr), col=PZ_IC[ic].c, costo=Number(pr.costo);
-    var pct=Math.max(0,Math.min(100,Math.round(Math.max(0,sal)/costo*100))), idx=lista.indexOf(pr);
-    var marca = st==='hecho' ? '<span class="pz-mark ok">'+pzI('<path d="M5 12.5l4.5 4.5L19 7.5"/>',13,3)+'</span>'
-              : st==='bloq' ? '<span class="pz-mark">'+pzI(PZ_LOCK,12,2.4)+'</span>' : '';
-    s+='<button class="pz-card '+st+'" data-pz="'+pr.id+'" style="--d:'+(idx*45)+'ms;--rot:'+(idx%2?4:-4)+'deg">'
-      + marca
-      + '<span class="pz-ic">'+pzI(PZ_IC[ic].d,34,1.8)+'</span>'
-      + '<span class="pz-n">'+esc(pr.nombre)+'</span>'
-      + '<span class="pz-price">'+PZ_COIN+costo+'</span>'
-      + (st==='falta' ? '<span class="pz-bar"><i style="width:'+Math.max(4,pct)+'%"></i></span>' : '')
-      + '</button>';
+  s+='<div class="tk-list">';
+  lista.forEach(function(pr,i){
+    s+='<button class="tk-btn" data-pz="'+pr.id+'" style="--d:'+(i*55)+'ms">'+pzTicket(pr, estado(pr), sal)+'</button>';
   });
-  s+='<button class="pz-card nuevo" id="pzNuevo" style="--d:'+(lista.length*45)+'ms"><span class="pz-ic">'+pzI('<path d="M12 5v14M5 12h14"/>',26,2.2)+'</span></button>';
+  s+='<button class="tk-btn" id="pzNuevo" style="--d:'+(lista.length*55)+'ms"><div class="tk nuevo"><span class="tk-main">'
+    + '<span class="tk-ic">'+pzI('<path d="M12 5v14M5 12h14"/>',24,2.4)+'</span><span class="tk-txt"><b>Nuevo ticket</b><small>¿qué más te querés regalar?</small></span>'
+    + '</span></div></button>';
   s+='</div>';
   cont.innerHTML=s;
 
-  // saldo que "cuenta" hasta el valor nuevo
   var nEl=document.getElementById('pzSaldoN');
   if(pzSaldoVisto!=null && pzSaldoVisto!==sal) pzContar(nEl, pzSaldoVisto, sal, 700);
   pzSaldoVisto=sal;
@@ -5066,46 +5172,55 @@ function pzHoja(html){
   return bg.firstChild;
 }
 function pzCerrar(){ var bg=document.getElementById('pzBg'); if(bg) bg.classList.remove('on'); }
+var PZ_XBTN='<button class="pz-x" id="pzX"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
 
-/* ── ¿Te lo regalás? ── */
+/* ── El ticket en grande: mantener para cortarlo ── */
 function pzAbrir(id){
   var pr=premiosList().filter(function(x){ return x.id===id; })[0];
   if(!pr) return;
-  var k=hoyKey(), sal=saldo(), costo=Number(pr.costo), ic=pzIcono(pr), col=PZ_IC[ic].c;
+  var k=hoyKey(), sal=saldo(), costo=Number(pr.costo);
   var tomado=premTomado(k,id), disp=premioDisp(pr), alcanza=sal>=costo;
-  var h='<div class="pz-hero" style="--pc:'+col+'"><span class="pz-hic">'+pzI(PZ_IC[ic].d,54,1.6)+'</span></div>'
-    + '<div class="pz-ht">'+esc(pr.nombre)+'</div>'
-    + '<div class="pz-hp">'+PZ_COIN.replace('width="16" height="16"','width="20" height="20"')+costo+'</div>';
-  if(tomado){
-    h+='<div class="pz-msg">Ya te lo diste hoy. ¡Disfrutalo!</div>'
-      + '<button class="pz-btn ghost" id="pzUndo">Deshacer canje</button>';
-  } else if(!disp.ok){
-    h+='<div class="pz-msg">'+pzI(PZ_LOCK,15,2.2)+' Disponible '+esc(disp.nota)+'</div>'
+  var st = tomado ? 'hecho' : (!disp.ok ? 'bloq' : (alcanza ? 'listo' : 'falta'));
+  var h='<div class="tk-stage">'+pzTicket(pr, st, sal, ' big')+'</div>';
+  if(st==='hecho'){
+    h+='<div class="pz-msg">Ya lo canjeaste hoy. ¡Disfrutalo!</div>'
+      + '<button class="pz-btn ghost" id="pzUndo">Deshacer</button>';
+  } else if(st==='bloq'){
+    h+='<div class="pz-msg">Disponible '+esc(disp.nota)+'</div>'
       + '<button class="pz-link" id="pzForzar">Canjear igual</button>';
-  } else if(!alcanza){
-    var tc=techoDia(), f=costo-Math.max(0,sal);
-    h+='<div class="pz-ring" style="--p:'+Math.round(Math.max(0,sal)/costo*100)+';--pc:'+col+'"><span>'+Math.round(Math.max(0,sal)/costo*100)+'%</span></div>'
-      + '<div class="pz-msg">Te faltan <b>'+f+'</b>'+(tc?' · ≈ '+Math.ceil(f/tc)+' '+(Math.ceil(f/tc)===1?'día':'días')+' de rutina':'')+'</div>';
+  } else if(st==='falta'){
+    var tc=techoDia(), f=costo-Math.max(0,sal), dd=tc?Math.ceil(f/tc):0;
+    h+='<div class="pz-msg">Te faltan <b>'+f+'</b> monedas'+(dd?' · unos '+dd+' '+(dd===1?'día':'días')+' de rutina':'')+'</div>';
   } else {
-    h+='<div class="pz-after">Te quedan <b>'+(sal-costo)+'</b> después</div>'
-      + '<button class="pz-hold" id="pzHold" style="--pc:'+col+'"><i></i><span>Mantené para canjear</span></button>';
+    h+='<div class="pz-after">'+PZ_COIN+'<b>'+sal+'</b><span>→</span><b>'+(sal-costo)+'</b></div>'
+      + '<button class="pz-hold" id="pzHold"><i></i><span>Mantené para cortar</span></button>';
   }
-  h+='<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
+  h+=PZ_XBTN;
   var sh=pzHoja(h);
   sh.querySelector('#pzX').addEventListener('click', pzCerrar);
   var undo=sh.querySelector('#pzUndo');
   if(undo) undo.addEventListener('click', function(){ pzCanjear(pr,true); pzCerrar(); });
   var fz=sh.querySelector('#pzForzar');
-  if(fz) fz.addEventListener('click', function(){ if(confirm('Está fuera de su regla. ¿Canjear igual?')) pzCanjear(pr); });
+  if(fz) fz.addEventListener('click', function(){ if(confirm('Está fuera de su regla. ¿Canjear igual?')) pzAbrir2(pr); });
   var hold=sh.querySelector('#pzHold');
   if(hold) pzMantener(hold, function(){ pzCanjear(pr); });
 }
-/* Botón de "mantener apretado": llena una barra y dispara al completar */
+/* Forzar: mostramos el mismo ticket listo para cortar */
+function pzAbrir2(pr){
+  var sal=saldo(), costo=Number(pr.costo);
+  var sh=pzHoja('<div class="tk-stage">'+pzTicket(pr,'listo',sal,' big')+'</div>'
+    + '<div class="pz-after">'+PZ_COIN+'<b>'+sal+'</b><span>→</span><b>'+(sal-costo)+'</b></div>'
+    + '<button class="pz-hold" id="pzHold"><i></i><span>Mantené para cortar</span></button>'+PZ_XBTN);
+  sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+  pzMantener(sh.querySelector('#pzHold'), function(){ pzCanjear(pr); });
+}
+/* Botón de "mantener apretado": el ticket tiembla y la barra se llena */
 function pzMantener(btn, fn){
-  var tm=null, hecho=false;
-  function ini(e){ if(hecho) return; e.preventDefault(); btn.classList.add('holding'); if(navigator.vibrate) navigator.vibrate(10);
-    tm=setTimeout(function(){ hecho=true; btn.classList.add('ok'); if(navigator.vibrate) navigator.vibrate([20,40,30]); fn(); }, 900); }
-  function fin(){ if(hecho) return; clearTimeout(tm); btn.classList.remove('holding'); }
+  var tm=null, hecho=false, tk=document.querySelector('.tk-stage .tk');
+  function ini(e){ if(hecho) return; e.preventDefault(); btn.classList.add('holding'); if(tk) tk.classList.add('tension');
+    if(navigator.vibrate) navigator.vibrate(10);
+    tm=setTimeout(function(){ hecho=true; btn.classList.add('ok'); if(navigator.vibrate) navigator.vibrate([25,40,60]); fn(); }, 1000); }
+  function fin(){ if(hecho) return; clearTimeout(tm); btn.classList.remove('holding'); if(tk) tk.classList.remove('tension'); }
   btn.addEventListener('pointerdown', ini);
   btn.addEventListener('pointerup', fin);
   btn.addEventListener('pointerleave', fin);
@@ -5121,22 +5236,28 @@ function pzCanjear(pr, deshacer){
   });
   repintar();
   if(deshacer) return;
-  var ic=pzIcono(pr), col=PZ_IC[ic].c, conf='', cols=[col,'#ffc53d','#ff8a5b','#34d399','#fde68a'];
-  for(var i=0;i<34;i++) conf+='<i style="left:'+Math.round(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.4).toFixed(2)+'s"></i>';
-  var sh=pzHoja('<div class="pz-conf">'+conf+'</div>'
-    + '<div class="pz-hero win" style="--pc:'+col+'"><span class="pz-hic">'+pzI(PZ_IC[ic].d,58,1.6)+'</span></div>'
-    + '<div class="pz-ht">¡Te lo ganaste!</div>'
-    + '<div class="pz-msg">Disfrutá: <b>'+esc(pr.nombre)+'</b></div>'
-    + '<div class="pz-hp big">'+PZ_COIN.replace('width="16" height="16"','width="22" height="22"')+'<span id="pzCnt">'+antes+'</span></div>'
-    + '<button class="pz-btn" id="pzOk">Listo</button>');
-  pzContar(sh.querySelector('#pzCnt'), antes, antes-costo, 900);
+  // Animación en la misma hoja: el talón se corta, cae el sello, confeti
+  var sh=document.querySelector('#pzBg .pz-sheet');
+  if(!sh) return;
+  var tk=sh.querySelector('.tk-stage .tk');
+  if(tk){ tk.classList.remove('tension'); tk.classList.add('torn'); }
+  setTimeout(function(){ if(tk) tk.classList.add('stamped'); if(navigator.vibrate) navigator.vibrate(35); }, 420);
+  var conf='', cols=['#ffc53d','#ff8a5b','#fde68a','#f6e7d0'];
+  for(var i=0;i<36;i++) conf+='<i style="left:'+Math.round(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(0.45+Math.random()*.4).toFixed(2)+'s"></i>';
+  var low=sh.querySelectorAll('.pz-after,.pz-hold,.pz-msg,.pz-link');
+  low.forEach(function(n){ n.remove(); });
+  sh.insertAdjacentHTML('beforeend','<div class="pz-conf">'+conf+'</div>'
+    + '<div class="pz-win"><div class="pz-ht">¡Te lo ganaste!</div>'
+    + '<div class="pz-hp big">'+PZ_COIN.replace('width="16" height="16"','width="24" height="24"')+'<span id="pzCnt">'+antes+'</span></div>'
+    + '<button class="pz-btn" id="pzOk">A disfrutar</button></div>');
+  setTimeout(function(){ pzContar(sh.querySelector('#pzCnt'), antes, antes-costo, 900); }, 500);
   sh.querySelector('#pzOk').addEventListener('click', pzCerrar);
 }
 
 /* ── Configuración (detrás del engranaje) ── */
 function pzConfig(){
   var lista=premiosList().slice().sort(function(a,b){ return Number(a.costo)-Number(b.costo); });
-  var h='<div class="pz-st">Tus gustos</div><div class="pz-cl">';
+  var h='<div class="pz-st">Tus tickets</div><div class="pz-cl">';
   lista.forEach(function(pr){
     var ic=pzIcono(pr);
     h+='<button class="pz-row" data-ed="'+pr.id+'" style="--pc:'+PZ_IC[ic].c+'">'
@@ -5144,7 +5265,7 @@ function pzConfig(){
       + '<span class="pz-rn">'+esc(pr.nombre)+'</span>'
       + '<span class="pz-rp">'+PZ_COIN+pr.costo+'</span></button>';
   });
-  h+='</div><button class="pz-btn" id="pzAdd">+ Nuevo gusto</button>'
+  h+='</div><button class="pz-btn" id="pzAdd">+ Nuevo ticket</button>'
     + '<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
   var sh=pzHoja(h);
   sh.querySelector('#pzX').addEventListener('click', pzCerrar);
@@ -5175,7 +5296,7 @@ function pzEditor(pr){
       h+='<div class="pz-rng"><span>'+c+'</span><button class="pz-step" data-h="'+c+'" data-d="-1">−</button><b>'+p2(r[c])+'h</b><button class="pz-step" data-h="'+c+'" data-d="1">+</button></div>';
     });
     if(r.tipo==='frecuencia') h+='<div class="pz-rng"><button class="pz-step" data-n="-1">−</button><span>cada</span><b>'+r.cadaDias+'</b><span>días</span><button class="pz-step" data-n="1">+</button></div>';
-    h+='<button class="pz-btn" id="pzSave">'+(pr?'Guardar':'Agregar gusto')+'</button>'
+    h+='<button class="pz-btn" id="pzSave">'+(pr?'Guardar':'Crear ticket')+'</button>'
       + (pr?'<button class="pz-link bad" id="pzDel">Eliminar</button>':'')
       + '<button class="pz-x" id="pzX">'+pzI('<path d="M18 6L6 18M6 6l12 12"/>',16,2.2)+'</button>';
     var sh=pzHoja(h);
