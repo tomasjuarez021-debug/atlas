@@ -3135,6 +3135,28 @@ body{
 .pz-bar i{background:var(--ink3)}
 .pz-card.nuevo .pz-ic{background:none}
 
+/* Premios: tarjetas compactas y juguetonas (toda la tarjeta se toca) */
+.pz-top{align-items:center;margin-bottom:16px}
+.pz-saldo{margin-top:0}
+.pz-card{align-items:center;text-align:center;min-height:0;padding:18px 10px 14px;gap:8px;
+  animation:pzIn .45s cubic-bezier(.2,1.5,.4,1) both;animation-delay:var(--d,0ms)}
+@keyframes pzIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+.pz-card:active{transform:scale(.93) rotate(-1deg)}
+.pz-ic{width:68px;height:68px;border-radius:24px;margin:0;transform:rotate(var(--rot,0deg));transition:transform .2s}
+.pz-card:active .pz-ic{transform:rotate(0) scale(1.08)}
+.pz-n{font-size:14.5px}
+.pz-price{padding:4px 10px 4px 6px;border-radius:999px;background:rgba(255,255,255,.06);font-size:13.5px}
+.pz-card.listo .pz-price{background:rgba(255,197,61,.14);color:#ffd36e}
+.pz-card .pz-bar{position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:0;margin:0;background:rgba(255,255,255,.05)}
+.pz-card .pz-bar i{background:var(--ink3);border-radius:0}
+.pz-card.falta{opacity:.8}
+.pz-card.falta .pz-ic,.pz-card.bloq .pz-ic,.pz-card.hecho .pz-ic{background:rgba(255,255,255,.05);color:var(--ink3)}
+.pz-mark{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink3);background:rgba(255,255,255,.07)}
+.pz-mark.ok{color:#1a1512;background:var(--mint)}
+.pz-card.nuevo{justify-content:center;min-height:150px}
+.pz-card.nuevo .pz-ic{color:var(--ink3)}
+
 </style>
 </head>
 
@@ -4989,28 +5011,27 @@ function renderPremios(){
   var alcanza=lista.filter(function(pr){ return estado(pr)==='listo'; }).length;
 
   var s='<div class="pz-top">'
-    + '<div><div class="pz-lbl">Tu saldo</div>'
+    + '<div>'
     + '<div class="pz-saldo'+(sal<0?' neg':'')+'">'+PZ_COIN.replace('width="16" height="16"','width="30" height="30"')+'<span id="pzSaldoN">'+sal+'</span></div>'
-    + '<div class="pz-hint">'+(alcanza ? 'Te podés dar <b>'+alcanza+'</b> '+(alcanza===1?'gusto':'gustos')+' hoy' : 'Seguí sumando para tu próximo gusto')+'</div></div>'
+    + '<div class="pz-hint">'+(alcanza ? '<b>'+alcanza+'</b> '+(alcanza===1?'gusto disponible':'gustos disponibles') : 'Seguí sumando')+'</div></div>'
     + '<button class="pz-gear" id="pzGear" aria-label="Configurar premios">'+pzI(PZ_GEAR,20,1.8)+'</button>'
     + '</div>';
 
   s+='<div class="pz-grid">';
   lista.forEach(function(pr){
     var st=estado(pr), ic=pzIcono(pr), col=PZ_IC[ic].c, costo=Number(pr.costo);
-    var pie='';
-    if(st==='listo') pie='<span class="pz-cta">Canjear</span>';
-    else if(st==='hecho') pie='<span class="pz-done">'+pzI('<path d="M5 12.5l4.5 4.5L19 7.5"/>',14,2.6)+'Disfrutado</span>';
-    else if(st==='bloq') pie='<span class="pz-lock">'+pzI(PZ_LOCK,13,2.2)+esc(pzEtiqueta(pr))+'</span>';
-    else pie='<span class="pz-bar"><i style="width:'+Math.max(4,Math.min(100,Math.round(Math.max(0,sal)/costo*100)))+'%"></i></span><span class="pz-faltan">faltan '+(costo-Math.max(0,sal))+'</span>';
-    s+='<button class="pz-card '+st+'" data-pz="'+pr.id+'" style="--pc:'+col+'">'
-      + '<span class="pz-ic">'+pzI(PZ_IC[ic].d,30,1.8)+'</span>'
+    var pct=Math.max(0,Math.min(100,Math.round(Math.max(0,sal)/costo*100))), idx=lista.indexOf(pr);
+    var marca = st==='hecho' ? '<span class="pz-mark ok">'+pzI('<path d="M5 12.5l4.5 4.5L19 7.5"/>',13,3)+'</span>'
+              : st==='bloq' ? '<span class="pz-mark">'+pzI(PZ_LOCK,12,2.4)+'</span>' : '';
+    s+='<button class="pz-card '+st+'" data-pz="'+pr.id+'" style="--d:'+(idx*45)+'ms;--rot:'+(idx%2?4:-4)+'deg">'
+      + marca
+      + '<span class="pz-ic">'+pzI(PZ_IC[ic].d,34,1.8)+'</span>'
       + '<span class="pz-n">'+esc(pr.nombre)+'</span>'
       + '<span class="pz-price">'+PZ_COIN+costo+'</span>'
-      + pie
+      + (st==='falta' ? '<span class="pz-bar"><i style="width:'+Math.max(4,pct)+'%"></i></span>' : '')
       + '</button>';
   });
-  s+='<button class="pz-card nuevo" id="pzNuevo"><span class="pz-ic">'+pzI('<path d="M12 5v14M5 12h14"/>',26,2)+'</span><span class="pz-n">Nuevo gusto</span></button>';
+  s+='<button class="pz-card nuevo" id="pzNuevo" style="--d:'+(lista.length*45)+'ms"><span class="pz-ic">'+pzI('<path d="M12 5v14M5 12h14"/>',26,2.2)+'</span></button>';
   s+='</div>';
   cont.innerHTML=s;
 
