@@ -3608,6 +3608,34 @@ body{
 .lvs .lvs-st{display:table;margin:18px auto 0}
 .pv.cur.gift .pn-in{border-radius:50%}
 
+/* ── Pilares como círculos flotantes ── */
+.mod-hab .orbs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 0 14px;margin-bottom:4px}
+.mod-hab .orb{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;margin-top:var(--y);
+  animation:orbFly 4.2s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes orbFly{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.mod-hab .orb-c{position:relative;width:74px;height:74px;display:grid;place-items:center;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 18px -10px rgba(0,0,0,.7);transition:transform .25s cubic-bezier(.3,1.5,.5,1),background .25s}
+.mod-hab .orb-c .orb-r{position:absolute;inset:-1px;width:76px;height:76px;transform:rotate(-90deg)}
+.mod-hab .orb-t{fill:none;stroke:#2c2824;stroke-width:5}
+.mod-hab .orb-f{fill:none;stroke:var(--brand);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1)}
+.mod-hab .orb-ic{color:var(--brand);display:grid;place-items:center}
+.mod-hab .orb-n{font-size:11.5px;font-weight:700;color:var(--ink2);letter-spacing:-.02em;white-space:nowrap}
+.mod-hab .orb-hint{text-align:center;font-size:13px;color:var(--ink3);margin:-4px 0 14px;transition:opacity .2s}
+.mod-hab .orb-hint.hide{display:none}
+.mod-hab .orb-p{font-size:11.5px;font-weight:800;color:var(--ink3);margin-top:-3px}
+.mod-hab .orb.full .orb-f{stroke:var(--mint)}
+.mod-hab .orb.full .orb-ic{color:var(--mint)}
+.mod-hab .orb-ok{position:absolute;top:-2px;right:-2px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#13110f;background:var(--mint);border:2px solid var(--bg)}
+.mod-hab .orb.open .orb-c{transform:scale(1.12);background:#e9d7bf;border-color:#e9d7bf}
+.mod-hab .orb.open .orb-ic{color:#2a1d14}
+.mod-hab .orb.open .orb-n{color:var(--ink)}
+.mod-hab .orb:active .orb-c{transform:scale(.92)}
+.mod-hab .pil-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
+.mod-hab .pil-wrap.open{grid-template-rows:1fr;opacity:1}
+.mod-hab .pil-in{overflow:hidden;min-height:0}
+.mod-hab .pil-wrap .pil{margin-bottom:12px}
+.mod-hab .pil-wrap:not(.open) .pil{margin-bottom:0}
+
 </style>
 </head>
 
@@ -5460,13 +5488,32 @@ function renderResumen(){
     + '</div>'
     + '</div>';
 
-  // ── Un card por pilar ──
-  PILARES.forEach(function(pl){
-    var hs=habsPilar(pl);
-    if(!hs.length) return;
-    var ok=hs.filter(function(c){ return H[c].on; }).length, tot=hs.length, pc=Math.round(ok/tot*100);
-    s+='<div class="pil'+(ok===tot?' full':'')+'">'
-      + '<div class="pil-h"><span class="pil-ic">'+pilIco(pl.ic,18)+'</span><span class="pil-n">'+pl.n+'</span><span class="pil-c">'+pc+'%</span></div>'
+  // ── Pilares como círculos flotantes: tocás uno y se despliega ──
+  var vis=PILARES.filter(function(pl){ return habsPilar(pl).length; });
+  if(!T.ui) T.ui={};
+  var abierto=T.ui.pilOpen;
+  if(abierto===undefined){   // primera vez: abre el primer pilar incompleto
+    var inc=vis.filter(function(pl){ return habsPilar(pl).some(function(c){ return !H[c].on; }); })[0];
+    abierto=inc?inc.id:null;
+  }
+  var RC=2*Math.PI*33;
+  s+='<div class="orbs">';
+  vis.forEach(function(pl,i){
+    var hs=habsPilar(pl), ok=hs.filter(function(c){ return H[c].on; }).length, pc=Math.round(ok/hs.length*100), full=ok===hs.length;
+    s+='<button class="orb'+(full?' full':'')+(abierto===pl.id?' open':'')+'" data-orb="'+pl.id+'" style="--d:'+(i*-0.7)+'s;--y:'+(i%2?10:0)+'px">'
+      + '<span class="orb-c">'
+      +   '<svg class="orb-r" viewBox="0 0 76 76"><circle cx="38" cy="38" r="33" class="orb-t"/><circle cx="38" cy="38" r="33" class="orb-f" stroke-dasharray="'+RC.toFixed(1)+'" stroke-dashoffset="'+(RC*(1-pc/100)).toFixed(1)+'"/></svg>'
+      +   '<span class="orb-ic">'+pilIco(pl.ic,24)+'</span>'
+      +   (full?'<span class="orb-ok">'+pilIco('<path d="M5 12.5l4.5 4.5L19 7.5"/>',12)+'</span>':'')
+      + '</span>'
+      + '<span class="orb-n">'+pl.n+'</span><span class="orb-p">'+pc+'%</span>'
+      + '</button>';
+  });
+  s+='</div><div class="orb-hint'+(abierto?' hide':'')+'" id="orbHint">Tocá un pilar para ver sus hábitos</div>';
+  vis.forEach(function(pl){
+    var hs=habsPilar(pl), ok=hs.filter(function(c){ return H[c].on; }).length, tot=hs.length, pc=Math.round(ok/tot*100);
+    s+='<div class="pil-wrap'+(abierto===pl.id?' open':'')+'" data-pilw="'+pl.id+'"><div class="pil-in"><div class="pil'+(ok===tot?' full':'')+'">'
+      + '<div class="pil-h"><span class="pil-ic">'+pilIco(pl.ic,18)+'</span><span class="pil-n">'+pl.n+'</span><span class="pil-c">'+ok+' de '+tot+'</span></div>'
       + '<div class="pil-bar"><i style="width:'+pc+'%"></i></div>';
     hs.forEach(function(c){
       var h=H[c];
@@ -5478,7 +5525,7 @@ function renderResumen(){
         + '<span class="trk-res-chk'+(h.tipo==='lec'&&!h.on?' arrow':'')+'">'+chk+'</span>'
         + '</div>';
     });
-    s+='</div>';
+    s+='</div></div></div>';
   });
 
   // ── Premios disponibles hoy ──
@@ -5512,6 +5559,16 @@ function renderResumen(){
     if(n>meta) n=0;
     editar(k, function(x){ if(n>0) x.dien=n; else delete x.dien; });
     repintar();
+  });
+  cont.querySelectorAll('[data-orb]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id=b.dataset.orb, ya=b.classList.contains('open');
+      cont.querySelectorAll('.orb').forEach(function(o){ o.classList.toggle('open', !ya && o===b); });
+      cont.querySelectorAll('.pil-wrap').forEach(function(w){ w.classList.toggle('open', !ya && w.dataset.pilw===id); });
+      if(!T.ui) T.ui={}; T.ui.pilOpen = ya ? null : id; save();
+      var hn=document.getElementById('orbHint'); if(hn) hn.classList.toggle('hide', !ya);
+      if(navigator.vibrate) navigator.vibrate(6);
+    });
   });
   var hcR=document.getElementById('hcRank');
   if(hcR) hcR.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
