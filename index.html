@@ -3394,6 +3394,106 @@ body{
 .mod-hab .hchip.rank{cursor:pointer}
 .mod-hab .hchip.rank svg{color:#ffc53d}
 
+/* ============================================================
+   PROGRESO · KPI de cumplimiento
+   ============================================================ */
+.mod-hab .kp{background:radial-gradient(260px 160px at 0% 0%, rgba(255,138,91,.12), transparent 70%), var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 16px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.mod-hab .kp-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mod-hab .kp-l{font-size:13px;font-weight:600;color:var(--ink3)}
+.mod-hab .kp-big{font-size:58px;font-weight:800;color:var(--ink);letter-spacing:-.04em;line-height:1;margin-top:4px}
+.mod-hab .kp-big small{font-size:24px;color:var(--ink3);letter-spacing:0;margin-left:2px}
+.mod-hab .kp-delta{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;color:var(--ink)}
+.mod-hab .kp-delta em{font-style:normal;font-weight:600;color:var(--ink3)}
+.mod-hab .kp-delta.up{background:rgba(52,211,153,.12)} .mod-hab .kp-delta.up .kp-arr{color:var(--mint)}
+.mod-hab .kp-delta.down{background:rgba(251,113,133,.12)} .mod-hab .kp-delta.down .kp-arr{color:var(--coral)}
+.mod-hab .kp-ring{position:relative;width:84px;height:84px;flex-shrink:0}
+.mod-hab .kp-ring svg circle:last-child{transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+.mod-hab .kp-ring-n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mod-hab .kp-ring-n b{font-size:18px;font-weight:800;color:var(--ink);line-height:1}
+.mod-hab .kp-ring-n span{font-size:11px;color:var(--ink3);font-weight:600;margin-top:2px}
+.mod-hab .kp-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:20px 0 6px;height:148px}
+.mod-hab .kp-col{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:0}
+.mod-hab .kp-val{height:16px;font-size:11.5px;font-weight:700;color:var(--ink3)}
+.mod-hab .kp-track{flex:1;width:100%;max-width:30px;border-radius:10px;background:rgba(255,255,255,.05);display:flex;align-items:flex-end;overflow:hidden}
+.mod-hab .kp-track i{display:block;width:100%;border-radius:6px 6px 4px 4px;background:rgba(255,138,91,.55);transition:height .7s cubic-bezier(.2,.8,.2,1)}
+.mod-hab .kp-col.hoy .kp-track i{background:var(--brand)}
+.mod-hab .kp-col.hoy .kp-val{color:var(--ink)}
+.mod-hab .kp-col.fut .kp-track{background:none;border:1.5px dashed rgba(255,255,255,.1)}
+.mod-hab .kp-day{font-size:12px;font-weight:700;color:var(--ink3)}
+.mod-hab .kp-col.hoy .kp-day{color:var(--ink);background:var(--brand);color:#1a1512;border-radius:999px;padding:0 7px}
+.mod-hab .kp-col.sel::after{content:attr(data-tip);position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  padding:5px 9px;border-radius:9px;font-size:12px;font-weight:700;color:var(--ink);background:var(--surface2);border:1px solid var(--line2);box-shadow:0 6px 16px rgba(0,0,0,.4);z-index:2}
+.mod-hab .kp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.mod-hab .kp-stats span{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--ink3);text-align:center}
+.mod-hab .kp-stats b{font-size:18px;font-weight:800;color:var(--ink)}
+.mod-hab .kp-stats b small{font-size:11px;color:var(--ink3)}
+.mod-hab .kp-pils{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.mod-hab .kp-pil{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px 14px 12px}
+.mod-hab .kp-pil.flojo{border-color:rgba(255,138,91,.45)}
+.mod-hab .kp-pil-h{display:flex;align-items:center;justify-content:space-between}
+.mod-hab .kp-pil-ic{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;color:var(--brand);background:rgba(255,138,91,.12)}
+.mod-hab .kp-tag{font-size:10.5px;font-weight:800;color:#1a1512;background:var(--brand);padding:2px 8px;border-radius:999px}
+.mod-hab .kp-pil-n{font-size:13.5px;font-weight:700;color:var(--ink2);margin-top:10px}
+.mod-hab .kp-pil-p{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.1}
+.mod-hab .kp-pil-p small{font-size:15px;color:var(--ink3)}
+.mod-hab .kp-pil-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:8px}
+.mod-hab .kp-pil-bar i{display:block;height:100%;border-radius:999px;background:var(--brand)}
+.mod-hab .kp-pil-d{font-size:11.5px;font-weight:700;margin-top:7px;color:var(--ink3)}
+.mod-hab .kp-pil-d.up::first-letter{color:var(--mint)} .mod-hab .kp-pil-d.down::first-letter{color:var(--coral)}
+
+/* ============================================================
+   AJUSTES
+   ============================================================ */
+.mod-hab .aj-prof{display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:var(--r-lg);margin-bottom:10px;
+  background:radial-gradient(240px 140px at 0% 0%, rgba(255,138,91,.14), transparent 70%), var(--surface);border:1px solid var(--line)}
+.mod-hab .aj-prof-tx{flex:1;min-width:0}
+.mod-hab .aj-prof-n{font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.mod-hab .aj-prof-s{font-size:13px;color:var(--ink3);margin-top:2px}
+.mod-hab .aj-edit{padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;color:var(--brand2);background:rgba(255,138,91,.12)}
+.mod-hab .aj-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.mod-hab .aj-sum span{display:flex;flex-direction:column;align-items:center;padding:12px 4px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:11.5px;font-weight:600;color:var(--ink3)}
+.mod-hab .aj-sum b{font-size:22px;font-weight:800;color:var(--ink)}
+.mod-hab .aj-sec{font-size:18px;font-weight:800;color:var(--ink);margin:24px 4px 4px;letter-spacing:-.01em}
+.mod-hab .aj-hint{font-size:13px;color:var(--ink3);margin:0 4px 10px;line-height:1.5}
+.mod-hab .aj-grp{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.mod-hab .aj-row{display:flex;align-items:center;gap:12px;width:100%;padding:14px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.mod-hab .aj-row:last-child{border-bottom:none}
+.mod-hab button.aj-row:active{background:rgba(255,255,255,.03)}
+.mod-hab .aj-ic{width:38px;height:38px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;color:var(--brand);background:rgba(255,138,91,.12)}
+.aj-ic.big{width:52px;height:52px;border-radius:16px;color:var(--brand);background:rgba(255,138,91,.12);display:grid;place-items:center;flex-shrink:0}
+.mod-hab .aj-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mod-hab .aj-tx b{font-size:15px;font-weight:700;color:var(--ink)}
+.mod-hab .aj-tx small{font-size:12.5px;color:var(--ink3);line-height:1.4}
+.mod-hab .aj-chev{color:var(--ink3)}
+.mod-hab .bad{color:var(--coral)}
+.mod-hab .aj-step{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.mod-hab .aj-step button{width:34px;height:34px;border-radius:11px;font-size:18px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.07)}
+.mod-hab .aj-step button:active{background:rgba(255,138,91,.25)}
+.mod-hab .aj-step b{min-width:52px;text-align:center;font-size:17px;font-weight:800;color:var(--ink)}
+.mod-hab .aj-step b small{display:block;font-size:10.5px;font-weight:600;color:var(--ink3)}
+.mod-hab .aj-adv{display:block;margin:22px auto 0;font-size:13px;font-weight:600;color:var(--ink3);text-decoration:underline;text-underline-offset:3px}
+.mod-hab .aj-ver{text-align:center;font-size:12px;color:var(--ink3);opacity:.6;margin:14px 0 6px}
+.mod-hab #ajViejo{margin-top:16px}
+/* hoja de pilar */
+.aj-sh-h{display:flex;align-items:center;gap:14px;text-align:left;margin:6px 0 14px}
+.aj-sh-s{font-size:13px;color:var(--ink3)}
+.aj-hl{display:flex;flex-direction:column;gap:6px;text-align:left}
+.aj-h{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.04);transition:opacity .2s}
+.aj-h.off{opacity:.45}
+.aj-hn{flex:1;min-width:0;font-size:14.5px;font-weight:700;color:var(--ink)}
+.aj-hn small{margin-left:6px;font-size:10.5px;font-weight:800;color:#1a1512;background:var(--brand);padding:1px 6px;border-radius:999px;vertical-align:2px}
+.aj-pts{display:flex;align-items:center;gap:4px}
+.aj-pts button{width:28px;height:28px;border-radius:9px;font-size:16px;font-weight:700;color:var(--ink);background:rgba(255,255,255,.07)}
+.aj-pts b{min-width:36px;text-align:center;font-size:13.5px;font-weight:800;color:#ffd36e}
+.aj-sw{position:relative;width:46px;height:28px;border-radius:999px;background:rgba(255,255,255,.12);flex-shrink:0;transition:background .2s}
+.aj-sw::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.aj-sw.on{background:var(--mint)} .aj-sw.on::after{transform:translateX(18px)}
+.aj-del{width:46px;height:28px;display:grid;place-items:center;color:var(--coral)}
+.aj-add{display:flex;gap:8px;margin-top:12px}
+.aj-add .pz-in{margin:0;text-align:left}
+.aj-add .pz-btn{width:auto;margin:0;padding:0 18px}
+
 </style>
 </head>
 
@@ -3463,6 +3563,8 @@ body{
 
 <!-- CONFIGURAR (actividades / premios / metas) -->
 <div class="scr" id="s-config">
+  <div id="ajBody"></div>
+  <div id="ajViejo" class="hide">
 
   <div class="cfg-section">
     <div class="cfg-head" data-cfg="acts">
@@ -3518,6 +3620,7 @@ body{
     </div>
   </div>
 
+  </div>
 </div>
 
 <!-- PREMIOS (saldo de permisos + permisos por categoría) -->
@@ -4315,7 +4418,7 @@ function renderConfig(){
 function go(scr,btn){
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
   document.getElementById('s-'+scr).classList.add('on');
-  if(scr==='config'){renderCatSels();renderConfig();}
+  if(scr==='config'){renderCatSels();renderConfig();if(window.Track&&window.Track.renderAjustes)window.Track.renderAjustes();}
   if(scr==='hoy'){renderHoy();if(window.Track)window.Track.renderResumen();}
   if(scr==='cal'&&window.Track)window.Track.render();
   if(scr==='premios'&&window.Track)window.Track.renderPremios();
@@ -4379,7 +4482,7 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
       try { go(name); } catch(e){ console.warn('hab go', e); }
       try {
         if(name === 'hoy'){ renderHoy(); if(window.Track) window.Track.renderResumen(); }
-        else if(name === 'config') renderConfig();
+        else if(name === 'config'){ renderConfig(); if(window.Track && window.Track.renderAjustes) window.Track.renderAjustes(); }
         else if(name === 'cal' && window.Track) window.Track.render();
         else if(name === 'premios' && window.Track) window.Track.renderPremios();
         else if(name === 'rank' && window.Track) window.Track.renderRanking();
@@ -4891,26 +4994,53 @@ function renderStats(){
   var rk=h, racha=0;
   if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
   while(ganadosDia(rk)>0){ racha++; rk=sumaDias(rk,-1); }
-  // ── Cumplimiento: semana, hoy, mes y por pilar ──
-  var sw=cumplDias(diasSemana(0)), sp=cumplDias(diasSemana(1)), dl=sw-sp;
-  s+='<div class="cp-card">'
-    + '<div class="cp-top"><div><div class="cp-l">Cumplimiento de la semana</div><div class="cp-big">'+sw+'<small>%</small></div></div>'
-    + '<div class="cp-delta '+(dl>=0?'up':'down')+'">'+(dl>=0?'▲ +':'▼ ')+dl+'%<span>vs semana pasada</span></div></div>'
-    + '<div class="cp-mini"><span>Hoy <b>'+cumplDias([h])+'%</b></span><span>Mes <b>'+cumplDias(diasMesActual())+'%</b></span></div>';
-  PILARES.forEach(function(pl){
-    if(!habsPilar(pl).length) return;
-    var pp=cumplDias(diasSemana(0), pl);
-    s+='<div class="cp-row"><span class="cp-ic">'+pilIco(pl.ic,16)+'</span><span class="cp-n">'+pl.n+'</span>'
-      + '<span class="cp-bar"><i style="width:'+pp+'%"></i></span><span class="cp-p">'+pp+'%</span></div>';
+  // ── KPI: cumplimiento de la semana (número héroe + 7 días + pilares) ──
+  var sw=cumplDias(diasSemana(0)), sp=cumplDias(diasSemana(1)), dl=sw-sp, hoyP=cumplDias([h]);
+  var lunK=lunesDe(h), DL=['L','M','M','J','V','S','D'];
+  var rC=2*Math.PI*30, rOff=(rC*(1-hoyP/100)).toFixed(1);
+  s+='<div class="kp">'
+    + '<div class="kp-top">'
+    +   '<div class="kp-main"><div class="kp-l">Cumplimiento semanal</div>'
+    +     '<div class="kp-big">'+sw+'<small>%</small></div>'
+    +     '<div class="kp-delta '+(dl>=0?'up':'down')+'"><span class="kp-arr">'+(dl>=0?'▲':'▼')+'</span>'+(dl>=0?'+':'')+dl+' pts <em>vs semana pasada</em></div>'
+    +   '</div>'
+    +   '<div class="kp-ring"><svg viewBox="0 0 72 72" width="84" height="84"><circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="7"/>'
+    +     '<circle cx="36" cy="36" r="30" fill="none" stroke="var(--brand)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+rC.toFixed(1)+'" stroke-dashoffset="'+rOff+'" transform="rotate(-90 36 36)"/></svg>'
+    +     '<div class="kp-ring-n"><b>'+hoyP+'%</b><span>hoy</span></div></div>'
+    + '</div>'
+    + '<div class="kp-chart" role="img" aria-label="Cumplimiento por día de esta semana">';
+  for(var di=0; di<7; di++){
+    var dk=sumaDias(lunK,di), fut=dk>h, dp=fut?0:cumplDias([dk]);
+    s+='<button class="kp-col'+(dk===h?' hoy':'')+(fut?' fut':'')+'" data-tip="'+(fut?'Por venir':DL[di]+' · '+dp+'%')+'">'
+      + '<span class="kp-val">'+(fut?'':dp)+'</span>'
+      + '<span class="kp-track"><i style="height:'+(fut?0:Math.max(4,dp))+'%"></i></span>'
+      + '<span class="kp-day">'+DL[di]+'</span></button>';
+  }
+  s+='</div>'
+    + '<div class="kp-stats">'
+    +   '<span><b>'+racha+'</b>racha</span>'
+    +   '<span><b>'+cumplDias(diasMesActual())+'%</b>mes</span>'
+    +   '<span><b>'+activos+'<small>/'+dm.length+'</small></b>días activos</span>'
+    +   '<span><b>'+perfectos+'</b>perfectos</span>'
+    + '</div></div>';
+
+  // Pilares: 2×2, con el más flojo marcado para reforzar
+  var pls=PILARES.filter(function(pl){ return habsPilar(pl).length; }).map(function(pl){ return {pl:pl, p:cumplDias(diasSemana(0),pl), a:cumplDias(diasSemana(1),pl)}; });
+  var peor=pls.slice().sort(function(a,b){ return a.p-b.p; })[0];
+  s+='<div class="kp-pils">';
+  pls.forEach(function(x){
+    var d2=x.p-x.a;
+    s+='<div class="kp-pil'+(x===peor && pls.length>1?' flojo':'')+'">'
+      + '<div class="kp-pil-h"><span class="kp-pil-ic">'+pilIco(x.pl.ic,16)+'</span>'+(x===peor && pls.length>1?'<span class="kp-tag">a reforzar</span>':'')+'</div>'
+      + '<div class="kp-pil-n">'+x.pl.n+'</div>'
+      + '<div class="kp-pil-p">'+x.p+'<small>%</small></div>'
+      + '<div class="kp-pil-bar"><i style="width:'+x.p+'%"></i></div>'
+      + '<div class="kp-pil-d '+(d2>=0?'up':'down')+'">'+(d2>=0?'▲ +':'▼ ')+d2+' pts</div>'
+      + '</div>';
   });
   s+='</div>';
   var calOpen=!!(T.ui && T.ui.calOpen);
-  s+='<button class="trk-link cal-toggle" id="calToggle">'+(calOpen?'Ocultar calendario':'Ver calendario')+'</button>';
-  s+='<div class="stat-row">'
-    + '<div class="stat-card"><div class="sv warn">'+racha+'</div><div class="sl">racha días</div></div>'
-    + '<div class="stat-card"><div class="sv good">'+activos+'<small>/'+dm.length+'</small></div><div class="sl">activos '+mes+'</div></div>'
-    + '<div class="stat-card"><div class="sv gold">'+perfectos+'</div><div class="sl">perfectos</div></div>'
-    + '</div>';
+  s+='<button class="trk-link cal-toggle" id="calToggle">'+(calOpen?'Ocultar calendario':'Ver calendario del mes')+'</button>';
 
   // (El saldo de permisos ahora vive en la ventana Premios)
 
@@ -5013,6 +5143,12 @@ function renderStats(){
 
   var cont=document.getElementById('calStats');
   cont.innerHTML=s;
+  cont.querySelectorAll('.kp-col').forEach(function(c){
+    c.addEventListener('click', function(){
+      cont.querySelectorAll('.kp-col.sel').forEach(function(o){ if(o!==c) o.classList.remove('sel'); });
+      c.classList.toggle('sel');
+    });
+  });
   var ctgl=document.getElementById('calToggle');
   if(ctgl) ctgl.addEventListener('click', function(){
     if(!T.ui) T.ui={}; T.ui.calOpen=!T.ui.calOpen; save(); render();
@@ -5656,6 +5792,177 @@ function haceTxt(t){
 }
 var RK_FLAME='<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 22c3.9 0 7-2.9 7-6.8 0-3.6-2.4-5.6-3.6-9.2-1.8 1.6-2.7 3.5-2.9 5.3-.9-.8-1.6-2-1.8-3.6C8.4 9.6 5 12.4 5 15.2 5 19.1 8.1 22 12 22z"/></svg>';
 
+/* ============================================================
+   AJUSTES · todo lo configurable, explicado
+   ============================================================ */
+var AJ_I={
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  gift:'<path d="M4 11h16v10H4zM3 7h18v4H3zM12 7v14"/><path d="M12 7H8.5a2.3 2.3 0 010-4.6C11 2.4 12 7 12 7zM12 7h3.5a2.3 2.3 0 000-4.6C13 2.4 12 7 12 7z"/>',
+  book:'<path d="M12 6c-2-1.5-5-2-8-1v13c3-1 6-.5 8 1 2-1.5 5-2 8-1V5c-3-1-6-.5-8 1zM12 6v13"/>',
+  spark:'<path d="M12 2.5l1.9 4.6 4.6 1.9-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9z"/><path d="M18.5 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>',
+  down:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+  up:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  chev:'<path d="M9 6l6 6-6 6"/>',
+  lock:'<path d="M6 11h12v9H6z"/><path d="M8.5 11V8a3.5 3.5 0 017 0v3"/>',
+  moon:'<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/>'
+};
+function ajI(k,sz){ return pilIco(AJ_I[k], sz||18); }
+function ajFila(id, ic, t, sub, der){
+  return '<button class="aj-row" id="'+id+'"><span class="aj-ic">'+ic+'</span>'
+    + '<span class="aj-tx"><b>'+t+'</b><small>'+sub+'</small></span>'
+    + (der||'<span class="aj-chev">'+ajI('chev',16)+'</span>')+'</button>';
+}
+/* metas editables en línea: [clave, título, explicación, get, set, paso, min, max, unidad] */
+function ajMetas(){
+  var m=T.metas, p=P();
+  return [
+    ['sue','Dormir como mínimo','Desde cuántas horas cuenta "dormí bien".', function(){ return m.sueno.min; }, function(v){ m.sueno.min=v; }, .5, 4, 12, 'h'],
+    ['med','Meditar','Minutos que tiene que durar la meditación del día.', function(){ return m.meditar.minDia; }, function(v){ m.meditar.minDia=v; }, 5, 1, 120, 'min'],
+    ['lec','Leer por día','Páginas mínimas para que "Leer" cuente.', function(){ return p.lecMin; }, function(v){ p.lecMin=v; }, 5, 1, 200, 'pág'],
+    ['dien','Dientes','Veces por día para completar el hábito.', function(){ return m.higiene.dientesDia; }, function(v){ m.higiene.dientesDia=v; }, 1, 1, 5, 'veces'],
+    ['ent','Entrenar por semana','Tu objetivo semanal de entrenamientos.', function(){ return m.entren.porSemana; }, function(v){ m.entren.porSemana=v; }, 1, 1, 14, 'días'],
+    ['b12','B12 por semana','Cuántas tomas por semana.', function(){ return m.sup.b12Semana; }, function(v){ m.sup.b12Semana=v; }, 1, 1, 7, 'veces']
+  ];
+}
+function renderAjustes(){
+  var cont=document.getElementById('ajBody');
+  if(!cont) return;
+  if(!T) load();
+  var so=social(), nivel=miNivel(), tier=null;
+  try { tier=window.Lvl.tiers[Math.min(9,Math.floor((nivel-1)/10))]; } catch(e){}
+  var desde=claves()[0], totH=0;
+  PILARES.forEach(function(pl){ totH+=habsPilar(pl).length; });
+
+  var s='<div class="aj-prof">'
+    + rkAv(so.nombre||'?', 64)
+    + '<div class="aj-prof-tx"><div class="aj-prof-n">'+(so.nombre?esc(so.nombre):'Sin nombre')+'</div>'
+    + '<div class="aj-prof-s">Nivel '+nivel+(tier?' · '+tier.n:'')+(desde?' · desde '+fecha(desde).toLocaleDateString('es-AR',{month:'short',year:'numeric'}):'')+'</div></div>'
+    + '<button class="aj-edit" id="ajNom">Editar</button>'
+    + '</div>'
+    + '<div class="aj-sum"><span><b>'+totH+'</b>hábitos activos</span><span><b>'+premiosList().length+'</b>premios</span><span><b>'+rachaActiva()+'</b>racha</span></div>';
+
+  // ── Tus hábitos por pilar ──
+  s+='<div class="aj-sec">Tus hábitos</div><div class="aj-hint">Elegí qué hábitos ves en Hoy y cuántos puntos da cada uno. Los puntos son monedas para premios y XP para subir de nivel.</div><div class="aj-grp">';
+  PILARES.forEach(function(pl){
+    var vis=habsPilar(pl).length, ocul=pl.h.filter(function(c){ return ocultos().indexOf(c)>=0; }).length;
+    s+=ajFila('ajPil_'+pl.id, pilIco(pl.ic,18), pl.n, vis+' activos'+(ocul?' · '+ocul+' ocultos':'')+' · tocá para editar');
+  });
+  s+='</div>';
+
+  // ── Metas ──
+  s+='<div class="aj-sec">Metas</div><div class="aj-hint">Definen cuándo un hábito cuenta como cumplido. Ajustalas a tu realidad: mejor una meta que cumplís que una perfecta que abandonás.</div><div class="aj-grp">';
+  ajMetas().forEach(function(x){
+    s+='<div class="aj-row st"><span class="aj-tx"><b>'+x[1]+'</b><small>'+x[2]+'</small></span>'
+      + '<span class="aj-step"><button data-mt="'+x[0]+'" data-d="-1">−</button><b>'+x[3]()+'<small>'+x[8]+'</small></b><button data-mt="'+x[0]+'" data-d="1">+</button></span></div>';
+  });
+  s+='</div>';
+
+  // ── Premios, libros, asistente ──
+  s+='<div class="aj-sec">Recompensas y extras</div><div class="aj-grp">'
+    + ajFila('ajPrem', ajI('gift'), 'Premios', premiosList().length+' tickets · precio, ícono y cuándo se pueden canjear')
+    + ajFila('ajLib', ajI('book'), 'Libros y puntos', 'Cargá los libros que leés y los puntos/costos avanzados')
+    + ajFila('ajChat', ajI('spark'), 'Pedírselo a Atlas', 'Escribí "agregá el hábito…" o "creá un premio…" y lo arma solo')
+    + '</div>';
+
+  // ── Datos ──
+  s+='<div class="aj-sec">Tus datos</div><div class="aj-hint">Todo se guarda sólo en este teléfono. Hacé una copia de vez en cuando por si cambiás de celu o borrás el navegador.</div><div class="aj-grp">'
+    + ajFila('ajExp', ajI('down'), 'Descargar copia', 'Guarda un archivo con todo tu progreso')
+    + ajFila('ajImp', ajI('up'), 'Restaurar copia', 'Cargá un archivo descargado antes')
+    + ajFila('ajDel', '<span class="bad">'+ajI('trash')+'</span>', '<span class="bad">Borrar todo</span>', 'Empieza de cero. No se puede deshacer')
+    + '</div>'
+    + '<input type="file" id="ajFile" accept="application/json,.json" hidden>'
+    + '<button class="aj-adv" id="ajAdv">Opciones de la versión anterior</button>'
+    + '<div class="aj-ver">atlas · hecho para que no aflojes</div>';
+  cont.innerHTML=s;
+
+  // ── Cableado ──
+  document.getElementById('ajNom').addEventListener('click', function(){
+    var v=prompt('¿Cómo te dicen? (se ve en el ranking)', so.nombre||'');
+    if(v!=null && v.trim()){ so.nombre=v.trim().slice(0,24); save(); renderAjustes(); msg('Listo, '+so.nombre); }
+  });
+  PILARES.forEach(function(pl){ document.getElementById('ajPil_'+pl.id).addEventListener('click', function(){ ajPilar(pl); }); });
+  cont.querySelectorAll('[data-mt]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var x=ajMetas().filter(function(m){ return m[0]===b.dataset.mt; })[0];
+      var v=Math.round((Number(x[3]())+Number(b.dataset.d)*x[5])*10)/10;
+      v=Math.max(x[6],Math.min(x[7],v)); x[4](v); save(); renderAjustes(); repintar();
+    });
+  });
+  document.getElementById('ajPrem').addEventListener('click', pzConfig);
+  document.getElementById('ajLib').addEventListener('click', abrirLibros);
+  document.getElementById('ajChat').addEventListener('click', function(){ if(window.AtlasChat) AtlasChat.abrir(); });
+  document.getElementById('ajExp').addEventListener('click', ajExportar);
+  var fi=document.getElementById('ajFile');
+  document.getElementById('ajImp').addEventListener('click', function(){ fi.click(); });
+  fi.addEventListener('change', function(){ if(fi.files[0]) ajImportar(fi.files[0]); });
+  document.getElementById('ajDel').addEventListener('click', function(){
+    if(!confirm('¿Borrar TODO tu progreso, hábitos y premios?')) return;
+    if(!confirm('Última confirmación: no se puede deshacer.')) return;
+    Object.keys(localStorage).filter(function(k){ return /^atlas|^evo1/.test(k); }).forEach(function(k){ localStorage.removeItem(k); });
+    location.reload();
+  });
+  document.getElementById('ajAdv').addEventListener('click', function(){
+    var v=document.getElementById('ajViejo'); if(!v) return;
+    v.classList.toggle('hide');
+    this.textContent = v.classList.contains('hide') ? 'Opciones de la versión anterior' : 'Ocultar opciones anteriores';
+  });
+}
+/* Hoja de un pilar: mostrar/ocultar, puntos y hábitos propios */
+function ajPilar(pl){
+  var p=P(), oc=ocultos();
+  var h='<div class="aj-sh-h"><span class="aj-ic big">'+pilIco(pl.ic,24)+'</span><div><div class="pz-st" style="margin:0">'+pl.n+'</div><div class="aj-sh-s">Encendé lo que querés ver en Hoy</div></div></div><div class="aj-hl">';
+  pl.h.forEach(function(c){
+    var on=oc.indexOf(c)<0, pts=Number(p[c])||0;
+    h+='<div class="aj-h'+(on?'':' off')+'"><span class="aj-hn">'+esc(NOMBRES[c]||c)+'</span>'
+      + '<span class="aj-pts"><button data-pc="'+c+'" data-d="-5">−</button><b>+'+pts+'</b><button data-pc="'+c+'" data-d="5">+</button></span>'
+      + '<button class="aj-sw'+(on?' on':'')+'" data-tg="'+c+'" aria-label="Mostrar"></button></div>';
+  });
+  custom().filter(function(x){ return x.pil===pl.id; }).forEach(function(x){
+    h+='<div class="aj-h"><span class="aj-hn">'+esc(x.n)+'<small>tuyo</small></span>'
+      + '<span class="aj-pts"><button data-pcx="'+x.id+'" data-d="-5">−</button><b>+'+x.pts+'</b><button data-pcx="'+x.id+'" data-d="5">+</button></span>'
+      + '<button class="aj-del" data-dcx="'+x.id+'" aria-label="Eliminar">'+ajI('trash',16)+'</button></div>';
+  });
+  h+='</div><div class="aj-add"><input class="pz-in" id="ajNew" placeholder="Nuevo hábito para '+pl.n+'…"><button class="pz-btn" id="ajNewOk">Agregar</button></div>'+PZ_XBTN;
+  var sh=pzHoja(h);
+  sh.querySelector('#pzX').addEventListener('click', function(){ pzCerrar(); renderAjustes(); });
+  function rehacer(){ save(); repintar(); ajPilar(pl); }
+  sh.querySelectorAll('[data-tg]').forEach(function(b){ b.addEventListener('click', function(){
+    var c=b.dataset.tg; if(ocultos().indexOf(c)>=0) T.ocultos=ocultos().filter(function(x){ return x!==c; }); else ocultos().push(c); rehacer(); }); });
+  sh.querySelectorAll('[data-pc]').forEach(function(b){ b.addEventListener('click', function(){
+    var c=b.dataset.pc; p[c]=Math.max(0,Math.min(200,(Number(p[c])||0)+Number(b.dataset.d))); rehacer(); }); });
+  sh.querySelectorAll('[data-pcx]').forEach(function(b){ b.addEventListener('click', function(){
+    var x=custom().filter(function(y){ return y.id===b.dataset.pcx; })[0]; if(x){ x.pts=Math.max(1,Math.min(200,x.pts+Number(b.dataset.d))); rehacer(); } }); });
+  sh.querySelectorAll('[data-dcx]').forEach(function(b){ b.addEventListener('click', function(){
+    if(!confirm('¿Eliminar este hábito?')) return; T.custom=custom().filter(function(y){ return y.id!==b.dataset.dcx; }); rehacer(); }); });
+  sh.querySelector('#ajNewOk').addEventListener('click', function(){
+    var n=(sh.querySelector('#ajNew').value||'').trim(); if(!n) return msg('Escribí el nombre');
+    custom().push({id:'c'+Date.now().toString(36), n:n.charAt(0).toUpperCase()+n.slice(1), pts:10, pil:pl.id}); rehacer(); msg('Agregado a '+pl.n);
+  });
+}
+function ajExportar(){
+  var data={app:'atlas', v:1, fecha:new Date().toISOString(), datos:{}};
+  Object.keys(localStorage).filter(function(k){ return /^atlas|^evo1/.test(k); }).forEach(function(k){ data.datos[k]=localStorage.getItem(k); });
+  var blob=new Blob([JSON.stringify(data)],{type:'application/json'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='atlas-copia-'+hoyKey()+'.json';
+  document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  msg('Copia descargada');
+}
+function ajImportar(file){
+  var rd=new FileReader();
+  rd.onload=function(){
+    try {
+      var d=JSON.parse(rd.result);
+      if(!d || d.app!=='atlas' || !d.datos) throw 0;
+      if(!confirm('Esto reemplaza tus datos actuales por los de la copia. ¿Seguimos?')) return;
+      Object.keys(d.datos).forEach(function(k){ if(/^atlas|^evo1/.test(k)) localStorage.setItem(k, d.datos[k]); });
+      location.reload();
+    } catch(e){ msg('Ese archivo no es una copia de Atlas'); }
+  };
+  rd.readAsText(file);
+}
+
 function miPuesto(){
   var so=social(); if(!so.nombre || !so.amigos.length) return null;
   var lun=lunesDe(hoyKey()), yo=cumplDias(diasSemana(0)), pos=1;
@@ -6182,6 +6489,7 @@ window.Track = {
   renderResumen: renderResumen,
   renderPremios: renderPremios,
   renderRanking: renderRanking,
+  renderAjustes: renderAjustes,
   api: {
     pilares: PILARES, nombres: NOMBRES,
     habitos: function(){
