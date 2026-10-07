@@ -3262,6 +3262,138 @@ body{
 .mod-hab .pil.full .pil-bar i{background:var(--mint)}
 .mod-hab .pil .trk-res-row{margin:4px 0}
 
+/* ============================================================
+   CHAT · Atlas
+   ============================================================ */
+.tb-chat{position:relative;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#2a1408;
+  background:var(--grad);box-shadow:0 6px 18px -6px rgba(255,138,91,.7);margin-right:4px}
+.tb-chat:active{transform:scale(.92)}
+.tbc-dot{position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--bg);animation:tblPulse 1.6s ease-in-out infinite}
+.chat-bg{position:fixed;inset:0;z-index:330;display:none;background:rgba(10,8,6,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.chat-bg.on{display:flex;justify-content:center;animation:fadeIn .2s ease-out}
+.ch{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;background:var(--bg);
+  padding-top:env(safe-area-inset-top);animation:trkUp .3s cubic-bezier(.34,1.1,.64,1) both}
+.ch-h{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.ch-av,.cb-av{display:grid;place-items:center;border-radius:14px;color:#2a1408;background:var(--grad);flex-shrink:0}
+.ch-av{width:42px;height:42px}
+.ch-t{flex:1;display:flex;flex-direction:column}
+.ch-t b{font-size:17px;color:var(--ink)}
+.ch-t span{font-size:12px;color:var(--mint);font-weight:600}
+.ch-x{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--ink3);background:var(--surface)}
+.ch-msgs{flex:1;overflow-y:auto;padding:16px 14px 8px;display:flex;flex-direction:column;gap:10px}
+.cb-m{display:flex;align-items:flex-end;gap:8px;max-width:88%;animation:pzIn .35s cubic-bezier(.2,1.4,.4,1) both}
+.cb-m.yo{align-self:flex-end;flex-direction:row-reverse}
+.cb-av{width:30px;height:30px;border-radius:10px}
+.cb-b{padding:11px 14px;border-radius:20px;font-size:14.5px;line-height:1.45;color:var(--ink);background:var(--surface);border:1px solid var(--line)}
+.cb-m.bot .cb-b{border-bottom-left-radius:6px}
+.cb-m.yo .cb-b{background:var(--grad);color:#2a1408;border:none;border-bottom-right-radius:6px;font-weight:600}
+.cb-b b{color:var(--ink)} .cb-m.yo .cb-b b{color:#2a1408}
+.cb-b i{font-style:italic;color:var(--ink2)}
+.typing .cb-b{display:flex;gap:4px;padding:14px 16px}
+.typing .cb-b i{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:cbDot 1s ease-in-out infinite}
+.typing .cb-b i:nth-child(2){animation-delay:.15s}.typing .cb-b i:nth-child(3){animation-delay:.3s}
+@keyframes cbDot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+.cb-card{margin:2px 0;padding:10px 12px;border-radius:14px;background:#f6e7d0;color:#2a1d14}
+.cb-card-k{font-size:11.5px;font-weight:700;opacity:.6}
+.cb-card-n{font-size:16px;font-weight:800;margin-top:1px}
+.cb-card-s{font-size:12.5px;margin-top:2px;opacity:.75}
+.cb-card-s b{color:#2a1d14}
+.cb-stats{display:flex;gap:6px;margin-bottom:8px}
+.cb-stats span{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:12px;background:rgba(255,255,255,.05);font-size:11px;color:var(--ink3)}
+.cb-stats b{font-size:19px;font-weight:800;color:var(--ink)}
+.cb-l{padding:3px 0}
+.ch-chips{display:flex;gap:8px;overflow-x:auto;padding:6px 14px 10px;scrollbar-width:none}
+.ch-chips::-webkit-scrollbar{display:none}
+.ch-chips button{flex-shrink:0;padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--brand2);
+  background:rgba(255,138,91,.1);border:1px solid rgba(255,138,91,.3);animation:pzIn .3s ease-out both}
+.ch-chips button:active{transform:scale(.95)}
+.ch-in{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.ch-in input{flex:1;min-width:0;padding:13px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line2);color:var(--ink);outline:none}
+.ch-in input:focus{border-color:var(--brand)}
+.ch-in button{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#2a1408;background:var(--grad);flex-shrink:0}
+
+/* ============================================================
+   CUMPLIMIENTO (Progreso)
+   ============================================================ */
+.mod-hab .cp-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 16px 12px;margin-bottom:12px}
+.mod-hab .cp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mod-hab .cp-l{font-size:13px;font-weight:600;color:var(--ink3)}
+.mod-hab .cp-big{font-size:48px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.05}
+.mod-hab .cp-big small{font-size:22px;color:var(--ink3)}
+.mod-hab .cp-delta{text-align:right;font-size:16px;font-weight:800;padding-top:4px}
+.mod-hab .cp-delta span{display:block;font-size:11px;font-weight:600;color:var(--ink3)}
+.mod-hab .cp-delta.up{color:var(--mint)} .mod-hab .cp-delta.down{color:var(--coral)}
+.mod-hab .cp-mini{display:flex;gap:16px;margin:6px 0 12px;font-size:13px;color:var(--ink3)}
+.mod-hab .cp-mini b{color:var(--ink)}
+.mod-hab .cp-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.mod-hab .cp-ic{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:var(--brand);background:rgba(255,138,91,.12)}
+.mod-hab .cp-n{width:96px;font-size:13.5px;font-weight:700;color:var(--ink)}
+.mod-hab .cp-bar{flex:1;height:8px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+.mod-hab .cp-bar i{display:block;height:100%;border-radius:999px;background:var(--brand)}
+.mod-hab .cp-p{width:40px;text-align:right;font-size:13.5px;font-weight:800;color:var(--ink)}
+
+/* ============================================================
+   RANKING
+   ============================================================ */
+.mod-hab .rk-hello{text-align:center;padding:30px 8px 10px}
+.mod-hab .rk-hello-ic{width:92px;height:92px;margin:0 auto;border-radius:30px;display:grid;place-items:center;color:#2a1408;background:var(--grad);
+  box-shadow:0 18px 40px -16px rgba(255,138,91,.8);animation:lvPop .6s cubic-bezier(.2,1.6,.4,1)}
+.mod-hab .rk-hello-t{font-size:24px;font-weight:800;color:var(--ink);margin-top:18px;letter-spacing:-.02em}
+.mod-hab .rk-hello-s{font-size:14px;color:var(--ink3);margin-top:6px}
+.mod-hab .rk-head{display:flex;justify-content:space-between;align-items:flex-end;margin:4px 2px 10px}
+.mod-hab .rk-kick{font-size:13px;font-weight:600;color:var(--ink3)}
+.mod-hab .rk-pos{font-size:52px;font-weight:800;color:var(--ink);letter-spacing:-.04em;line-height:1}
+.mod-hab .rk-pos small{font-size:18px;color:var(--ink3);letter-spacing:0}
+.mod-hab .rk-clock{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.mod-hab .rk-clock b{font-size:26px;font-weight:800;color:var(--brand)}
+.mod-hab .rk-clock span{font-size:11px;line-height:1.25;color:var(--ink3);font-weight:600}
+.mod-hab .rk-msg{padding:12px 14px;border-radius:16px;font-size:14px;color:var(--ink2);background:rgba(255,138,91,.08);border:1px solid rgba(255,138,91,.2);margin-bottom:14px}
+.mod-hab .rk-msg b{color:var(--ink)}
+.mod-hab .rk-msg.win{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3)}
+.mod-hab .rk-av{display:inline-grid;place-items:center;border-radius:50%;flex-shrink:0;font-weight:800;color:#2a1408;background:var(--a)}
+.mod-hab .rk-podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:22px 0 16px}
+.mod-hab .rk-pod{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;animation:pzIn .5s cubic-bezier(.2,1.5,.4,1) both}
+.mod-hab .rk-pod.p1{animation-delay:.15s}.mod-hab .rk-pod.p3{animation-delay:.08s}
+.mod-hab .rk-pod-n{font-size:13.5px;font-weight:700;color:var(--ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-hab .rk-pod-p{font-size:15px;font-weight:800;color:var(--ink2)}
+.mod-hab .rk-pod-base{width:100%;display:grid;place-items:center;border-radius:16px 16px 6px 6px;background:var(--surface);border:1px solid var(--line)}
+.mod-hab .rk-pod-base span{font-size:24px;font-weight:800;color:var(--ink3)}
+.mod-hab .rk-pod.p1 .rk-pod-base{height:96px;background:linear-gradient(180deg, rgba(255,197,61,.25), var(--surface));border-color:rgba(255,197,61,.4)}
+.mod-hab .rk-pod.p1 .rk-pod-base span{color:#ffc53d}
+.mod-hab .rk-pod.p2 .rk-pod-base{height:70px}.mod-hab .rk-pod.p3 .rk-pod-base{height:54px}
+.mod-hab .rk-pod.p1 .rk-av{box-shadow:0 0 0 3px #ffc53d,0 10px 24px -8px rgba(255,197,61,.7)}
+.mod-hab .rk-pod.yo .rk-pod-n{color:var(--brand2)}
+.mod-hab .rk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.mod-hab .rk-row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px 12px 10px;border-radius:18px;text-align:left;
+  background:var(--surface);border:1px solid var(--line)}
+.mod-hab .rk-row.yo{border-color:rgba(255,138,91,.5);background:linear-gradient(90deg, rgba(255,138,91,.12), transparent 70%), var(--surface)}
+.mod-hab .rk-row.viejo{opacity:.55}
+.mod-hab .rk-n{width:18px;text-align:center;font-size:15px;font-weight:800;color:var(--ink3)}
+.mod-hab .rk-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.mod-hab .rk-name{font-size:15px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mod-hab .rk-meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink3);font-weight:600}
+.mod-hab .rk-lv{padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--ink2)}
+.mod-hab .rk-fl{display:inline-flex;align-items:center;gap:2px;color:#ff8a5b}
+.mod-hab .rk-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:3px}
+.mod-hab .rk-bar i{display:block;height:100%;border-radius:999px;background:var(--brand)}
+.mod-hab .rk-row.yo .rk-bar i{background:var(--grad)}
+.mod-hab .rk-p{font-size:20px;font-weight:800;color:var(--ink)}
+.mod-hab .rk-p small{font-size:12px;color:var(--ink3)}
+.mod-hab .rk-foot{text-align:center;font-size:12px;color:var(--ink3);margin:14px 10px 0;line-height:1.5}
+.mod-hab .pz-btn svg{vertical-align:-3px;margin-right:4px}
+.rk-help{font-size:13.5px;color:var(--ink3);text-align:left;margin-bottom:4px;line-height:1.5}
+.rk-help b{color:var(--ink)}
+.rk-ta{min-height:96px;text-align:left;font-weight:500;font-size:13px !important;resize:none;font-family:inherit}
+.rk-fr{display:grid;place-items:center;margin-top:10px}
+.rk-fr .rk-av{display:inline-grid;place-items:center;border-radius:50%;font-weight:800;color:#2a1408;background:var(--a)}
+.rk-fr-st{display:flex;gap:8px;margin-top:16px}
+.rk-fr-st span{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;border-radius:14px;background:rgba(255,255,255,.05);font-size:11.5px;color:var(--ink3)}
+.rk-fr-st b{font-size:22px;font-weight:800;color:var(--ink)}
+
+.pz-in::placeholder,.ch-in input::placeholder{color:var(--ink3) !important;opacity:.7}
+.mod-hab .hchip.rank{cursor:pointer}
+.mod-hab .hchip.rank svg{color:#ffc53d}
+
 </style>
 </head>
 
@@ -3283,6 +3415,7 @@ body{
       </div>
     </div>
     <div class="tb-right">
+      <button class="tb-chat" id="tbChat" aria-label="Hablar con Atlas"></button>
       <button class="tb-lvl" id="tbLvl" aria-label="Ver nivel"></button>
       <div class="tb-date" id="tbDate"></div>
     </div>
@@ -3426,6 +3559,7 @@ body{
 
 <div class="lvup-bg" id="lvupBg"></div>
 <div class="pz-bg" id="pzBg"></div>
+<div class="chat-bg" id="chatBg"></div>
 
 <script>
 /* ============================================================
@@ -3449,6 +3583,7 @@ body{
   const TABS = [
     {sub:'hoy',     label:'Hoy',      svg: ICO_CHECK},
     {sub:'cal',     label:'Progreso', svg: ICO_CAL},
+    {sub:'rank',    label:'Ranking',  svg: ICO_TROPHY},
     {sub:'premios', label:'Premios',  svg: ICO_GIFT},
     {sub:'config',  label:'Ajustes',  svg: ICO_CFG}
   ];
@@ -4387,6 +4522,7 @@ function editar(k,fn){
   var vacio = !d.med && !d.chess && !d.sue && !d.insta && !d.az && !d.nota
     && !d.cre && !d.b12 && !d.lio && !d.dien && !d.ent && !d.nreels
     && !d.diario && !d.pasos && !d.estir && !d.agua && !d.verd && !d.frio
+    && (!d.cx || !Object.keys(d.cx).length)
     && (!d.prem || !Object.keys(d.prem).length)
     && (!d.lec || !Object.keys(d.lec).some(function(id){ return d.lec[id]>0; }));
   if(vacio) delete T.dias[k];
@@ -4479,6 +4615,7 @@ function ganadosDia(k){
   if(d.ent) n+=p.ent;
   if(d.nreels) n+=p.nreels;
   ['diario','pasos','estir','agua','verd','frio'].forEach(function(c){ if(d[c]) n+=Number(p[c])||0; });
+  if(d.cx) custom().forEach(function(x){ if(d.cx[x.id]) n+=Number(x.pts)||0; });
   if(paginasDia(d) >= p.lecMin) n+=p.lec;
   return n;
 }
@@ -4537,9 +4674,12 @@ function premiosDe(cats){
   return [];
 }
 function techoDia(){
-  var p=P();
-  return p.med+p.sue+p.dien*Number(T.metas.higiene.dientesDia)+p.cre+p.lio+p.ent+p.lec+(Number(p.nreels)||0)
+  var p=P(), DM=Number(T.metas.higiene.dientesDia);
+  var t=p.med+p.sue+p.dien*Number(T.metas.higiene.dientesDia)+p.cre+p.lio+p.ent+p.lec+(Number(p.nreels)||0)
     + ['diario','pasos','estir','agua','verd','frio'].reduce(function(a,c){ return a+(Number(p[c])||0); },0);
+  custom().forEach(function(x){ t+=Number(x.pts)||0; });
+  ocultos().forEach(function(c){ if(c==='dien') t-=p.dien*DM; else if(c!=='b12') t-=Number(p[c])||0; });
+  return Math.max(0,t);
 }
 
 /* ── Métricas (siempre calculadas) ── */
@@ -4751,6 +4891,19 @@ function renderStats(){
   var rk=h, racha=0;
   if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
   while(ganadosDia(rk)>0){ racha++; rk=sumaDias(rk,-1); }
+  // ── Cumplimiento: semana, hoy, mes y por pilar ──
+  var sw=cumplDias(diasSemana(0)), sp=cumplDias(diasSemana(1)), dl=sw-sp;
+  s+='<div class="cp-card">'
+    + '<div class="cp-top"><div><div class="cp-l">Cumplimiento de la semana</div><div class="cp-big">'+sw+'<small>%</small></div></div>'
+    + '<div class="cp-delta '+(dl>=0?'up':'down')+'">'+(dl>=0?'▲ +':'▼ ')+dl+'%<span>vs semana pasada</span></div></div>'
+    + '<div class="cp-mini"><span>Hoy <b>'+cumplDias([h])+'%</b></span><span>Mes <b>'+cumplDias(diasMesActual())+'%</b></span></div>';
+  PILARES.forEach(function(pl){
+    if(!habsPilar(pl).length) return;
+    var pp=cumplDias(diasSemana(0), pl);
+    s+='<div class="cp-row"><span class="cp-ic">'+pilIco(pl.ic,16)+'</span><span class="cp-n">'+pl.n+'</span>'
+      + '<span class="cp-bar"><i style="width:'+pp+'%"></i></span><span class="cp-p">'+pp+'%</span></div>';
+  });
+  s+='</div>';
   var calOpen=!!(T.ui && T.ui.calOpen);
   s+='<button class="trk-link cal-toggle" id="calToggle">'+(calOpen?'Ocultar calendario':'Ver calendario')+'</button>';
   s+='<div class="stat-row">'
@@ -4944,6 +5097,50 @@ var PILARES=[
    ic:'<path d="M12 7.5c-1-1.8-3-2.8-5-2.3C4 6 3.6 9.6 5 13.2 6.3 16.6 8.4 19 10 19c.8 0 1.3-.4 2-.4s1.2.4 2 .4c1.6 0 3.7-2.4 5-5.8 1.4-3.6 1-7.2-2-8-2-.5-4 .5-5 2.3z"/><path d="M12 7.5c0-2 1-3.6 3-4.5"/>'}
 ];
 
+/* ── Hábitos propios (los crea el chat) y hábitos ocultos ── */
+function custom(){ if(!Array.isArray(T.custom)) T.custom=[]; return T.custom; }
+function ocultos(){ if(!Array.isArray(T.ocultos)) T.ocultos=[]; return T.ocultos; }
+var NOMBRES={med:'Meditar',lec:'Leer',nreels:'Sin reels',diario:'Escribir diario',ent:'Entrenar',pasos:'Caminar 8.000 pasos',
+  estir:'Estirar 10 min',sue:'Dormir bien',dien:'Lavarse los dientes',frio:'Ducha fría',agua:'Tomar 2 L de agua',
+  verd:'Comer verduras',cre:'Creatina',lio:'Lions mane',b12:'B12'};
+function pilarPorId(id){ return PILARES.filter(function(p){ return p.id===id; })[0]||null; }
+/* claves visibles de un pilar: campos fijos no ocultos + 'cx:<id>' propios */
+function habsPilar(pl){
+  var o=ocultos();
+  return pl.h.filter(function(c){ return o.indexOf(c)<0; })
+    .concat(custom().filter(function(x){ return x.pil===pl.id; }).map(function(x){ return 'cx:'+x.id; }));
+}
+function hechoEn(k,c){
+  var d=dia(k);
+  if(c.indexOf('cx:')===0) return !!(d.cx && d.cx[c.slice(3)]);
+  if(c==='lec') return paginasDia(d)>=P().lecMin;
+  if(c==='sue') return sueOk(d);
+  if(c==='dien') return Number(d.dien||0)>=Number(T.metas.higiene.dientesDia);
+  return !!d[c];
+}
+/* % de hábitos cumplidos sobre los posibles en esos días (todos o un pilar) */
+function cumplDias(ks, pl){
+  var ok=0, tot=0, pls=pl?[pl]:PILARES;
+  ks.forEach(function(k){ pls.forEach(function(p){ habsPilar(p).forEach(function(c){ tot++; if(hechoEn(k,c)) ok++; }); }); });
+  return tot ? Math.round(ok/tot*100) : 0;
+}
+function diasSemana(off){
+  var lun=sumaDias(lunesDe(hoyKey()), -7*(off||0)), h=hoyKey(), out=[];
+  for(var i=0;i<7;i++){ var k=sumaDias(lun,i); if(k<=h) out.push(k); }
+  return out;
+}
+function diasMesActual(){
+  var h=hoyKey(), f=fecha(h), out=[];
+  for(var d=1; d<=f.getDate(); d++) out.push(ymd(f.getFullYear(),f.getMonth(),d));
+  return out;
+}
+function rachaActiva(){
+  var rk=hoyKey(), n=0;
+  if(ganadosDia(rk)===0) rk=sumaDias(rk,-1);
+  while(ganadosDia(rk)>0){ n++; rk=sumaDias(rk,-1); }
+  return n;
+}
+
 function renderResumen(){
   var cont=document.getElementById('trkResumen');
   if(!cont) return;
@@ -4969,6 +5166,7 @@ function renderResumen(){
     lio:{n:'Lions mane', pts:p.lio, on:!!d.lio},
     b12:{n:'B12', pts:p.b12, on:!!d.b12}
   };
+  custom().forEach(function(x){ H['cx:'+x.id]={n:esc(x.n), pts:x.pts, on:!!(d.cx&&d.cx[x.id]), tipo:'cx', id:x.id}; });
 
   // ── Anillo del día: % del techo diario cumplido hoy ──
   var techo=techoDia();
@@ -4984,7 +5182,7 @@ function renderResumen(){
   var hAr=((new Date().getUTCHours()-3+24)%24);
   var hola = hAr>=5&&hAr<12 ? 'Buen día' : (hAr>=12&&hAr<20 ? 'Buenas tardes' : 'Buenas noches');
   var hechos=0, totalH=0;
-  PILARES.forEach(function(pl){ pl.h.forEach(function(c){ totalH++; if(H[c].on) hechos++; }); });
+  PILARES.forEach(function(pl){ habsPilar(pl).forEach(function(c){ totalH++; if(H[c].on) hechos++; }); });
 
   var s='<div class="hoy-card">'
     + '<div class="hoy-hero">'
@@ -5004,6 +5202,7 @@ function renderResumen(){
     +     '<div class="hoy-sub">'+hechos+' de '+totalH+' hábitos</div>'
     +     '<div class="hero-chips">'
     +       '<span class="hchip streak"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 22c3.9 0 7-2.9 7-6.8 0-3.6-2.4-5.6-3.6-9.2-1.8 1.6-2.7 3.5-2.9 5.3-.9-.8-1.6-2-1.8-3.6C8.4 9.6 5 12.4 5 15.2 5 19.1 8.1 22 12 22z"/></svg><b>'+rachaAct+'</b></span>'
+    +       (function(){ var mp=miPuesto(); return mp ? '<span class="hchip rank" id="hcRank"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/></svg><b>#'+mp.pos+'</b></span>' : ''; })()
     +       '<span class="hchip coin'+(sal<0?' neg':'')+'"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M9.5 10h4a1.8 1.8 0 010 3.6h-3"/></svg><b>'+sal+'</b></span>'
     +     '</div>'
     +   '</div>'
@@ -5012,13 +5211,15 @@ function renderResumen(){
 
   // ── Un card por pilar ──
   PILARES.forEach(function(pl){
-    var ok=pl.h.filter(function(c){ return H[c].on; }).length, tot=pl.h.length;
+    var hs=habsPilar(pl);
+    if(!hs.length) return;
+    var ok=hs.filter(function(c){ return H[c].on; }).length, tot=hs.length, pc=Math.round(ok/tot*100);
     s+='<div class="pil'+(ok===tot?' full':'')+'">'
-      + '<div class="pil-h"><span class="pil-ic">'+pilIco(pl.ic,18)+'</span><span class="pil-n">'+pl.n+'</span><span class="pil-c">'+ok+'/'+tot+'</span></div>'
-      + '<div class="pil-bar"><i style="width:'+Math.round(ok/tot*100)+'%"></i></div>';
-    pl.h.forEach(function(c){
+      + '<div class="pil-h"><span class="pil-ic">'+pilIco(pl.ic,18)+'</span><span class="pil-n">'+pl.n+'</span><span class="pil-c">'+pc+'%</span></div>'
+      + '<div class="pil-bar"><i style="width:'+pc+'%"></i></div>';
+    hs.forEach(function(c){
       var h=H[c];
-      var attr = h.tipo==='dien' ? 'id="trkResDien"' : (h.tipo==='lec' ? 'id="trkResLec"' : 'data-campo="'+c+'"');
+      var attr = h.tipo==='dien' ? 'id="trkResDien"' : (h.tipo==='lec' ? 'id="trkResLec"' : (h.tipo==='cx' ? 'data-cx="'+h.id+'"' : 'data-campo="'+c+'"'));
       var chk = h.tipo==='lec' ? (h.on?'':'›') : (h.tipo==='dien' ? (dn>0&&dn<DM?dn:'') : '');
       s+='<div class="trk-res-row'+(h.on?' on':'')+'" '+attr+'>'
         + '<span class="trk-res-n">'+h.n+'</span>'
@@ -5047,13 +5248,24 @@ function renderResumen(){
       repintar();
     });
   });
-  document.getElementById('trkResDien').addEventListener('click', function(){
+  cont.querySelectorAll('[data-cx]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var id=row.dataset.cx;
+      editar(k, function(x){ if(!x.cx) x.cx={}; if(x.cx[id]) delete x.cx[id]; else x.cx[id]=1; if(!Object.keys(x.cx).length) delete x.cx; });
+      repintar();
+    });
+  });
+  var bD=document.getElementById('trkResDien');
+  if(bD) bD.addEventListener('click', function(){
     var n=Number(dia(k).dien||0)+1;
     if(n>meta) n=0;
     editar(k, function(x){ if(n>0) x.dien=n; else delete x.dien; });
     repintar();
   });
-  document.getElementById('trkResLec').addEventListener('click', function(){ abrirDia(k); });
+  var hcR=document.getElementById('hcRank');
+  if(hcR) hcR.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
+  var bL=document.getElementById('trkResLec');
+  if(bL) bL.addEventListener('click', function(){ abrirDia(k); });
   try { if(window.Lvl) window.Lvl.renderCard(); } catch(e){}
 }
 
@@ -5387,68 +5599,197 @@ function cumplimientoSemana(){
   var gan=ks.reduce(function(a,k){ return a+Math.min(ganadosDia(k), techo); }, 0);
   return Math.min(100, Math.round(gan/(techo*ks.length)*100));
 }
+/* ============================================================
+   RANKING · amigos offline por código
+   Cada uno comparte un código (o link) con su % de la semana,
+   racha y nivel; el otro lo pega y aparece en su ranking.
+   ============================================================ */
+function social(){
+  if(!T.social) T.social={};
+  var so=T.social;
+  if(!so.uid) so.uid='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  if(!Array.isArray(so.amigos)) so.amigos=[];
+  return so;
+}
+function miNivel(){ try { return window.Lvl ? window.Lvl.calc().L : 1; } catch(e){ return 1; } }
+function miCodigo(){
+  var so=social();
+  var o={u:so.uid, n:so.nombre||'Yo', p:cumplDias(diasSemana(0)), r:rachaActiva(), l:miNivel(), w:lunesDe(hoyKey()), t:Date.now()};
+  return 'ATLAS-'+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function leerCodigo(txt){
+  var m=String(txt||'').match(/ATLAS-([A-Za-z0-9+\/_-]+)/);
+  if(!m) return null;
+  try {
+    var b=m[1].replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4) b+='=';
+    var o=JSON.parse(decodeURIComponent(escape(atob(b))));
+    if(!o || !o.u || !o.n) return null;
+    return o;
+  } catch(e){ return null; }
+}
+function sumarAmigo(o){
+  var so=social();
+  if(o.u===so.uid) return 'propio';
+  var ex=so.amigos.filter(function(a){ return a.u===o.u; })[0];
+  var limpio={u:String(o.u).slice(0,40), n:String(o.n).slice(0,24), p:Math.max(0,Math.min(100,Number(o.p)||0)),
+              r:Math.max(0,Number(o.r)||0), l:Math.max(1,Math.min(100,Number(o.l)||1)), w:String(o.w||''), t:Number(o.t)||Date.now()};
+  if(ex){ Object.keys(limpio).forEach(function(k){ ex[k]=limpio[k]; }); }
+  else so.amigos.push(limpio);
+  save();
+  return ex ? 'actualizado' : 'nuevo';
+}
+function compartirCodigo(){
+  var code=miCodigo(), url=location.href.split('#')[0]+'#amigo='+code;
+  var txt='Competí conmigo en Atlas esta semana. Tocá el link o pegá el código en Ranking:\n'+url;
+  if(navigator.share){ navigator.share({title:'Atlas', text:txt}).catch(function(){}); return; }
+  try { navigator.clipboard.writeText(txt).then(function(){ msg('Link copiado. Mandáselo a tus amigos'); }, function(){ prompt('Copiá tu código:', code); }); }
+  catch(e){ prompt('Copiá tu código:', code); }
+}
+var RK_COL=['#ff8a5b','#ffb347','#f6c177','#e8a87c','#d4a373','#ffcf99','#f4a261'];
+function rkCol(n){ var s=0; for(var i=0;i<n.length;i++) s+=n.charCodeAt(i); return RK_COL[s%RK_COL.length]; }
+function rkAv(n, sz){ return '<span class="rk-av" style="--a:'+rkCol(n)+';width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.42)+'px">'+esc((n||'?').charAt(0).toUpperCase())+'</span>'; }
+function haceTxt(t){
+  var m=Math.round((Date.now()-t)/60000);
+  if(m<60) return 'hace '+Math.max(1,m)+' min';
+  var h=Math.round(m/60); if(h<24) return 'hace '+h+' h';
+  return 'hace '+Math.round(h/24)+' d';
+}
+var RK_FLAME='<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M12 22c3.9 0 7-2.9 7-6.8 0-3.6-2.4-5.6-3.6-9.2-1.8 1.6-2.7 3.5-2.9 5.3-.9-.8-1.6-2-1.8-3.6C8.4 9.6 5 12.4 5 15.2 5 19.1 8.1 22 12 22z"/></svg>';
+
+function miPuesto(){
+  var so=social(); if(!so.nombre || !so.amigos.length) return null;
+  var lun=lunesDe(hoyKey()), yo=cumplDias(diasSemana(0)), pos=1;
+  so.amigos.forEach(function(a){ if(a.w===lun && a.p>yo) pos++; });
+  return {pos:pos, total:so.amigos.length+1};
+}
 function renderRanking(){
   var cont=document.getElementById('rankBody');
   if(!cont) return;
   if(!T) load();
-  var lun=lunesDe(hoyKey());
-  var f=function(k){ return fecha(k).toLocaleDateString('es-AR',{day:'2-digit',month:'short'}); };
-  var rango=f(lun)+' – '+f(sumaDias(lun,6));
-  var miPct=cumplimientoSemana();
+  var so=social(), h=hoyKey(), lun=lunesDe(h), fin=sumaDias(lun,6), quedan=difDias(h,fin)+1;
 
-  // Participantes: yo (real) + ejemplos (hasta tener Firebase)
-  var users=[
-    {n:'Sofía',     p:92},
-    {n:'Mateo',     p:85},
-    {n:'Valentina', p:78},
-    {n:'Bruno',     p:70},
-    {n:'Lucía',     p:61},
-    {n:'Diego',     p:47},
-    {n:'Vos',       p:miPct, yo:true}
-  ];
-  users.sort(function(a,b){ return b.p-a.p || (a.yo?-1:1); });
-  users.forEach(function(u,i){ u.rank=i+1; });
+  // 1) Sin nombre: onboarding mínimo
+  if(!so.nombre){
+    cont.innerHTML='<div class="rk-hello">'
+      + '<div class="rk-hello-ic">'+pzI('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/>',40,1.8)+'</div>'
+      + '<div class="rk-hello-t">Competí con tus amigos</div>'
+      + '<div class="rk-hello-s">Cada semana arranca de cero. Gana el que más cumple.</div>'
+      + '<input class="pz-in" id="rkNom" maxlength="24" placeholder="¿Cómo te dicen?">'
+      + '<button class="pz-btn" id="rkNomOk">Entrar al ranking</button>'
+      + '</div>';
+    var go=function(){ var v=(document.getElementById('rkNom').value||'').trim(); if(!v) return msg('Poné tu nombre'); so.nombre=v.slice(0,24); save(); renderRanking(); };
+    document.getElementById('rkNomOk').addEventListener('click', go);
+    document.getElementById('rkNom').addEventListener('keydown', function(e){ if(e.key==='Enter') go(); });
+    return;
+  }
 
-  var medalla=['🥇','🥈','🥉'];
-  function ini(n){ return (n==='Vos'?'V':n.charAt(0)).toUpperCase(); }
-  function col(n){ var c=['#4dc98a','#ff8a3d','#a98fd8','#5fc9c2','#e8b84b','#6aa9d8','#c98a8a']; var s=0; for(var i=0;i<n.length;i++) s+=n.charCodeAt(i); return c[s%c.length]; }
+  // 2) Participantes de esta semana
+  var yo={n:so.nombre, p:cumplDias(diasSemana(0)), r:rachaActiva(), l:miNivel(), yo:true};
+  var users=[yo].concat(so.amigos.map(function(a){
+    var vigente=a.w===lun;
+    return {n:a.n, p:vigente?a.p:0, r:vigente?a.r:0, l:a.l, u:a.u, viejo:!vigente, t:a.t};
+  }));
+  users.sort(function(a,b){ return b.p-a.p || (a.yo?-1:b.yo?1:0); });
+  users.forEach(function(u,i){ u.pos=i+1; });
+  var miPos=yo.pos, arriba=users[miPos-2];
 
-  var s='<div class="rank-head">'
-    + '<div class="rank-title">Ranking semanal</div>'
-    + '<div class="rank-sub">Cumplimiento de hábitos · '+rango+'</div>'
+  var s='<div class="rk-head">'
+    + '<div><div class="rk-kick">Ranking semanal</div>'
+    + '<div class="rk-pos">#'+miPos+'<small> de '+users.length+'</small></div></div>'
+    + '<div class="rk-clock"><b>'+quedan+'</b><span>'+(quedan===1?'día':'días')+'<br>para el cierre</span></div>'
     + '</div>';
+  if(users.length===1){
+    s+='<div class="rk-msg">Estás solo por ahora. Invitá a alguien y que empiece la pelea.</div>';
+  } else if(miPos===1){
+    s+='<div class="rk-msg win">Vas primero. Defendé el puesto hasta el domingo.</div>';
+  } else {
+    s+='<div class="rk-msg">Te faltan <b>'+Math.max(1,arriba.p-yo.p+1)+'%</b> para pasar a <b>'+esc(arriba.n)+'</b>.</div>';
+  }
 
-  // Podio (top 3)
-  var top=users.slice(0,3), orden=[1,0,2];   // 2º, 1º, 3º
-  s+='<div class="podium">';
-  orden.forEach(function(idx){
-    var u=top[idx]; if(!u) return;
-    var cls=idx===0?'gold':(idx===1?'silver':'bronze');
-    s+='<div class="pod '+cls+(u.yo?' yo':'')+'">'
-      + '<div class="pod-av" style="--a:'+col(u.n)+'">'+ini(u.n)+'</div>'
-      + '<div class="pod-medal">'+medalla[u.rank-1]+'</div>'
-      + '<div class="pod-name">'+esc(u.n)+'</div>'
-      + '<div class="pod-pct">'+u.p+'<small>%</small></div>'
-      + '<div class="pod-base"></div>'
-      + '</div>';
-  });
-  s+='</div>';
+  // Podio
+  if(users.length>=3){
+    s+='<div class="rk-podium">';
+    [1,0,2].forEach(function(i){
+      var u=users[i];
+      s+='<div class="rk-pod p'+(i+1)+(u.yo?' yo':'')+'">'
+        + rkAv(u.n, i===0?64:52)
+        + '<div class="rk-pod-n">'+esc(u.yo?'Vos':u.n)+'</div>'
+        + '<div class="rk-pod-p">'+u.p+'%</div>'
+        + '<div class="rk-pod-base"><span>'+(i+1)+'</span></div>'
+        + '</div>';
+    });
+    s+='</div>';
+  }
 
-  // Lista completa
-  s+='<div class="rank-list">';
+  // Lista
+  s+='<div class="rk-list">';
   users.forEach(function(u){
-    s+='<div class="rank-row'+(u.yo?' yo':'')+'">'
-      + '<div class="rank-pos">'+u.rank+'</div>'
-      + '<div class="rank-av" style="--a:'+col(u.n)+'">'+ini(u.n)+'</div>'
-      + '<div class="rank-main"><div class="rank-name">'+esc(u.n)+(u.yo?' <span class="rank-you">vos</span>':'')+'</div>'
-      +   '<div class="rank-bar"><i style="width:'+u.p+'%;--a:'+col(u.n)+'"></i></div></div>'
-      + '<div class="rank-pct">'+u.p+'<small>%</small></div>'
-      + '</div>';
+    s+='<button class="rk-row'+(u.yo?' yo':'')+(u.viejo?' viejo':'')+'"'+(u.u?' data-ami="'+u.u+'"':'')+'>'
+      + '<span class="rk-n">'+u.pos+'</span>'
+      + rkAv(u.n, 40)
+      + '<span class="rk-mid"><span class="rk-name">'+esc(u.yo?u.n+' (vos)':u.n)+'</span>'
+      +   '<span class="rk-meta"><span class="rk-lv">Nv '+u.l+'</span>'
+      +   (u.r?'<span class="rk-fl">'+RK_FLAME+u.r+'</span>':'')
+      +   (u.viejo?'<span class="rk-old">sin actualizar</span>':(u.t?'<span class="rk-old">'+haceTxt(u.t)+'</span>':''))
+      +   '</span>'
+      +   '<span class="rk-bar"><i style="width:'+u.p+'%"></i></span></span>'
+      + '<span class="rk-p">'+u.p+'<small>%</small></span>'
+      + '</button>';
   });
   s+='</div>';
 
-  s+='<div class="rank-note">Los demás usuarios son de ejemplo. Pronto vas a competir con tus amigos de verdad (Firebase).</div>';
+  s+='<button class="pz-btn" id="rkShare">'+pzI('<path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v13"/>',18,2.2)+' Invitar / actualizar mi puesto</button>'
+    + '<button class="pz-btn ghost" id="rkAdd">Pegar código de un amigo</button>'
+    + '<div class="rk-foot">Sin servidores: cada uno comparte su código cuando quiere actualizar su puesto.</div>';
   cont.innerHTML=s;
+
+  document.getElementById('rkShare').addEventListener('click', compartirCodigo);
+  document.getElementById('rkAdd').addEventListener('click', rkPegar);
+  cont.querySelectorAll('[data-ami]').forEach(function(b){
+    b.addEventListener('click', function(){ rkAmigo(b.dataset.ami); });
+  });
+}
+function rkPegar(){
+  var sh=pzHoja('<div class="pz-st">Sumar amigo</div>'
+    + '<div class="rk-help">Pedile a tu amigo que toque <b>Invitar</b> en su Atlas y pegá acá lo que te mande.</div>'
+    + '<textarea class="pz-in rk-ta" id="rkCode" placeholder="ATLAS-…"></textarea>'
+    + '<button class="pz-btn" id="rkCodeOk">Sumar al ranking</button>'+PZ_XBTN);
+  sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+  sh.querySelector('#rkCodeOk').addEventListener('click', function(){
+    var o=leerCodigo(sh.querySelector('#rkCode').value);
+    if(!o) return msg('Ese código no es válido');
+    var r=sumarAmigo(o);
+    if(r==='propio') return msg('Ese es tu propio código');
+    pzCerrar(); renderRanking();
+    msg(r==='nuevo' ? '¡'+o.n+' se sumó al ranking!' : 'Actualizamos a '+o.n);
+  });
+}
+function rkAmigo(u){
+  var so=social(), a=so.amigos.filter(function(x){ return x.u===u; })[0];
+  if(!a) return;
+  var sh=pzHoja('<div class="rk-fr">'+rkAv(a.n,84)+'</div>'
+    + '<div class="pz-ht">'+esc(a.n)+'</div>'
+    + '<div class="rk-fr-st"><span><b>'+(a.w===lunesDe(hoyKey())?a.p:0)+'%</b>semana</span><span><b>'+a.r+'</b>racha</span><span><b>'+a.l+'</b>nivel</span></div>'
+    + '<div class="pz-msg">Actualizado '+haceTxt(a.t)+'</div>'
+    + '<button class="pz-link bad" id="rkDel">Sacar del ranking</button>'+PZ_XBTN);
+  sh.querySelector('#pzX').addEventListener('click', pzCerrar);
+  sh.querySelector('#rkDel').addEventListener('click', function(){
+    if(!confirm('¿Sacar a '+a.n+'?')) return;
+    so.amigos=so.amigos.filter(function(x){ return x.u!==u; }); save(); pzCerrar(); renderRanking();
+  });
+}
+/* Link de invitación: #amigo=ATLAS-… suma al amigo al abrir la app */
+function rkDesdeLink(){
+  var m=location.hash.match(/amigo=(ATLAS-[A-Za-z0-9+\/_-]+)/);
+  if(!m) return;
+  var o=leerCodigo(decodeURIComponent(m[1]));
+  history.replaceState(null,'',location.href.split('#')[0]);
+  if(!o) return;
+  var r=sumarAmigo(o);
+  if(r!=='propio') setTimeout(function(){
+    msg(r==='nuevo' ? '¡'+o.n+' se sumó a tu ranking!' : 'Actualizamos a '+o.n);
+    if(window.App && App.showScreen) App.showScreen('hab','rank');
+  }, 700);
 }
 
 /* ============================================================
@@ -5825,6 +6166,7 @@ function msg(t){
 
 /* ── Arranque ── */
 load();
+try { rkDesdeLink(); } catch(e){}
 var pzBg=document.getElementById('pzBg');
 if(pzBg) pzBg.addEventListener('click', function(e){ if(e.target===pzBg) pzCerrar(); });
 try{ renderResumen(); }catch(e){ console.warn('trk resumen', e); }
@@ -5840,6 +6182,42 @@ window.Track = {
   renderResumen: renderResumen,
   renderPremios: renderPremios,
   renderRanking: renderRanking,
+  api: {
+    pilares: PILARES, nombres: NOMBRES,
+    habitos: function(){
+      var out=[];
+      PILARES.forEach(function(pl){ habsPilar(pl).forEach(function(c){
+        if(c.indexOf('cx:')===0){ var x=custom().filter(function(y){ return 'cx:'+y.id===c; })[0]; if(x) out.push({key:c, n:x.n, pts:x.pts, pil:pl.id, propio:true}); }
+        else out.push({key:c, n:NOMBRES[c]||c, pts:c==='dien'?P().dien:P()[c], pil:pl.id});
+      }); });
+      return out;
+    },
+    agregarHabito: function(n,pts,pil){ var x={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,4), n:n, pts:pts, pil:pil}; custom().push(x); save(); repintar(); return x; },
+    quitarHabito: function(key){
+      var prev=null;
+      if(key.indexOf('cx:')===0){ prev=custom().filter(function(y){ return 'cx:'+y.id===key; })[0]; T.custom=custom().filter(function(y){ return 'cx:'+y.id!==key; }); }
+      else if(ocultos().indexOf(key)<0) ocultos().push(key);
+      save(); repintar(); return prev;
+    },
+    restaurarHabito: function(key, obj){ if(obj) custom().push(obj); else T.ocultos=ocultos().filter(function(c){ return c!==key; }); save(); repintar(); },
+    ocultos: function(){ return ocultos().slice(); },
+    puntosHabito: function(key,n){
+      if(key.indexOf('cx:')===0){ var x=custom().filter(function(y){ return 'cx:'+y.id===key; })[0]; if(x) x.pts=n; }
+      else if(P()[key]!=null) P()[key]=n;
+      save(); repintar();
+    },
+    premios: function(){ return premiosList(); },
+    agregarPremio: function(nombre,costo,restr){ var pr={id:pid(), nombre:nombre, costo:costo, restr:restr||{tipo:'libre'}}; premiosList().push(pr); save(); repintar(); return pr; },
+    quitarPremio: function(id){ var pr=premiosList().filter(function(x){ return x.id===id; })[0]; T.premios=premiosList().filter(function(x){ return x.id!==id; }); save(); repintar(); return pr; },
+    restaurarPremio: function(pr){ premiosList().push(pr); save(); repintar(); },
+    costoPremio: function(id,n){ var pr=premiosList().filter(function(x){ return x.id===id; })[0]; if(pr){ pr.costo=n; save(); repintar(); } },
+    cumplHoy: function(){ return cumplDias([hoyKey()]); },
+    cumplSemana: function(off){ return cumplDias(diasSemana(off)); },
+    cumplMes: function(){ return cumplDias(diasMesActual()); },
+    cumplPilar: function(id){ var pl=pilarPorId(id); return pl ? cumplDias(diasSemana(0), pl) : 0; },
+    pendientesHoy: function(){ var k=hoyKey(), out=[]; PILARES.forEach(function(pl){ habsPilar(pl).forEach(function(c){ if(!hechoEn(k,c)) out.push(c); }); }); return out; },
+    racha: rachaActiva, saldo: saldo, techo: techoDia
+  },
   cofre: {
     abierto: function(w){ return !!(T.cofres && T.cofres[w]); },
     abrir: function(w,pts){ if(!T.cofres) T.cofres={}; if(T.cofres[w]) return; T.cofres[w]=Number(pts)||0; save(); repintar(); }
@@ -6163,6 +6541,299 @@ try {
   if(tb) tb.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','nivel'); });
   renderCard();
 } catch(e){ console.warn('niveles', e); }
+})();
+</script>
+
+<!-- ============================================================
+     CHAT · Atlas, tu coach
+     Asistente programado (sin servidor): entiende pedidos en
+     castellano para crear/sacar hábitos y premios, cambiar puntos,
+     contarte cómo vas y sugerirte ideas. Guarda la charla local.
+     ============================================================ -->
+<script>
+(function(){
+'use strict';
+var KEY='atlas.chat.v1';
+var st={msgs:[], flow:null};
+try { var g=JSON.parse(localStorage.getItem(KEY)); if(g && Array.isArray(g.msgs)) st.msgs=g.msgs.slice(-60); } catch(e){}
+function guardar(){ try { localStorage.setItem(KEY, JSON.stringify({msgs:st.msgs.slice(-60)})); } catch(e){} }
+function api(){ return (window.Track && Track.api) || null; }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function norm(t){ return String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim(); }
+function cap(t){ t=String(t||'').trim(); return t.charAt(0).toUpperCase()+t.slice(1); }
+function ico(d,sz){ return '<svg viewBox="0 0 24 24" width="'+(sz||18)+'" height="'+(sz||18)+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'; }
+var I_BOT='<path d="M12 2.5l1.9 4.6 4.6 1.9-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9z"/><path d="M18.5 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/><path d="M6 16l.7 1.6 1.6.7-1.6.7L6 20.6l-.7-1.6-1.6-.7 1.6-.7z"/>';
+var I_SEND='<path d="M5 12h14M13 6l6 6-6 6"/>';
+
+var PIL={mente:'Mente', ejer:'Ejercicio', cuerpo:'Cuerpo', alim:'Alimentación'};
+var IDEAS={
+  mente:['Leer 20 min','Escribir 3 gratitudes','Estudiar inglés 15 min','Sin celular la primera hora'],
+  ejer:['Correr 20 min','50 flexiones','Yoga 15 min','Subir por escalera'],
+  cuerpo:['Skincare de noche','Acostarme antes de las 0','Tomar sol 10 min','Pausa de postura'],
+  alim:['Fruta en el desayuno','Sin azúcar agregada','Proteína en cada comida','Cocinar en casa']
+};
+
+/* ── Interpretación ── */
+function pilarDicho(t){
+  t=norm(t);
+  if(/\bmente\b|mental|cabeza/.test(t)) return 'mente';
+  if(/ejercicio|deporte|fisic|entrenamiento/.test(t)) return 'ejer';
+  if(/\bcuerpo\b|salud|descanso/.test(t)) return 'cuerpo';
+  if(/aliment|comida|nutric|dieta/.test(t)) return 'alim';
+  return null;
+}
+function pilarInferido(n){
+  var t=norm(n);
+  if(/corr|gym|gimnas|entren|camin|yoga|pesas|bici|nad|flexion|abdomin|estir|futbol|padel|tenis|pasos|escalera|sentadilla|trot|box/.test(t)) return 'ejer';
+  if(/agua|comer|comida|fruta|verdur|protein|azucar|alcohol|cafe|desayun|cena|almuerz|vitamin|suplement|ayuno|cocin|harina|gaseosa/.test(t)) return 'alim';
+  if(/dorm|siesta|piel|skincare|ducha|dient|postura|sol\b|bano|crema|acostar/.test(t)) return 'cuerpo';
+  return 'mente';
+}
+function numeroDe(t){
+  var m=norm(t).match(/(\d+)\s*(pts|puntos?|monedas?|coins?)\b/) || norm(t).match(/\b(?:por|a|en|cuesta|vale|valga|cueste)\s+(\d+)\b/);
+  return m ? Number(m[1]) : null;
+}
+var STOP=['che','porfa','por','favor','agrega','agregame','agregar','agregue','anade','anadi','anadime','anadir','crea','creame','crear','suma','sumame','sumar',
+  'pone','poneme','poner','mete','meteme','meter','quiero','queria','nuevo','nueva','un','una','el','la','los','las','habito','habitos','premio','premios',
+  'recompensa','gusto','regalo','de','del','mi','me','que','se','llame','llamado','llamada','como','tipo','otro','otra','dame','darme','hace','hacer','empezar','a'];
+function nombreDe(txt){
+  var q=String(txt).match(/["“'«]([^"”'»]{2,40})["”'»]/);
+  if(q) return cap(q[1]);
+  var palabras=String(txt).trim().split(/\s+/), i=0;
+  while(i<palabras.length && STOP.indexOf(norm(palabras[i]).replace(/[^a-z]/g,''))>=0) i++;
+  var resto=' '+palabras.slice(i).join(' ')+' ';
+  resto=resto.split(/\s(?:en el pilar|en (?:mente|ejercicio|cuerpo|alimentaci\S*)|por \d+|que (?:valga|cueste|de)|a \d+\s?(?:pts|puntos|monedas)|cada \d+|solo|sólo|los fines?|el finde|los findes|de \d+ a \d+|\d+\s?(?:pts|puntos?|monedas?))\b/i)[0];
+  resto=resto.replace(/[.,;!?]+$/,'').trim();
+  return resto.length>=2 ? cap(resto) : '';
+}
+function restrDe(t){
+  t=norm(t);
+  if(/finde|fin de semana|fines de semana/.test(t)) return {tipo:'dias', dias:[6,0]};
+  var m=t.match(/cada (\d+) dias?/); if(m) return {tipo:'frecuencia', cadaDias:Number(m[1])};
+  m=t.match(/de (\d{1,2}) a (\d{1,2})/); if(m) return {tipo:'horario', desde:Number(m[1]), hasta:Number(m[2])};
+  var D={domingo:0,lunes:1,martes:2,miercoles:3,jueves:4,viernes:5,sabado:6}, ds=[];
+  Object.keys(D).forEach(function(k){ if(t.indexOf(k)>=0) ds.push(D[k]); });
+  if(ds.length && /solo|los |el /.test(t)) return {tipo:'dias', dias:ds};
+  if(/siempre|cuando quiera|libre/.test(t)) return {tipo:'libre'};
+  return null;
+}
+function buscar(t){
+  var a=api(), q=norm(t), res=[];
+  a.habitos().forEach(function(h){ var n=norm(h.n); if(n.length>2 && (q.indexOf(n)>=0 || (n.split(' ')[0].length>3 && q.indexOf(n.split(' ')[0])>=0))) res.push({tipo:'hab', key:h.key, n:h.n, pts:h.pts}); });
+  a.premios().forEach(function(p){ var n=norm(p.nombre); if(n.length>2 && (q.indexOf(n)>=0 || (n.split(' ')[0].length>3 && q.indexOf(n.split(' ')[0])>=0))) res.push({tipo:'prem', id:p.id, n:p.nombre, costo:p.costo}); });
+  return res;
+}
+function describirRestr(r){
+  if(!r || r.tipo==='libre') return 'cuando quieras';
+  if(r.tipo==='dias'){ var N=['dom','lun','mar','mié','jue','vie','sáb']; return 'sólo '+r.dias.map(function(d){ return N[d]; }).join(', '); }
+  if(r.tipo==='horario') return 'de '+r.desde+' a '+r.hasta+' h';
+  return 'cada '+r.cadaDias+' días';
+}
+
+/* ── Respuestas ── */
+var deshacer=null;
+function bot(html, chips){ return {de:'bot', html:html, chips:chips||null}; }
+var CH_MENU=[{t:'Agregar hábito',v:'Quiero agregar un hábito'},{t:'Crear premio',v:'Quiero crear un premio'},{t:'¿Cómo voy?',v:'¿Cómo voy?'},{t:'Ideas para mí',v:'Dame ideas'}];
+
+function responder(txt){
+  var a=api(); if(!a) return bot('Dame un segundo, estoy cargando tus datos.');
+  var t=norm(txt);
+
+  if(/^(cancel|nada|deja|olvida|no gracias|chau|salir)/.test(t)){ st.flow=null; return bot('Listo, cancelado. ¿Algo más?', CH_MENU); }
+  if(t==='deshacer' && deshacer){ var f=deshacer; deshacer=null; f(); return bot('Hecho, lo deshice.', CH_MENU); }
+
+  // ── Flujos guiados ──
+  if(st.flow) return seguirFlujo(txt);
+
+  if(/^(hola|buenas|hey|ey|que tal|buen dia|ayuda|help|que podes|que sabes)/.test(t))
+    return bot('¡Hola! Soy <b>Atlas</b>, tu coach. Puedo <b>crear hábitos</b> y <b>premios</b>, cambiar puntos, contarte <b>cómo vas</b> y tirarte ideas. Escribime como le hablarías a un amigo.', CH_MENU);
+
+  // Sacar
+  if(/\b(borr|elimin|saca|saque|quita|quite|chau)\w*/.test(t)){
+    var r=buscar(txt);
+    if(!r.length) return bot('No encontré cuál querés sacar. Decime el nombre tal cual aparece.', null);
+    var x=r[0];
+    if(x.tipo==='hab'){ var prev=a.quitarHabito(x.key); deshacer=function(){ a.restaurarHabito(x.key, prev); };
+      return bot(card('Hábito eliminado', x.n, 'Ya no aparece en tus pilares.'), [{t:'Deshacer',v:'deshacer'}].concat(CH_MENU.slice(0,2))); }
+    var pr=a.quitarPremio(x.id); deshacer=function(){ a.restaurarPremio(pr); };
+    return bot(card('Premio eliminado', x.n, ''), [{t:'Deshacer',v:'deshacer'}].concat(CH_MENU.slice(1,3)));
+  }
+
+  // Cambiar puntos / precio
+  if(/\b(cambi|pone|pon|subi|baja|ajust|que valga|que cueste)\w*/.test(t) && numeroDe(txt)!=null){
+    var r2=buscar(txt);
+    if(r2.length){ var y=r2[0], n=numeroDe(txt);
+      if(y.tipo==='hab'){ var ant=y.pts; a.puntosHabito(y.key,n); deshacer=function(){ a.puntosHabito(y.key,ant); };
+        return bot(card('Puntos actualizados', y.n, ant+' → <b>'+n+' pts</b>'), [{t:'Deshacer',v:'deshacer'},{t:'¿Cómo voy?',v:'¿Cómo voy?'}]); }
+      var ant2=y.costo; a.costoPremio(y.id,n); deshacer=function(){ a.costoPremio(y.id,ant2); };
+      return bot(card('Precio actualizado', y.n, ant2+' → <b>'+n+' monedas</b>'), [{t:'Deshacer',v:'deshacer'}]);
+    }
+  }
+
+  // Premio
+  if(/premio|recompensa|regal|gusto|darme|permit/.test(t)){
+    st.flow={tipo:'prem', n:nombreDe(txt), costo:numeroDe(txt), restr:restrDe(txt)};
+    return seguirFlujo(null);
+  }
+  // Hábito
+  if(/habit|rutina|empezar a|quiero (empezar|arrancar)|agreg|anad|crea|suma|mete|pone/.test(t)){
+    var nm=nombreDe(txt);
+    st.flow={tipo:'hab', n:nm, pil:pilarDicho(txt), pts:numeroDe(txt)};
+    if(nm && !st.flow.pil) st.flow.pilSug=pilarInferido(nm);
+    return seguirFlujo(null);
+  }
+
+  // Cómo voy
+  if(/como voy|como estoy|resumen|progreso|porcentaje|cumpl|estadistic|que tal voy|mi semana/.test(t)) return estado();
+  // Listas
+  if(/(mis|ver|lista|cuales).*(habit)/.test(t)) return listaHab();
+  if(/(mis|ver|lista|cuales).*(premio)/.test(t)) return listaPrem();
+  // Ideas
+  if(/idea|suger|recomend|que (hago|agrego)|mejorar/.test(t)) return ideas();
+  // Motivación
+  if(/ganas|desmotiv|cansad|me cuesta|no puedo|fiaca|paja/.test(t)) return animo();
+  if(/gracias|genial|buenisimo|joya|dale|de una/.test(t)) return bot('¡De nada! Seguimos.', CH_MENU);
+
+  return bot('No te entendí del todo. Probá con algo como <i>"agregá el hábito correr 20 min"</i> o <i>"creá un premio helado por 80 el finde"</i>.', CH_MENU);
+}
+function card(tit, nombre, sub){
+  return '<div class="cb-card"><div class="cb-card-k">'+tit+'</div><div class="cb-card-n">'+esc(nombre)+'</div>'+(sub?'<div class="cb-card-s">'+sub+'</div>':'')+'</div>';
+}
+function seguirFlujo(txt){
+  var f=st.flow, a=api(), t=norm(txt||'');
+  if(f.tipo==='hab'){
+    if(txt!=null){
+      if(!f.n) f.n=cap(String(txt).replace(/[.!?]+$/,'').trim());
+      else if(!f.pil) f.pil=pilarDicho(txt)||(/^s[ií]\b|dale|ok|de una/.test(t)&&f.pilSug)||null;
+      else if(f.pts==null){ var n=numeroDe(txt) || Number((t.match(/\d+/)||[])[0]); if(n) f.pts=n; }
+    }
+    if(!f.n) return bot('¿Cómo se llama el hábito?', [{t:'Leer 20 min',v:'Leer 20 min'},{t:'Correr',v:'Correr'},{t:'Tomar agua',v:'Tomar agua'}]);
+    if(!f.pil){
+      if(f.pilSug && txt==null) return bot('¿Lo pongo en <b>'+PIL[f.pilSug]+'</b>?', [{t:'Sí, '+PIL[f.pilSug],v:PIL[f.pilSug]}].concat(Object.keys(PIL).filter(function(k){ return k!==f.pilSug; }).map(function(k){ return {t:PIL[k],v:PIL[k]}; })));
+      return bot('¿En qué pilar va <b>'+esc(f.n)+'</b>?', Object.keys(PIL).map(function(k){ return {t:PIL[k],v:PIL[k]}; }));
+    }
+    if(f.pts==null) return bot('¿Cuántos puntos te da cada vez?', [{t:'5',v:'5 pts'},{t:'10',v:'10 pts'},{t:'15',v:'15 pts'},{t:'25',v:'25 pts'}]);
+    var x=a.agregarHabito(f.n, Math.max(1,Math.min(200,f.pts)), f.pil); st.flow=null;
+    deshacer=function(){ a.quitarHabito('cx:'+x.id); };
+    return bot(card('Nuevo hábito en '+PIL[x.pil], x.n, '+'+x.pts+' pts cada día que lo cumplas'), [{t:'Deshacer',v:'deshacer'},{t:'Otro hábito',v:'Quiero agregar un hábito'},{t:'Ver Hoy',v:'__hoy'}]);
+  }
+  if(f.tipo==='prem'){
+    if(txt!=null){
+      if(!f.n) f.n=cap(String(txt).replace(/[.!?]+$/,'').trim());
+      else if(f.costo==null){ var c=numeroDe(txt) || Number((t.match(/\d+/)||[])[0]); if(c) f.costo=c; }
+      else if(!f.restr) f.restr=restrDe(txt)||{tipo:'libre'};
+    }
+    if(!f.n) return bot('¿Qué te querés regalar?', [{t:'Helado',v:'Helado'},{t:'Capítulo de serie',v:'Capítulo de serie'},{t:'Salida con amigos',v:'Salida con amigos'}]);
+    if(f.costo==null) return bot('¿Cuántas monedas cuesta <b>'+esc(f.n)+'</b>?', [{t:'50',v:'50'},{t:'100',v:'100'},{t:'250',v:'250'},{t:'500',v:'500'}]);
+    if(!f.restr) return bot('¿Cuándo vale?', [{t:'Siempre',v:'siempre'},{t:'Sólo finde',v:'el finde'},{t:'Cada 7 días',v:'cada 7 dias'},{t:'De 19 a 22 h',v:'de 19 a 22'}]);
+    var pr=a.agregarPremio(f.n, Math.max(1,f.costo), f.restr); st.flow=null;
+    deshacer=function(){ a.quitarPremio(pr.id); };
+    return bot(card('Nuevo ticket en Premios', pr.nombre, pr.costo+' monedas · '+describirRestr(pr.restr)), [{t:'Deshacer',v:'deshacer'},{t:'Otro premio',v:'Quiero crear un premio'},{t:'Ver Premios',v:'__premios'}]);
+  }
+  st.flow=null; return bot('¿En qué te ayudo?', CH_MENU);
+}
+function estado(){
+  var a=api(), hoy=a.cumplHoy(), sem=a.cumplSemana(0), ant=a.cumplSemana(1), d=sem-ant;
+  var peor=Object.keys(PIL).map(function(k){ return {k:k, p:a.cumplPilar(k)}; }).sort(function(x,y){ return x.p-y.p; })[0];
+  var pend=a.pendientesHoy().length;
+  var h='<div class="cb-stats"><span><b>'+hoy+'%</b>hoy</span><span><b>'+sem+'%</b>semana</span><span><b>'+a.racha()+'</b>racha</span></div>'
+    + (d>=0 ? 'Vas <b>+'+d+'%</b> arriba de la semana pasada. ' : 'Vas <b>'+d+'%</b> abajo de la semana pasada. ')
+    + 'Tu pilar más flojo es <b>'+PIL[peor.k]+'</b> ('+peor.p+'%). '
+    + (pend ? 'Te quedan <b>'+pend+'</b> hábitos hoy.' : '¡Hoy cerraste todo!');
+  return bot(h, [{t:'Ideas para '+PIL[peor.k],v:'ideas de '+PIL[peor.k]},{t:'Ver Ranking',v:'__rank'},{t:'Ver Hoy',v:'__hoy'}]);
+}
+function listaHab(){
+  var a=api(), h='';
+  Object.keys(PIL).forEach(function(k){
+    var hs=a.habitos().filter(function(x){ return x.pil===k; });
+    if(hs.length) h+='<div class="cb-l"><b>'+PIL[k]+'</b> · '+hs.map(function(x){ return esc(x.n); }).join(', ')+'</div>';
+  });
+  return bot(h||'Todavía no tenés hábitos.', [{t:'Agregar hábito',v:'Quiero agregar un hábito'}]);
+}
+function listaPrem(){
+  var a=api(), ps=a.premios().slice().sort(function(x,y){ return x.costo-y.costo; });
+  if(!ps.length) return bot('No tenés premios todavía.', [{t:'Crear premio',v:'Quiero crear un premio'}]);
+  return bot(ps.map(function(p){ return '<div class="cb-l"><b>'+esc(p.nombre)+'</b> · '+p.costo+' monedas</div>'; }).join(''), [{t:'Crear premio',v:'Quiero crear un premio'}]);
+}
+function ideas(txt){
+  var a=api(), k=null;
+  if(st._ideasPil) { k=st._ideasPil; st._ideasPil=null; }
+  if(!k) k=Object.keys(PIL).map(function(x){ return {k:x, p:a.cumplPilar(x)}; }).sort(function(x,y){ return x.p-y.p; })[0].k;
+  var ya=a.habitos().map(function(h){ return norm(h.n); });
+  var lst=IDEAS[k].filter(function(i){ return ya.indexOf(norm(i))<0; }).slice(0,3);
+  return bot('Para reforzar <b>'+PIL[k]+'</b> te propongo:', lst.map(function(i){ return {t:'+ '+i, v:'agregá el hábito "'+i+'" en '+PIL[k]+' por 10 puntos'}; }));
+}
+function animo(){
+  var a=api(), p=a.pendientesHoy();
+  var fac=a.habitos().filter(function(h){ return p.indexOf(h.key)>=0; }).sort(function(x,y){ return x.pts-y.pts; })[0];
+  return bot('Pasa. No hace falta hacer todo: hacé <b>una cosa chiquita</b> y la racha sigue viva.'+(fac?' ¿Arrancamos con <b>'+esc(fac.n)+'</b>?':''), [{t:'Ver Hoy',v:'__hoy'},{t:'¿Cómo voy?',v:'¿Cómo voy?'}]);
+}
+
+/* ── UI ── */
+function pintar(){
+  var box=document.getElementById('chMsgs');
+  if(!box) return;
+  var h='';
+  st.msgs.forEach(function(m,i){
+    h+='<div class="cb-m '+m.de+'">'+(m.de==='bot'?'<span class="cb-av">'+ico(I_BOT,16)+'</span>':'')+'<div class="cb-b">'+m.html+'</div></div>';
+  });
+  box.innerHTML=h;
+  var ult=st.msgs[st.msgs.length-1], chips=document.getElementById('chChips');
+  chips.innerHTML = (ult && ult.de==='bot' && ult.chips) ? ult.chips.map(function(c){ return '<button data-v="'+esc(c.v)+'">'+esc(c.t)+'</button>'; }).join('') : '';
+  chips.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', function(){ enviar(b.dataset.v, b.textContent); }); });
+  box.scrollTop=box.scrollHeight;
+}
+function enviar(v, visible){
+  v=String(v||'').trim(); if(!v) return;
+  if(v.indexOf('__')===0){ cerrar(); if(window.App && App.showScreen) App.showScreen('hab', {__hoy:'hoy',__premios:'premios',__rank:'rank'}[v]); return; }
+  var m=v.match(/^ideas de (.+)$/i); if(m) st._ideasPil=pilarDicho(m[1]);
+  st.msgs.push({de:'yo', html:esc(visible||v)});
+  pintar();
+  var box=document.getElementById('chMsgs');
+  box.insertAdjacentHTML('beforeend','<div class="cb-m bot typing"><span class="cb-av">'+ico(I_BOT,16)+'</span><div class="cb-b"><i></i><i></i><i></i></div></div>');
+  box.scrollTop=box.scrollHeight;
+  setTimeout(function(){
+    var r;
+    try { r = m ? ideas() : responder(v); } catch(e){ console.warn(e); r=bot('Uy, algo falló. Probá de otra forma.', CH_MENU); }
+    st.msgs.push(r); guardar(); pintar();
+    if(navigator.vibrate) navigator.vibrate(8);
+  }, 450+Math.random()*350);
+}
+function abrir(){
+  var bg=document.getElementById('chatBg');
+  if(!st.msgs.length){
+    var nom=''; try { nom=(Track.datos().social||{}).nombre||''; } catch(e){}
+    st.msgs.push(bot('¡Hola'+(nom?' '+esc(nom):'')+'! Soy <b>Atlas</b>. Decime qué querés cambiar de tu rutina y lo armo: hábitos, premios, puntos. También te cuento cómo vas.', CH_MENU));
+    guardar();
+  }
+  bg.classList.add('on');
+  try { localStorage.setItem('atlas.chat.visto','1'); } catch(e){}
+  var dot=document.querySelector('#tbChat .tbc-dot'); if(dot) dot.remove();
+  pintar();
+  setTimeout(function(){ var i=document.getElementById('chIn'); if(i && window.innerWidth>600) i.focus(); }, 200);
+}
+function cerrar(){ document.getElementById('chatBg').classList.remove('on'); }
+
+function init(){
+  var bg=document.getElementById('chatBg');
+  bg.innerHTML='<div class="ch">'
+    + '<div class="ch-h"><span class="ch-av">'+ico(I_BOT,22)+'</span><div class="ch-t"><b>Atlas</b><span>tu coach · siempre online</span></div>'
+    + '<button class="ch-x" id="chX">'+ico('<path d="M18 6L6 18M6 6l12 12"/>',18)+'</button></div>'
+    + '<div class="ch-msgs" id="chMsgs"></div>'
+    + '<div class="ch-chips" id="chChips"></div>'
+    + '<form class="ch-in" id="chForm"><input id="chIn" autocomplete="off" placeholder="Escribile a Atlas…"><button type="submit" aria-label="Enviar">'+ico(I_SEND,20)+'</button></form>'
+    + '</div>';
+  document.getElementById('chX').addEventListener('click', cerrar);
+  document.getElementById('chForm').addEventListener('submit', function(e){ e.preventDefault(); var i=document.getElementById('chIn'); var v=i.value; i.value=''; enviar(v); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && bg.classList.contains('on')) cerrar(); });
+  var tb=document.getElementById('tbChat');
+  tb.innerHTML=ico(I_BOT,20);
+  var visto=false; try { visto=!!localStorage.getItem('atlas.chat.visto'); } catch(e){}
+  if(!visto) tb.insertAdjacentHTML('beforeend','<span class="tbc-dot"></span>');
+  tb.addEventListener('click', abrir);
+}
+window.AtlasChat={abrir:abrir, enviar:enviar, _responder:responder};
+try { init(); } catch(e){ console.warn('chat', e); }
 })();
 </script>
 
