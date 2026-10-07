@@ -3781,6 +3781,33 @@ body{
 .pz-vence{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink3);background:rgba(var(--fg),.05)}
 .pz-vence.urge{color:#2a1d14;background:var(--cream)}
 
+/* Hoja de lectura */
+.mod-hab .lc-hero{padding:16px;border-radius:18px;background:rgba(var(--fg),.04);margin:10px 0 12px}
+.mod-hab .lc-n{font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1}
+.mod-hab .lc-n small{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.mod-hab .lc-bar,.mod-hab .lc-bbar{height:8px;border-radius:999px;background:var(--track);overflow:hidden;margin-top:10px}
+.mod-hab .lc-bar i,.mod-hab .lc-bbar i{display:block;height:100%;border-radius:999px;background:var(--brand)}
+.mod-hab .lc-hero.ok .lc-bar i{background:var(--mint)}
+.mod-hab .lc-s{font-size:13px;font-weight:600;color:var(--ink3);margin-top:8px}
+.mod-hab .lc-hero.ok .lc-s{color:var(--mint)}
+.mod-hab .lc-empty{font-size:13.5px;color:var(--ink3);margin:4px 2px 10px}
+.mod-hab .lc-book{padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--line);margin-bottom:10px}
+.mod-hab .lc-bh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.mod-hab .lc-bh b{font-size:15px;font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-hab .lc-bh span{font-size:12px;font-weight:600;color:var(--ink3);flex-shrink:0}
+.mod-hab .lc-bbar{height:5px;margin-top:8px}
+.mod-hab .lc-ctrl{display:flex;align-items:center;gap:6px;margin-top:12px}
+.mod-hab .lc-ctrl button{height:40px;min-width:40px;padding:0 10px;border-radius:12px;font-size:18px;font-weight:800;color:var(--ink);background:rgba(var(--fg),.07)}
+.mod-hab .lc-ctrl button:active{transform:scale(.94)}
+.mod-hab .lc-ctrl span{min-width:52px;text-align:center;display:flex;flex-direction:column;font-size:10.5px;font-weight:600;color:var(--ink3)}
+.mod-hab .lc-ctrl span b{font-size:19px;font-weight:800;color:var(--ink);line-height:1.1}
+.mod-hab .lc-ctrl .lc-q{flex:1;font-size:14px;color:var(--brand2);background:rgba(255,138,91,.12)}
+.mod-hab .lc-add{display:flex;gap:8px;margin-top:6px}
+.mod-hab .lc-add .trk-inp{flex:1;min-width:0}
+.mod-hab .lc-add .trk-inp:nth-child(2){flex:0 0 80px}
+.mod-hab .lc-add button{width:46px;flex-shrink:0;border-radius:12px;font-size:22px;font-weight:800;color:#2a1408;background:var(--grad)}
+
+.mod-hab .trk-inp::placeholder,.mod-hab .trk-num::placeholder{color:var(--ink3) !important;opacity:.8}
 </style>
 </head>
 
@@ -5691,8 +5718,7 @@ function renderResumen(){
   });
 
   // ── Premios disponibles hoy ──
-  var pzHoy=premiosTrackerHTML(k, sal, true);
-  if(pzHoy) s+='<div class="trk-res">'+pzHoy+'</div>';
+
   cont.innerHTML=s;
 
   // ── Cableado ──
@@ -5736,7 +5762,7 @@ function renderResumen(){
   var hcR=document.getElementById('hcRank');
   if(hcR) hcR.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
   var bL=document.getElementById('trkResLec');
-  if(bL) bL.addEventListener('click', function(){ abrirDia(k); });
+  if(bL) bL.addEventListener('click', function(){ abrirLectura(k); });
   try { if(window.Lvl) window.Lvl.renderCard(); } catch(e){}
 }
 
@@ -6498,10 +6524,6 @@ function abrirDia(k){
   h+='<div class="trk-sec">Hábitos</div>';
   h+=fila({ id:'tgMed', color:'#4dc98a', ico:ICO.med, nombre:'Meditar ' + T.metas.meditar.minDia + ' min',
             detalle: d.med?'hecho':'sin marcar', estado: d.med?' ok':'', on:!!d.med });
-  h+=fila({ id:'tgChe', color:'#6aa9d8', ico:ICO.che, nombre:'Chess · −' + C().chess + ' pts · ' + p2(T.metas.chess.desde) + '-' + p2(T.metas.chess.hasta) + ' h',
-            detalle: d.chess ? (chessExceso(d) ? 'excedido: ' + d.chess.min + ' min' : d.chess.min + ' min') : 'sin marcar',
-            estado: d.chess ? (chessExceso(d)?' bad':' ok') : '', on:!!d.chess,
-            extra: '<input type="number" class="trk-num' + (chessExceso(d)?' warn':'') + '" id="inChe" inputmode="numeric" min="0" max="240" value="' + (d.chess?d.chess.min:T.metas.chess.maxMin) + '">' });
   h+=fila({ id:'tgSue', color:'#a98fd8', ico:ICO.sue, nombre:'Dormir bien',
             detalle: d.sue ? (sueOk(d) ? d.sue.h + ' h' : 'corto: ' + d.sue.h + ' h') : 'sin marcar',
             estado: d.sue ? (sueOk(d)?' ok':' bad') : '', on:!!d.sue,
@@ -6560,24 +6582,6 @@ function abrirDia(k){
               detalle: d[x[1]]?'hecho':'sin marcar', estado: d[x[1]]?' ok':'', on:!!d[x[1]] });
   });
 
-  h+='<div class="trk-sec">Reglas</div>';
-  h+=fila({ id:'tgAz', color:'#ff6b00', ico:ICO.az, nombre:'Comí azúcar · −' + C().az + ' pts',
-            detalle: d.az ? (finde?'permitido: es finde':'no estaba permitido') : (finde?'finde libre':'prohibido hoy'),
-            estado: d.az ? (finde?' ok':' bad') : '', on:!!d.az, mal:!finde });
-  var ok=instaValido(k);
-  h+=fila({ id:'tgIg', color:'#c14747', ico:ICO.ig, nombre:'Usé Instagram · −' + C().insta + ' pts',
-            detalle: d.insta ? (ok ? d.insta.min + ' min · dentro de la regla' : d.insta.min + ' min · fuera de la regla')
-                             : (ok ? 'habilitado este día' : 'no corresponde este día'),
-            estado: d.insta ? (ok?' ok':' bad') : '', on:!!d.insta, mal:!ok,
-            extra: '<input type="number" class="trk-num" id="inIg" inputmode="numeric" min="0" max="600" value="' + (d.insta?d.insta.min:T.metas.insta.maxMin) + '">' });
-
-  if(d.az && !finde) h+='<div class="trk-aviso">Es día de semana: el azúcar quedaba para el finde.</div>';
-  if(d.insta && !ok){
-    var pr=proxInstaPermitido();
-    h+='<div class="trk-aviso">Fuera de la frecuencia permitida. Con esta regla, el próximo domingo habilitado es ' + esc(largo(pr)) + '.</div>';
-  }
-  if(!d.insta && !ok && dow(k)===0) h+='<div class="trk-aviso info">Es domingo, pero todavía no pasaron ' + T.metas.insta.cadaDias + ' días desde el último uso.</div>';
-
   var el=abrirSheet(h);
 
   // ── Cableado ──
@@ -6585,16 +6589,6 @@ function abrirDia(k){
 
   el.querySelector('#tgMed').addEventListener('click', function(){
     editar(k, function(x){ if(x.med) delete x.med; else x.med=1; });
-    refrescar(k);
-  });
-  el.querySelector('#tgChe').addEventListener('click', function(){
-    var min=Number(document.getElementById('inChe').value)||0;
-    editar(k, function(x){ if(x.chess) delete x.chess; else x.chess={min:min}; });
-    refrescar(k);
-  });
-  el.querySelector('#inChe').addEventListener('change', function(e){
-    var min=Math.max(0,Number(e.target.value)||0);
-    editar(k, function(x){ x.chess={min:min}; });
     refrescar(k);
   });
   el.querySelector('#tgSue').addEventListener('click', function(){
@@ -6624,20 +6618,6 @@ function abrirDia(k){
   el.querySelector('#dienMas').addEventListener('click', function(){ setDientes(Number(dia(k).dien||0)+1); });
   el.querySelector('#inDien').addEventListener('change', function(e){ setDientes(Number(e.target.value)||0); });
 
-  el.querySelector('#tgAz').addEventListener('click', function(){
-    editar(k, function(x){ if(x.az) delete x.az; else x.az=1; });
-    refrescar(k);
-  });
-  el.querySelector('#tgIg').addEventListener('click', function(){
-    var min=Number(document.getElementById('inIg').value)||0;
-    editar(k, function(x){ if(x.insta) delete x.insta; else x.insta={min:min}; });
-    refrescar(k);
-  });
-  el.querySelector('#inIg').addEventListener('change', function(e){
-    var min=Math.max(0,Number(e.target.value)||0);
-    editar(k, function(x){ x.insta={min:min}; });
-    refrescar(k);
-  });
   el.querySelectorAll('[data-pag]').forEach(function(b){
     b.addEventListener('click', function(){
       var id=b.dataset.pag, delta=Number(b.dataset.delta);
@@ -6667,6 +6647,46 @@ function refrescar(k){
   renderResumen();
   try { if(window.App && App.modules.hab && App.modules.hab.redibujar) App.modules.hab.redibujar(); } catch(e){}
   if(sheetDia===k) abrirDia(k);   // redibuja el sheet con los estados nuevos
+}
+
+/* ============================================================
+   SHEET · lectura (sólo lo de leer)
+   ============================================================ */
+function abrirLectura(k){
+  sheetDia=null;
+  var d=dia(k), p=P(), pag=paginasDia(d), meta=Number(p.lecMin)||1, pc=Math.min(100,Math.round(pag/meta*100));
+  var h=cab('Lectura', (rel(k)||largo(k))+' · meta '+meta+' páginas');
+  h+='<div class="lc-hero'+(pag>=meta?' ok':'')+'"><div class="lc-n">'+pag+'<small> / '+meta+' páginas hoy</small></div>'
+    + '<div class="lc-bar"><i style="width:'+pc+'%"></i></div>'
+    + '<div class="lc-s">'+(pag>=meta?'Cumplido · +'+p.lec+' pts':'Te faltan '+(meta-pag)+' páginas')+'</div></div>';
+  var libros=T.libros.filter(function(lb){ return !libroTerminado(lb) || (d.lec&&d.lec[lb.id]); });
+  if(!libros.length) h+='<div class="lc-empty">Cargá el libro que estás leyendo para anotar páginas.</div>';
+  libros.forEach(function(lb){
+    var pg=(d.lec&&d.lec[lb.id])?Number(d.lec[lb.id]):0, le=leido(lb.id), tt=Number(lb.paginas)||1, pcl=Math.min(100,Math.round(le/tt*100));
+    h+='<div class="lc-book"><div class="lc-bh"><b>'+esc(lb.titulo)+'</b><span>'+le+' / '+tt+' · '+pcl+'%</span></div>'
+      + '<div class="lc-bbar"><i style="width:'+pcl+'%"></i></div>'
+      + '<div class="lc-ctrl"><button data-lb="'+lb.id+'" data-d="-1">−</button><span><b>'+pg+'</b>hoy</span><button data-lb="'+lb.id+'" data-d="1">+</button>'
+      + '<button class="lc-q" data-lb="'+lb.id+'" data-d="5">+5</button><button class="lc-q" data-lb="'+lb.id+'" data-d="10">+10</button><button class="lc-q" data-lb="'+lb.id+'" data-d="20">+20</button></div></div>';
+  });
+  h+='<div class="lc-add"><input class="trk-inp" id="lcTit" placeholder="Nuevo libro"><input type="number" class="trk-inp" id="lcPag" placeholder="Págs" inputmode="numeric" min="2"><button id="lcAdd" aria-label="Agregar libro">+</button></div>';
+  var el=abrirSheet(h);
+  document.getElementById('trkX').addEventListener('click', cerrarSheet);
+  function rehacer(){ render(); renderResumen(); try { if(window.App && App.modules.hab && App.modules.hab.redibujar) App.modules.hab.redibujar(); } catch(e){} abrirLectura(k); }
+  el.querySelectorAll('[data-lb]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id=b.dataset.lb, ant=(dia(k).lec&&dia(k).lec[id])?Number(dia(k).lec[id]):0;
+      guardarPaginas(k, id, Math.max(0, ant+Number(b.dataset.d)));
+      if(navigator.vibrate) navigator.vibrate(6);
+      rehacer();
+    });
+  });
+  document.getElementById('lcAdd').addEventListener('click', function(){
+    var t=(document.getElementById('lcTit').value||'').trim(), pgs=Number(document.getElementById('lcPag').value)||0;
+    if(!t) return msg('Poné el título');
+    if(pgs<2) return msg('Poné cuántas páginas tiene');
+    T.libros.push({ id:'lb'+Math.random().toString(36).slice(2,7), titulo:t, paginas:pgs });
+    save(); rehacer(); msg('Libro agregado');
+  });
 }
 
 /* ============================================================
