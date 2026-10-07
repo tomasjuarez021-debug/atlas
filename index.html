@@ -3778,6 +3778,9 @@ body{
 .mod-hab .jf-strip b{color:var(--ink2);font-weight:700}
 .mod-hab .jf-strip em{font-style:normal;font-size:12px;font-weight:800;color:var(--ink3)}
 
+.pz-vence{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;color:var(--ink3);background:rgba(var(--fg),.05)}
+.pz-vence.urge{color:#2a1d14;background:var(--cream)}
+
 </style>
 </head>
 
@@ -4137,9 +4140,13 @@ function getLog(ds){
   return l;
 }
 /* Neto propio de este módulo (actividades cargadas menos premios canjeados) */
-function netoPropio(){
+/* Las monedas viven una semana (lunes a domingo): el saldo sólo suma ese rango */
+function lunesSemana(){ var d=new Date(today()+'T12:00:00'); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function netoPropio(desde, hasta){
+  desde=desde||lunesSemana();
+  if(!hasta){ var f=new Date(desde+'T12:00:00'); f.setDate(f.getDate()+6); hasta=f.getFullYear()+'-'+pad(f.getMonth()+1)+'-'+pad(f.getDate()); }
   var e=0,g=0;
-  Object.keys(S.log||{}).forEach(function(ds){ var c=counts(ds); e+=c.earned; g+=c.spent; });
+  Object.keys(S.log||{}).forEach(function(ds){ if(ds<desde||ds>hasta) return; var c=counts(ds); e+=c.earned; g+=c.spent; });
   return e-g;
 }
 /* Saldo único de la app: esto más la rutina de hábitos */
@@ -5044,13 +5051,23 @@ function premioDisp(prem){
   }
   return {ok:true, nota:'sin restricción'};
 }
-function netoPropio(){
+/* Monedas semanales: se cuentan de lunes a domingo y vuelven a 0 al terminar el domingo */
+function netoPropio(desde, hasta){
+  desde=desde||lunesDe(hoyKey()); hasta=hasta||sumaDias(desde,6);
   var n=0;
-  claves().forEach(function(k){ n += ganadosDia(k) - gastadosDia(k); });
-  if(T.cofres) Object.keys(T.cofres).forEach(function(w){ n += Number(T.cofres[w])||0; });   // cofres semanales
-  if(T.recompensas) Object.keys(T.recompensas).forEach(function(L){ n += Number(T.recompensas[L])||0; });   // regalos de nivel
+  claves().forEach(function(k){ if(k>=desde && k<=hasta) n += ganadosDia(k) - gastadosDia(k); });
+  if(T.cofres) Object.keys(T.cofres).forEach(function(w){ if(w>=desde && w<=hasta) n += Number(T.cofres[w])||0; });   // cofres semanales
+  if(T.recompensas) Object.keys(T.recompensas).forEach(function(L){   // regalos de nivel y jefes (del momento en que se cobraron)
+    var v=T.recompensas[L]; if(v && typeof v==='object' && v.w>=desde && v.w<=hasta) n += Number(v.p)||0;
+  });
   return n;
 }
+function saldoDeSemana(lun){
+  var otro=0;
+  try { if(window.App && App.modules.hab && App.modules.hab.netoPropio) otro=App.modules.hab.netoPropio(lun, sumaDias(lun,6)); } catch(e){}
+  return netoPropio(lun, sumaDias(lun,6)) + otro;
+}
+function diasParaReset(){ return difDias(hoyKey(), sumaDias(lunesDe(hoyKey()),6)); }   // 0 = hoy es domingo
 /* Saldo único: la rutina más las actividades y premios del otro módulo */
 function saldo(){
   var otro=0;
@@ -5819,7 +5836,10 @@ function renderPremios(){
     + '<div class="pz-wallet">'
     +   '<span class="pz-coins">'+PZ_COIN.replace('width="16" height="16"','width="34" height="34"')+'</span>'
     +   '<div><div class="pz-saldo'+(sal<0?' neg':'')+'"><span id="pzSaldoN">'+sal+'</span></div>'
-    +   '<div class="pz-hint">'+(alcanza ? '<b>'+alcanza+'</b> '+(alcanza===1?'ticket listo':'tickets listos')+' para canjear' : 'Juntá monedas para tu próximo ticket')+'</div></div>'
+    +   '<div class="pz-hint">'+(alcanza ? '<b>'+alcanza+'</b> '+(alcanza===1?'ticket listo':'tickets listos')+' para canjear' : 'Juntá monedas para tu próximo ticket')+'</div>'
+    +   (function(){ var dr=diasParaReset(); return '<div class="pz-vence'+(dr<=1?' urge':'')+'">'+pzI('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/>',14,2.2)
+        + (dr===0 ? 'Vencen hoy: gastalas' : (dr===1 ? 'Vencen mañana' : 'Vencen en '+dr+' días')) + '</div>'; })()
+    +   '</div>'
     + '</div>'
     + '<button class="pz-gear" id="pzGear" aria-label="Configurar premios">'+pzI(PZ_GEAR,20,1.8)+'</button>'
     + '</div>';
@@ -6799,6 +6819,17 @@ function msg(t){
 /* ── Arranque ── */
 load();
 try { rkDesdeLink(); } catch(e){}
+/* Semana nueva: las monedas arrancan de 0 */
+try {
+  var lunHoy=lunesDe(hoyKey()), visto=localStorage.getItem('atlas.semana');
+  if(visto && visto<lunHoy){
+    setTimeout(function(){
+      var sobra=saldoDeSemana(visto);
+      msg(sobra>0 ? 'Semana nueva: se vencieron '+sobra+' monedas. ¡A juntar!' : 'Semana nueva: arrancás de 0 monedas');
+    }, 1200);
+  }
+  localStorage.setItem('atlas.semana', lunHoy);
+} catch(e){}
 var pzBg=document.getElementById('pzBg');
 if(pzBg) pzBg.addEventListener('click', function(e){ if(e.target===pzBg) pzCerrar(); });
 try{ renderResumen(); }catch(e){ console.warn('trk resumen', e); }
@@ -6854,7 +6885,7 @@ window.Track = {
   },
   recompensa: {
     reclamada: function(L){ return !!(T.recompensas && T.recompensas[L]); },
-    reclamar: function(L,pts){ if(!T.recompensas) T.recompensas={}; if(T.recompensas[L]) return; T.recompensas[L]=Number(pts)||0; save(); repintar(); }
+    reclamar: function(L,pts){ if(!T.recompensas) T.recompensas={}; if(T.recompensas[L]) return; T.recompensas[L]={p:Number(pts)||0, w:lunesDe(hoyKey())}; save(); repintar(); }
   },
   cofre: {
     abierto: function(w){ return !!(T.cofres && T.cofres[w]); },
