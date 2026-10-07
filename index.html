@@ -3746,6 +3746,38 @@ body{
 .mod-hab .aj-theme .sw.d{background:#13110f} .mod-hab .aj-theme .sw.l{background:#f6f0e8}
 .mod-hab .aj-theme .sw.a{background:linear-gradient(135deg,#13110f 50%,#f6f0e8 50%)}
 
+/* ============================================================
+   JEFES
+   ============================================================ */
+.jf-tok{position:absolute;transform:translate(-50%,-50%);z-index:3;width:58px;height:58px;display:grid;place-items:center}
+.jf-tok svg{filter:drop-shadow(0 4px 0 rgba(0,0,0,.25))}
+.jf-tok.oculto svg{filter:brightness(0);opacity:.28}
+.jf-q{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:800;color:var(--ink3)}
+.jf-tok.activo{animation:jfSway 3.4s ease-in-out infinite}
+@keyframes jfSway{0%,100%{transform:translate(-50%,-50%) rotate(-4deg)}50%{transform:translate(-50%,-56%) rotate(4deg)}}
+.jf-pips,.jf-hp{display:flex;gap:3px;justify-content:center}
+.jf-pips{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%)}
+.jf-pips i,.jf-hp i{display:block;width:7px;height:7px;border-radius:2px;background:#b5654a}
+.jf-pips i.on,.jf-hp i.on{background:var(--mute)}
+.jf-tok.vencido svg{filter:grayscale(1);opacity:.4}
+.jf-x{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);padding:0 6px;border-radius:999px;font-size:11px;font-weight:800;color:#2a1d14;background:#d9b37a}
+.jf-x:empty{display:none}
+.jf-tok.cobrar{animation:ptGift 1.8s ease-in-out infinite}
+.jf-big{display:grid;place-items:center}
+.jf-sheet.oculto .jf-big svg{filter:brightness(0);opacity:.3}
+.jf-sheet.vencido .jf-big svg{filter:grayscale(.7)}
+.jf-lema{font-style:italic;color:var(--ink2) !important}
+.jf-hp{margin-top:12px}
+.jf-hp i{width:14px;height:10px;border-radius:3px}
+/* en Hoy, apenas una presencia */
+.mod-hab .orb-jf{position:absolute;bottom:-4px;left:-4px;z-index:3;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--bg);animation:jfPeek 6s ease-in-out infinite}
+@keyframes jfPeek{0%,70%,100%{transform:translateY(0)}78%{transform:translateY(-3px) rotate(-8deg)}86%{transform:translateY(0) rotate(6deg)}}
+.mod-hab .jf-strip{display:flex;align-items:center;gap:10px;width:calc(100% - 8px);margin:0 4px 6px;padding:6px 12px 6px 6px;border-radius:14px;text-align:left;
+  background:rgba(var(--fg),.035);border:1px dashed var(--line2)}
+.mod-hab .jf-strip span{flex:1;font-size:12.5px;color:var(--ink3)}
+.mod-hab .jf-strip b{color:var(--ink2);font-weight:700}
+.mod-hab .jf-strip em{font-style:normal;font-size:12px;font-weight:800;color:var(--ink3)}
+
 </style>
 </head>
 
@@ -5606,7 +5638,8 @@ function renderResumen(){
     var inc=vis.filter(function(pl){ return habsPilar(pl).some(function(c){ return !H[c].on; }); })[0];
     abierto=inc?inc.id:null;
   }
-  var RC=2*Math.PI*33;
+  var RC=2*Math.PI*33, JA={};
+  try { if(window.Lvl && Lvl.jefesActivos) Lvl.jefesActivos().forEach(function(e){ if(e.j.pil && !JA[e.j.pil]) JA[e.j.pil]=e; }); } catch(x){}
   s+='<div class="orbs">';
   vis.forEach(function(pl,i){
     var hs=habsPilar(pl), ok=hs.filter(function(c){ return H[c].on; }).length, pc=Math.round(ok/hs.length*100), full=ok===hs.length;
@@ -5614,6 +5647,7 @@ function renderResumen(){
       + '<span class="orb-c">'
       +   '<svg class="orb-r" viewBox="0 0 76 76"><circle cx="38" cy="38" r="33" class="orb-t"/><circle cx="38" cy="38" r="33" class="orb-f" stroke-dasharray="'+RC.toFixed(1)+'" stroke-dashoffset="'+(RC*(1-pc/100)).toFixed(1)+'"/></svg>'
       +   '<span class="orb-ic">'+pilIco(pl.ic,24)+'</span>'
+      +   (JA[pl.id]?'<span class="orb-jf">'+Lvl.jefeSVG(JA[pl.id].j.sp,22)+'</span>':'')
       +   (full?'<span class="orb-ok">'+pilIco('<path d="M5 12.5l4.5 4.5L19 7.5"/>',12)+'</span>':'')
       + '</span>'
       + '<span class="orb-n">'+pl.n+'</span><span class="orb-p">'+pc+'%</span>'
@@ -5624,7 +5658,8 @@ function renderResumen(){
     var hs=habsPilar(pl), ok=hs.filter(function(c){ return H[c].on; }).length, tot=hs.length, pc=Math.round(ok/tot*100);
     s+='<div class="pil-wrap'+(abierto===pl.id?' open':'')+'" data-pilw="'+pl.id+'"><div class="pil-in"><div class="pil'+(ok===tot?' full':'')+'">'
       + '<div class="pil-h"><span class="pil-ic">'+pilIco(pl.ic,18)+'</span><span class="pil-n">'+pl.n+'</span><span class="pil-c">'+ok+' de '+tot+'</span></div>'
-      + '<div class="pil-bar"><i style="width:'+pc+'%"></i></div>';
+      + '<div class="pil-bar"><i style="width:'+pc+'%"></i></div>'
+      + (JA[pl.id] ? '<button class="jf-strip" data-jefe="'+JA[pl.id].j.L+'">'+Lvl.jefeSVG(JA[pl.id].j.sp,28)+'<span><b>'+JA[pl.id].j.n+'</b> anda cerca</span><em>'+JA[pl.id].golpes+'/'+JA[pl.id].hp+'</em></button>' : '');
     hs.forEach(function(c){
       var h=H[c];
       var attr = h.tipo==='dien' ? 'id="trkResDien"' : (h.tipo==='lec' ? 'id="trkResLec"' : (h.tipo==='cx' ? 'data-cx="'+h.id+'"' : 'data-campo="'+c+'"'));
@@ -5680,6 +5715,7 @@ function renderResumen(){
       if(navigator.vibrate) navigator.vibrate(6);
     });
   });
+  cont.querySelectorAll('.jf-strip').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); if(window.Lvl) Lvl.abrirJefe(Number(b.dataset.jefe)); }); });
   var hcR=document.getElementById('hcRank');
   if(hcR) hcR.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
   var bL=document.getElementById('trkResLec');
@@ -6811,6 +6847,7 @@ window.Track = {
     cumplHoy: function(){ return cumplDias([hoyKey()]); },
     cumplSemana: function(off){ return cumplDias(diasSemana(off)); },
     cumplMes: function(){ return cumplDias(diasMesActual()); },
+    cumplDia: function(k,id){ var pl=id?pilarPorId(id):null; return pl ? cumplDias([k], pl) : cumplDias([k]); },
     cumplPilar: function(id){ var pl=pilarPorId(id); return pl ? cumplDias(diasSemana(0), pl) : 0; },
     pendientesHoy: function(){ var k=hoyKey(), out=[]; PILARES.forEach(function(pl){ habsPilar(pl).forEach(function(c){ if(!hechoEn(k,c)) out.push(c); }); }); return out; },
     racha: rachaActiva, saldo: saldo, techo: techoDia
@@ -6902,7 +6939,7 @@ function calc(){
   try { var h=hab(); if(h && h.logDays) h.logDays().forEach(function(k){ set[k]=1; }); } catch(e){}
   var dias=Object.keys(set).filter(function(k){ return k<=hoy; }).sort();
   var tc=techo();
-  var L=1, xp=0, total=0, contados=0, sinXP=0, hoyInfo=null, porDia={};
+  var L=1, xp=0, total=0, contados=0, sinXP=0, hoyInfo=null, porDia={}, alcanzo={1:dias[0]||hoy};
   dias.forEach(function(k){
     var e=ganadoDia(k);
     if(e<=0) return;
@@ -6910,7 +6947,7 @@ function calc(){
     if(k===hoy) hoyInfo={e:e, req:req, pct:pct, ok:ok};
     if(!ok){ sinXP++; return; }
     contados++; total+=e; xp+=e; porDia[k]=e;
-    while(L<MAX && xp>=stepXP(L)){ xp-=stepXP(L); L++; }
+    while(L<MAX && xp>=stepXP(L)){ xp-=stepXP(L); L++; alcanzo[L]=k; }
   });
   if(L>=MAX){ L=MAX; xp=0; }
   if(!hoyInfo) hoyInfo={e:0, req:tierOf(L).req, pct:0, ok:false};
@@ -6920,7 +6957,7 @@ function calc(){
   var falta = L<MAX ? stepXP(L)-xp : 0;
   return { L:L, xp:xp, need:L<MAX?stepXP(L):0, falta:falta, total:total, contados:contados, sinXP:sinXP,
            hoy:hoyInfo, techo:tc, ritmo:ritmo, eta: (ritmo>0 && falta>0) ? Math.ceil(falta/ritmo) : null,
-           tier:tierOf(L), ti:tierIdx(L) };
+           tier:tierOf(L), ti:tierIdx(L), alcanzo:alcanzo };
 }
 
 /* ── Íconos propios (SVG, sin emojis) ── */
@@ -7034,6 +7071,7 @@ function renderPage(){
   var el=document.getElementById('nivelBody');
   if(!el) return;
   var r=calc(), tot=xpHasta(r.L)+r.xp, nt=r.ti<TIERS.length-1?TIERS[r.ti+1]:null, pend=pendientes(r);
+  var JE={}; estadoJefes(r).forEach(function(e){ JE[e.j.L]=e; });
   var enTier=((r.L-1)%10)+1;
 
   // ── Cabecera ──
@@ -7108,6 +7146,16 @@ function renderPage(){
       + (st==='cur' ? '<span class="pv-tag">VOS</span>' : '')
       + (reclam ? '<span class="pv-badge">+'+premioNivel(L)+'</span>' : '')
       + '</button>';
+    if(JE[L]){
+      var je=JE[L], jx = n.x<50 ? n.x+30 : n.x-30, jy = n.y + (st==='cur' ? 70 : 0);
+      var pp=''; if(je.st==='activo'){ for(var q=0;q<je.hp;q++) pp+='<i class="'+(q<je.golpes?'on':'')+'"></i>'; }
+      s+='<button class="jf-tok '+je.st+(je.st==='vencido'&&!je.cobrado?' cobrar':'')+'" data-jefe="'+L+'" style="left:'+jx.toFixed(1)+'%;top:'+jy+'px">'
+        + jefeSVG(je.j.sp, 54)
+        + (je.st==='oculto'?'<span class="jf-q">?</span>':'')
+        + (je.st==='activo'?'<span class="jf-pips">'+pp+'</span>':'')
+        + (je.st==='vencido'?'<span class="jf-x">'+(je.cobrado?'':'+'+jefePremio(je.j))+'</span>':'')
+        + '</button>';
+    }
     if(st==='cur'){
       var cx = n.x<50 ? n.x+32 : n.x-32, disp=cofreDisp();
       s+='<button class="pt-cofre'+(disp?' on':'')+'" id="pthCofre" style="left:'+cx.toFixed(1)+'%;top:'+n.y+'px">'
@@ -7119,6 +7167,7 @@ function renderPage(){
 
   el.querySelectorAll('.pv').forEach(function(b){ b.addEventListener('click', function(){ abrirNivel(Number(b.dataset.l), r); }); });
   var cf=document.getElementById('pthCofre'); if(cf) cf.addEventListener('click', function(){ abrirCofre(r); });
+  el.querySelectorAll('[data-jefe]').forEach(function(b){ b.addEventListener('click', function(){ abrirJefe(Number(b.dataset.jefe), r); }); });
   var pp=document.getElementById('ptPend'); if(pp) pp.addEventListener('click', function(){
     var b=el.querySelector('.pv[data-l="'+pend[0]+'"]'); if(b){ b.scrollIntoView({block:'center', behavior:'smooth'}); setTimeout(function(){ abrirNivel(pend[0], r); }, 450); } });
   document.getElementById('lvRank').addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
@@ -7161,6 +7210,111 @@ function abrirNivel(L, r){
     + '<button data-cerrar>Listo</button>'
     + '</div>');
 }
+/* ── Jefes: aparecen de vez en cuando en el camino. Se vencen con días buenos en su pilar ── */
+var JEFES=[
+  {L:7,  sp:'morfeo',   n:'Morfeo',                  lema:'Mañana arrancás.',                    pil:'ejer'},
+  {L:16, sp:'banquete', n:'El Banquete',             lema:'Siempre hay lugar para uno más.',     pil:'alim'},
+  {L:23, sp:'morfeo',   n:'Morfeo, el que vuelve',   lema:'Cinco minutitos más.',                pil:'ejer'},
+  {L:32, sp:'espejo',   n:'El Espejo',               lema:'A los demás les sale más fácil.',     pil:'mente'},
+  {L:41, sp:'banquete', n:'El Banquete, otra vuelta',lema:'Hoy te lo merecés.',                  pil:'alim'},
+  {L:49, sp:'brasa',    n:'Brasa',                   lema:'Total, ya fue el día.',               pil:'cuerpo'},
+  {L:57, sp:'morfeo',   n:'Morfeo en tu cama',       lema:'Ya es tarde para empezar.',           pil:'ejer'},
+  {L:66, sp:'urraca',   n:'La Urraca',               lema:'Guardalo, no es para vos.',           pil:null},
+  {L:74, sp:'banquete', n:'El Gran Banquete',        lema:'Un poquito no hace nada.',            pil:'alim'},
+  {L:82, sp:'corona',   n:'La Corona Hueca',         lema:'Vos ya no necesitás esto.',           pil:null},
+  {L:89, sp:'destello', n:'Destello',                lema:'Uno más y lo dejás.',                 pil:'mente'},
+  {L:97, sp:'sombra',   n:'La Sombra',               lema:'Volvé a ser el de antes.',            pil:null}
+];
+var PIL_N={mente:'Mente', ejer:'Ejercicio', cuerpo:'Cuerpo', alim:'Alimentación'};
+function jefeHP(j){ return 3+Math.floor(j.L/20); }
+function jefePremio(j){ return j.L*10; }
+/* Ilustraciones propias, en tono mate */
+function jefeSVG(sp, sz){
+  var B={
+    morfeo:'<path d="M10 46c0-14 10-26 22-26s22 12 22 26c0 7-10 10-22 10s-22-3-22-10z" fill="#7d8aa3"/>'
+      +'<path d="M17 26c5-11 21-15 30-6l7 10-7-2c-7-5-19-5-30-2z" fill="#4b5568"/><circle cx="55" cy="31" r="3.2" fill="#cfd5df"/>'
+      +'<path d="M21 40q4.5 3.5 9 0M35 40q4.5 3.5 9 0" stroke="#2b2f38" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
+      +'<path d="M29 49q3.5 2 7 0" stroke="#2b2f38" stroke-width="2.2" fill="none" stroke-linecap="round"/>'
+      +'<path d="M46 9h6l-6 6h6M54 2h4l-4 4h4" stroke="#cfd5df" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    banquete:'<circle cx="32" cy="37" r="22" fill="#b8875a"/><ellipse cx="32" cy="46" rx="13" ry="9" fill="#d4a777"/>'
+      +'<circle cx="25" cy="30" r="2.8" fill="#2b2118"/><circle cx="39" cy="30" r="2.8" fill="#2b2118"/>'
+      +'<path d="M23 36q9 9 18 0z" fill="#5a2e1f"/><path d="M27 37.5h10" stroke="#f1e2cf" stroke-width="2" stroke-linecap="round"/>'
+      +'<path d="M55 10v20M52 10v6a3 3 0 006 0v-6" stroke="#8c7b6a" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+      +'<circle cx="12" cy="52" r="1.6" fill="#d4a777"/><circle cx="8" cy="46" r="1.2" fill="#d4a777"/>',
+    espejo:'<ellipse cx="32" cy="30" rx="17" ry="22" fill="#7f948b"/><ellipse cx="32" cy="30" rx="12.5" ry="17" fill="#c3d1ca"/>'
+      +'<path d="M25 18c3-3 7-4 10-3" stroke="#eef3f0" stroke-width="2" fill="none" stroke-linecap="round"/>'
+      +'<circle cx="28" cy="31" r="2.4" fill="#2c3330"/><circle cx="38" cy="31" r="2.4" fill="#2c3330"/>'
+      +'<path d="M28 39q4-2 8 0" stroke="#2c3330" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M32 52v8M25 60h14" stroke="#7f948b" stroke-width="3" stroke-linecap="round"/>',
+    brasa:'<path d="M32 58c-12 0-19-8-19-18 0-9 7-14 9-23 4 4 5 8 5 11 2-5 6-11 13-17 1 9 10 14 10 27 0 12-7 20-18 20z" fill="#b5654a"/>'
+      +'<path d="M22 37l7 3M42 37l-7 3" stroke="#2a1712" stroke-width="2.6" stroke-linecap="round"/>'
+      +'<circle cx="27" cy="42" r="2.2" fill="#2a1712"/><circle cx="37" cy="42" r="2.2" fill="#2a1712"/><path d="M28 50q4-3 8 0" stroke="#2a1712" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+    urraca:'<path d="M14 40c0-12 9-20 20-20 8 0 14 5 16 11l8 3-8 3c-2 9-9 15-18 15-10 0-18-5-18-12z" fill="#5f6670"/>'
+      +'<path d="M14 42l-8 10 12-4" fill="#3f454d"/><path d="M24 40c4 6 12 7 18 2" stroke="#dfe3e8" stroke-width="3" fill="none" stroke-linecap="round"/>'
+      +'<circle cx="40" cy="29" r="2.6" fill="#1e2226"/><circle cx="50" cy="52" r="6" fill="#c9a24e"/><circle cx="50" cy="52" r="3" fill="none" stroke="#8c6b26" stroke-width="1.4"/>',
+    corona:'<path d="M10 44l4-24 10 12 8-16 8 16 10-12 4 24z" fill="#b59a55"/><path d="M10 44h44v8H10z" fill="#8f7738"/>'
+      +'<circle cx="25" cy="36" r="2.4" fill="#2b2412"/><circle cx="39" cy="36" r="2.4" fill="#2b2412"/><path d="M27 41h10" stroke="#2b2412" stroke-width="2" stroke-linecap="round"/>',
+    destello:'<rect x="17" y="8" width="30" height="48" rx="7" fill="#6f6a8a"/><rect x="21" y="13" width="22" height="34" rx="3" fill="#a9a3c7"/>'
+      +'<ellipse cx="32" cy="29" rx="7" ry="5" fill="#f2efff"/><circle cx="32" cy="29" r="2.8" fill="#2a2638"/>'
+      +'<path d="M51 12l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#d9d3f2"/><path d="M29 51h6" stroke="#a9a3c7" stroke-width="2" stroke-linecap="round"/>',
+    sombra:'<path d="M8 58c2-22 10-44 24-44s22 22 24 44c-5-4-8-4-12 0-4-4-8-4-12 0-4-4-8-4-12 0-4-4-8-4-12 0z" fill="#3a3440"/>'
+      +'<ellipse cx="25" cy="34" rx="3.4" ry="2.4" fill="#d8cfe0"/><ellipse cx="39" cy="34" rx="3.4" ry="2.4" fill="#d8cfe0"/>'
+  };
+  return '<svg viewBox="0 0 64 64" width="'+sz+'" height="'+sz+'">'+(B[sp]||B.sombra)+'</svg>';
+}
+/* Estado de cada jefe según tu historia: oculto · activo · vencido */
+function estadoJefes(r){
+  r=r||calc();
+  var hoy=hoyKey(), out=[];
+  JEFES.forEach(function(j){
+    var e={j:j, hp:jefeHP(j), golpes:0, st:'oculto'};
+    if(r.L>=j.L){
+      var k=r.alcanzo[j.L]||hoy, n=0, guard=0;
+      while(k<=hoy && guard++<800){
+        var pc=0; try { pc=Track.api.cumplDia(k, j.pil); } catch(x){}
+        if(pc>=60) n++;
+        k=sumaDias(k,1);
+      }
+      e.golpes=Math.min(n,e.hp);
+      e.st = n>=e.hp ? 'vencido' : 'activo';
+      e.cobrado = recReclamada('jefe'+j.L);
+    }
+    out.push(e);
+  });
+  return out;
+}
+function jefesActivos(){ try { return estadoJefes().filter(function(e){ return e.st==='activo'; }); } catch(x){ return []; } }
+
+function abrirJefe(L, r){
+  var e=estadoJefes(r).filter(function(x){ return x.j.L===L; })[0];
+  if(!e) return;
+  var j=e.j, cond = j.pil ? 'un día con <b>'+PIL_N[j.pil]+'</b> al 60% o más' : 'un día con tu rutina al 60% o más';
+  var pips=''; for(var i=0;i<e.hp;i++) pips+='<i class="'+(i<e.golpes?'on':'')+'"></i>';
+  var h='<div class="lvup lvs jf-sheet '+e.st+'">';
+  if(e.st==='oculto'){
+    h+='<div class="jf-big">'+jefeSVG(j.sp,110)+'</div><h3>???</h3><p>Algo te espera en el nivel <b>'+j.L+'</b>.</p><button data-cerrar>Seguir</button></div>';
+    hoja(h); return;
+  }
+  h+='<div class="jf-big">'+jefeSVG(j.sp,120)+'</div><h3>'+j.n+'</h3><p class="jf-lema">“'+j.lema+'”</p>'
+    + '<div class="jf-hp">'+pips+'</div>';
+  if(e.st==='activo'){
+    h+='<p>Cada '+cond+' le pega un golpe. Te faltan <b>'+(e.hp-e.golpes)+'</b>.</p><button data-cerrar>A pelear</button></div>';
+    hoja(h); return;
+  }
+  if(!e.cobrado){
+    h+='<p>Lo venciste. Se ganó tu respeto y dejó algo.</p><button id="jfCobrar">Cobrar +'+jefePremio(j)+'</button><button class="lvs-sec" data-cerrar>Después</button></div>';
+    hoja(h);
+    document.getElementById('jfCobrar').addEventListener('click', function(){
+      try { Track.recompensa.reclamar('jefe'+j.L, jefePremio(j)); } catch(x){ return; }
+      if(navigator.vibrate) navigator.vibrate([20,40,40]);
+      hoja('<div class="lvup lvs"><div class="lvs-chest pop">'+cofreSVG(true,100)+'</div><h3>+'+jefePremio(j)+' monedas</h3><p>'+j.n+' no vuelve más por acá.</p><button data-cerrar>Seguir</button></div>');
+      renderCard(); renderPage();
+    });
+    return;
+  }
+  h+='<p>Vencido. No vuelve más por acá.</p><button data-cerrar>Listo</button></div>';
+  hoja(h);
+}
+
 function reclamar(L, r){
   var pts=premioNivel(L);
   try { Track.recompensa.reclamar(L, pts); } catch(e){ return; }
@@ -7211,7 +7365,7 @@ function chequearSubida(r){
     + '</div>');
 }
 
-window.Lvl = { calc:calc, renderCard:renderCard, renderPage:renderPage, stepXP:stepXP, tiers:TIERS, ico:function(k,sz,sw){ return ico(IC[k],sz,sw); } };
+window.Lvl = { calc:calc, renderCard:renderCard, renderPage:renderPage, stepXP:stepXP, tiers:TIERS, jefesActivos:jefesActivos, jefeSVG:jefeSVG, abrirJefe:function(L){ abrirJefe(L); }, ico:function(k,sz,sw){ return ico(IC[k],sz,sw); } };
 
 try {
   var bg=document.getElementById('lvupBg');
@@ -7219,6 +7373,7 @@ try {
   var tb=document.getElementById('tbLvl');
   if(tb) tb.addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','nivel'); });
   renderCard();
+  try { if(window.Track && Track.renderResumen) Track.renderResumen(); } catch(x){}
 } catch(e){ console.warn('niveles', e); }
 })();
 </script>
