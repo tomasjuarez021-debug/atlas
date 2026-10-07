@@ -3494,6 +3494,120 @@ body{
 .aj-add .pz-in{margin:0;text-align:left}
 .aj-add .pz-btn{width:auto;margin:0;padding:0 18px}
 
+/* ============================================================
+   NIVELES · camino épico en tono mate
+   ============================================================ */
+/* ícono de arriba sin brillo */
+.tbl-ring{box-shadow:none !important;background:conic-gradient(color-mix(in srgb,var(--tc) 70%,#6b6259) calc(var(--p)*1%), rgba(255,255,255,.08) 0) !important}
+.tbl-in{background:color-mix(in srgb,var(--tc) 55%,#2a2522) !important;color:#f3ebe0 !important}
+.lvup{background:var(--surface) !important;border:1px solid var(--line2) !important}
+.lvup button{background:#e9d7bf !important;color:#2a1d14 !important}
+.lvup button.lvs-sec{background:none !important;color:var(--ink3) !important;margin-top:6px !important;padding:8px !important}
+
+/* emblema */
+.em{position:relative;display:inline-grid;place-items:center;flex-shrink:0}
+.em svg{position:absolute;inset:0}
+.em-o{fill:color-mix(in srgb,var(--tc) 45%,#2a2522)}
+.em-i{fill:color-mix(in srgb,var(--tc) 62%,#3a332d)}
+.em-s{fill:rgba(255,255,255,.08)}
+.em-ic{position:relative;color:#f6ecdf;display:grid;place-items:center}
+.em-n{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);min-width:24px;padding:1px 7px;border-radius:999px;
+  font-size:12px;font-weight:800;color:#2a1d14;background:#e9d7bf;border:2px solid var(--bg);text-align:center}
+.em.lock .em-o{fill:#2b2724} .em.lock .em-i{fill:#35302b} .em.lock .em-ic{color:#7d746a}
+
+/* cabecera */
+.pt-hero{display:flex;align-items:center;gap:16px;padding:18px 16px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.pt-hx{flex:1;min-width:0}
+.pt-k{font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.01em}
+.pt-lv{font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.05;margin-top:2px}
+.pt-lore{font-size:13px;color:var(--ink2);font-style:italic;margin-top:6px;line-height:1.4}
+.pt-xpbox{margin-top:10px;padding:14px 16px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.pt-xprow{display:flex;align-items:baseline;gap:2px}
+.pt-xprow b{font-size:22px;font-weight:800;color:var(--ink)}
+.pt-xprow span{font-size:13px;color:var(--ink3);font-weight:600}
+.pt-xprow em{margin-left:auto;font-style:normal;font-size:12.5px;font-weight:700;color:var(--ink2)}
+.pt-bar{height:12px;border-radius:999px;background:#2a2622;overflow:hidden;margin-top:8px}
+.pt-bar i{display:block;height:100%;border-radius:999px;background:color-mix(in srgb,var(--tc) 70%,#6b6259)}
+.pt-seg{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:12px}
+.pt-seg span{height:24px;border-radius:7px;display:grid;place-items:center;font-size:10px;font-weight:800;color:#6f665d;background:#2a2622}
+.pt-seg span.ok{background:color-mix(in srgb,var(--tc) 55%,#3a332d);color:#efe4d6}
+.pt-seg span.cur{background:#e9d7bf;color:#2a1d14}
+.pt-segl{font-size:12px;color:var(--ink3);margin-top:7px;font-weight:600}
+.pt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.pt-stats span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:11px 4px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:10.5px;font-weight:600;color:var(--ink3);text-align:center;line-height:1.25}
+.pt-stats b{font-size:17px;font-weight:800;color:var(--ink)}
+.pt-pend{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:13px 14px;border-radius:var(--r-lg);text-align:left;
+  background:#e9d7bf;color:#2a1d14;animation:ptNudge 2.6s ease-in-out infinite}
+@keyframes ptNudge{0%,90%,100%{transform:none}93%{transform:rotate(-1deg)}96%{transform:rotate(1deg)}}
+.pt-pend b{display:block;font-size:15px;font-weight:800}
+.pt-pend small{font-size:12px;opacity:.7}
+.pt-gift{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#2a1d14;color:#e9d7bf;flex-shrink:0}
+.pt-next{display:flex;align-items:center;gap:14px;margin-top:10px;padding:14px 16px;border-radius:var(--r-lg);background:var(--surface);border:1px dashed var(--line2)}
+.pt-next-tx{flex:1;min-width:0}
+.pt-next-n{font-size:19px;font-weight:800;color:var(--ink);margin-top:1px}
+.pt-next ul{list-style:none;margin-top:6px;display:flex;flex-direction:column;gap:2px}
+.pt-next li{font-size:12.5px;color:var(--ink3)}
+.pt-next li::before{content:'·';margin-right:6px;color:var(--ink2)}
+.pt-next li b{color:var(--ink2)}
+
+/* camino */
+.pt{position:relative;margin:18px -4px 0}
+.pt-svg{position:absolute;left:0;top:0;pointer-events:none}
+.pt-road{fill:none;stroke:#2c2824;stroke-width:16;stroke-linecap:round}
+.pt-road.ok{stroke:color-mix(in srgb,var(--tc) 48%,#3a332d)}
+.pt-world{position:absolute;left:6px;right:6px;height:124px;border-radius:22px;overflow:hidden;z-index:1;
+  background:color-mix(in srgb,var(--tc) 18%,#1d1a17);border:1px solid color-mix(in srgb,var(--tc) 22%,transparent)}
+.pj{position:absolute;inset:0;width:100%;height:100%}
+.pj-sol{fill:color-mix(in srgb,var(--tc) 40%,#e9d7bf);opacity:.55}
+.pj-c1{fill:color-mix(in srgb,var(--tc) 30%,#25211e)}
+.pj-c2{fill:color-mix(in srgb,var(--tc) 22%,#201c19)}
+.pj-c3{fill:color-mix(in srgb,var(--tc) 14%,#1a1715)}
+.pt-wx{position:absolute;left:14px;right:14px;bottom:12px;display:flex;align-items:center;gap:12px}
+.pt-wt{display:flex;flex-direction:column}
+.pt-wt b{font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+.pt-wt small{font-size:12px;font-weight:600;color:var(--ink2)}
+.pt-world.lock{background:#1d1a17;border-color:var(--line)}
+.pt-world.lock .pj{filter:grayscale(1);opacity:.5}
+.pt-world.lock .pt-wt b{color:var(--ink3)}
+
+.pv{position:absolute;transform:translate(-50%,-50%);width:60px;height:60px;z-index:2;display:grid;place-items:center;transition:transform .12s}
+.pv:active{transform:translate(-50%,-50%) scale(.9)}
+.pv .pn-in{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-size:17px;font-weight:800}
+.pv.done .pn-in{background:color-mix(in srgb,var(--tc) 55%,#3a332d);color:#f3ebe0;box-shadow:0 5px 0 color-mix(in srgb,var(--tc) 30%,#14110f)}
+.pv.lock .pn-in{background:#26221f;color:#6f665d;box-shadow:0 5px 0 #141210}
+.pv.lock .pn-in small{font-size:14px;font-weight:800}
+.pv.cur{width:84px;height:84px}
+.pv.cur .pn-in{position:relative;width:64px;height:64px;font-size:24px;background:#e9d7bf;color:#2a1d14;box-shadow:0 6px 0 #9c8569}
+.pv-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(color-mix(in srgb,var(--tc) 70%,#6b6259) calc(var(--p)*1%), #2c2824 0);
+  -webkit-mask:radial-gradient(circle, transparent 36px, #000 37px);mask:radial-gradient(circle, transparent 36px, #000 37px)}
+.pv-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);padding:1px 8px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.08em;color:#e9d7bf;background:#2a1d14;border:2px solid var(--bg)}
+.pv.gift .pn-in{border-radius:18px}
+.pv.gift.done .pn-in{background:#3a332d;color:#a4978a}
+.pv.gift.claim .pn-in{background:#e9d7bf;color:#2a1d14;box-shadow:0 5px 0 #9c8569;animation:ptGift 1.8s ease-in-out infinite}
+@keyframes ptGift{0%,80%,100%{transform:none}85%{transform:rotate(-8deg)}90%{transform:rotate(7deg)}95%{transform:rotate(-4deg)}}
+.pv.boss{width:72px;height:72px}
+.pv.boss.cur{width:84px;height:84px}
+.pv-badge{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);padding:1px 7px;border-radius:999px;font-size:11px;font-weight:800;color:#2a1d14;background:#d9b37a;border:2px solid var(--bg);white-space:nowrap}
+.pt-cofre{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;flex-direction:column;align-items:center;filter:grayscale(.9);opacity:.5}
+.pt-cofre span{font-size:11px;font-weight:800;color:var(--ink3);margin-top:-2px;white-space:nowrap}
+.pt-cofre.on{filter:saturate(.75);opacity:1;animation:cofreBob 1.8s ease-in-out infinite}
+.pt-cofre.on span{color:#d9b37a}
+
+/* hojas */
+.lvs .em{margin:0 auto}
+.lvs-st{background:#2c2824 !important;color:var(--ink2) !important}
+.lvs-rew{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border-radius:16px;text-align:left;background:#2a2622}
+.lvs-rew>span{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#e9d7bf;color:#2a1d14;flex-shrink:0}
+.lvs-rew div{flex:1}
+.lvs-rew b{display:block;font-size:14.5px;color:var(--ink)}
+.lvs-rew small{font-size:12px;color:var(--ink3)}
+.lvs-rew em{font-style:normal;font-size:18px;font-weight:800;color:#d9b37a}
+.lvs-rew.done{opacity:.55}
+
+.lvs>.em,.lvup>.em{display:grid;margin:0 auto}
+.lvs .lvs-st{display:table;margin:18px auto 0}
+.pv.cur.gift .pn-in{border-radius:50%}
+
 </style>
 </head>
 
@@ -4764,6 +4878,7 @@ function netoPropio(){
   var n=0;
   claves().forEach(function(k){ n += ganadosDia(k) - gastadosDia(k); });
   if(T.cofres) Object.keys(T.cofres).forEach(function(w){ n += Number(T.cofres[w])||0; });   // cofres semanales
+  if(T.recompensas) Object.keys(T.recompensas).forEach(function(L){ n += Number(T.recompensas[L])||0; });   // regalos de nivel
   return n;
 }
 /* Saldo único: la rutina más las actividades y premios del otro módulo */
@@ -6526,6 +6641,10 @@ window.Track = {
     pendientesHoy: function(){ var k=hoyKey(), out=[]; PILARES.forEach(function(pl){ habsPilar(pl).forEach(function(c){ if(!hechoEn(k,c)) out.push(c); }); }); return out; },
     racha: rachaActiva, saldo: saldo, techo: techoDia
   },
+  recompensa: {
+    reclamada: function(L){ return !!(T.recompensas && T.recompensas[L]); },
+    reclamar: function(L,pts){ if(!T.recompensas) T.recompensas={}; if(T.recompensas[L]) return; T.recompensas[L]=Number(pts)||0; save(); repintar(); }
+  },
   cofre: {
     abierto: function(w){ return !!(T.cofres && T.cofres[w]); },
     abrir: function(w,pts){ if(!T.cofres) T.cofres={}; if(T.cofres[w]) return; T.cofres[w]=Number(pts)||0; save(); repintar(); }
@@ -6704,76 +6823,132 @@ function renderCard(){
   return r;
 }
 
-/* ── Camino: 100 niveles que se recorren y se tocan ── */
-var GAP=92, BANNER=86;
+var IC_GIFT='<path d="M4 11h16v10H4zM3 7h18v4H3zM12 7v14"/><path d="M12 7H8.5a2.3 2.3 0 010-4.6C11 2.4 12 7 12 7zM12 7h3.5a2.3 2.3 0 000-4.6C13 2.4 12 7 12 7z"/>';
+/* ── Camino épico: mundos por rango, emblemas, recompensas cada 5 niveles ── */
+var NIV_LORE=['Toda racha empieza por un día.','Ya echaste raíz: ahora a crecer.','Los días flojos dejan de contar.','Aparecer todos los días es tu superpoder.',
+  'Un tercio de tu rutina, siempre.','Casi la mitad, sin negociar.','La mitad del día o nada.','Sólo días sólidos.','Días buenos, sin excusas.','El mundo sobre tus hombros.'];
+function premioNivel(L){ return L%10===0 ? L*15 : L*8; }
+function recReclamada(L){ try { return !!(Track.recompensa && Track.recompensa.reclamada(L)); } catch(e){ return false; } }
+function pendientes(r){ var out=[]; for(var L=5; L<=r.L; L+=5) if(!recReclamada(L)) out.push(L); return out; }
+
+/* Emblema propio por rango: escudo hexagonal mate con el ícono */
+function emblema(t, sz, L, lock){
+  return '<span class="em'+(lock?' lock':'')+'" style="--tc:'+t.c+';width:'+sz+'px;height:'+sz+'px">'
+    + '<svg viewBox="0 0 64 64" width="'+sz+'" height="'+sz+'"><path class="em-o" d="M32 2.5l26 15v29l-26 15-26-15v-29z"/><path class="em-i" d="M32 9.5l20 11.5v22L32 54.5 12 43V21z"/><path class="em-s" d="M32 9.5l20 11.5v6L32 15.5 12 27v-6z"/></svg>'
+    + '<span class="em-ic">'+tIco(t, Math.round(sz*.36), 2.2)+'</span>'
+    + (L?'<span class="em-n">'+L+'</span>':'')
+    + '</span>';
+}
+/* Paisaje del mundo: colinas mate generadas por rango */
+function paisaje(ti){
+  var w=340, h=86, s='';
+  function colina(base, amp, fase, frec){
+    var d='M0 '+h+' L0 '+base;
+    for(var x=0; x<=w; x+=10) d+=' L'+x+' '+(base-amp*Math.sin(x/frec+fase)-amp*.4*Math.sin(x/(frec*.45)+fase*2)).toFixed(1);
+    return d+' L'+w+' '+h+'z';
+  }
+  s+='<circle cx="'+(60+ti*27%220)+'" cy="24" r="'+(10+ti%3*3)+'" class="pj-sol"/>';
+  s+='<path d="'+colina(46,9,ti*1.7,38)+'" class="pj-c1"/>';
+  s+='<path d="'+colina(60,7,ti*2.3+1,26)+'" class="pj-c2"/>';
+  s+='<path d="'+colina(74,5,ti*.9+2,18)+'" class="pj-c3"/>';
+  if(ti>=6) s+='<path d="M'+(250-ti*6)+' 60l14-30 14 30z" class="pj-c1"/>';
+  return '<svg class="pj" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="xMidYMid slice">'+s+'</svg>';
+}
+
+var GAP=96, BANNER=150;
 function renderPage(){
   var el=document.getElementById('nivelBody');
   if(!el) return;
-  var r=calc(), nodos=[], y=24, H;
-  for(var L=1; L<=MAX; L++){
-    if((L-1)%10===0){ nodos.push({banner:tierIdx(L), y:y}); y+=BANNER; }
-    var x=50+30*Math.sin((L-1)*0.82);
-    nodos.push({L:L, x:x, y:y+34});
-    y+=GAP;
-  }
-  H=y+40;
+  var r=calc(), tot=xpHasta(r.L)+r.xp, nt=r.ti<TIERS.length-1?TIERS[r.ti+1]:null, pend=pendientes(r);
+  var enTier=((r.L-1)%10)+1;
 
-  // tramos del camino (curvas suaves entre niveles)
-  var pts=nodos.filter(function(n){ return n.L; }), seg='';
-  for(var i=1;i<pts.length;i++){
-    var a=pts[i-1], b=pts[i], my=(a.y+b.y)/2, hecho=b.L<=r.L;
-    seg+='<path d="M'+a.x.toFixed(1)+' '+a.y+' C'+a.x.toFixed(1)+' '+my+' '+b.x.toFixed(1)+' '+my+' '+b.x.toFixed(1)+' '+b.y+'"'
-      + ' stroke="'+(hecho?tierOf(b.L).c:'rgba(255,255,255,.13)')+'" stroke-width="'+(hecho?10:8)+'"'
-      + (hecho?'':' stroke-dasharray="2 14"')+' fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>';
-  }
+  // ── Cabecera ──
+  var s='<div class="pt-hero" style="--tc:'+r.tier.c+'">'
+    + emblema(r.tier, 92, r.L)
+    + '<div class="pt-hx"><div class="pt-k">Rango '+(r.ti+1)+' · '+r.tier.n+'</div>'
+    + '<div class="pt-lv">Nivel '+r.L+'</div>'
+    + '<div class="pt-lore">“'+NIV_LORE[r.ti]+'”</div></div>'
+    + '</div>'
+    + '<div class="pt-xpbox" style="--tc:'+r.tier.c+'">'
+    +   '<div class="pt-xprow"><b>'+fmt(r.xp)+'</b><span> / '+fmt(r.need||r.xp)+' XP</span><em>'+(r.L>=MAX?'cima':'faltan '+fmt(r.falta)+(r.eta?' · ~'+r.eta+' d':''))+'</em></div>'
+    +   '<div class="pt-bar"><i style="width:'+pctNivel(r)+'%"></i></div>'
+    +   '<div class="pt-seg">';
+  for(var i=1;i<=10;i++) s+='<span class="'+(i<enTier?'ok':(i===enTier?'cur':''))+'">'+(r.ti*10+i)+'</span>';
+  s+='</div><div class="pt-segl">'+enTier+' de 10 niveles en '+r.tier.n+'</div></div>';
 
-  var s='<div class="pth-head" style="--tc:'+r.tier.c+'">'
-    + '<div class="pth-ic">'+tIco(r.tier,26,2)+'</div>'
-    + '<div class="pth-mid"><div class="pth-t">Nivel '+r.L+' · '+r.tier.n+'</div>'
-    + '<div class="lv-bar"><i style="width:'+pctNivel(r)+'%"></i></div>'
-    + '<div class="pth-s">'+(r.L>=MAX?'Nivel máximo':'Faltan '+fmt(r.falta)+' XP')+'</div></div>'
+  s+='<div class="pt-stats">'
+    + '<span><b>'+fmt(tot)+'</b>XP total</span>'
+    + '<span><b>'+r.contados+'</b>días que sumaron</span>'
+    + '<span><b>'+Math.round(r.ritmo)+'</b>XP por día</span>'
+    + '<span><b>'+(r.tier.req?r.tier.req+'%':'libre')+'</b>exigencia</span>'
     + '</div>';
 
-  s+='<div class="pth" style="height:'+H+'px">'
-    + '<svg class="pth-svg" viewBox="0 0 100 '+H+'" preserveAspectRatio="none" width="100%" height="'+H+'">'+seg+'</svg>';
+  if(pend.length) s+='<button class="pt-pend" id="ptPend"><span class="pt-gift">'+ico(IC_GIFT,22,2)+'</span><span><b>'+pend.length+' '+(pend.length===1?'recompensa sin abrir':'recompensas sin abrir')+'</b><small>Tocá para reclamar tus monedas</small></span></button>';
+
+  if(nt){
+    var faltaN=(r.ti+1)*10+1-r.L;
+    s+='<div class="pt-next" style="--tc:'+nt.c+'">'
+      + emblema(nt, 58, 0, true)
+      + '<div class="pt-next-tx"><div class="pt-k">Próximo rango · en '+faltaN+' '+(faltaN===1?'nivel':'niveles')+'</div><div class="pt-next-n">'+nt.n+'</div>'
+      + '<ul><li>Emblema nuevo</li><li>Cofre de rango: <b>+'+premioNivel((r.ti+1)*10)+'</b> monedas</li><li>Exigencia diaria: <b>'+(nt.req?nt.req+'%':'libre')+'</b></li></ul></div>'
+      + '</div>';
+  }
+
+  // ── Camino ──
+  var nodos=[], y=10;
+  for(var L=1; L<=MAX; L++){
+    if((L-1)%10===0){ nodos.push({banner:tierIdx(L), y:y}); y+=BANNER; }
+    nodos.push({L:L, x:50+28*Math.sin((L-1)*0.85), y:y+40});
+    y+=GAP;
+  }
+  var H=y+20, pts=nodos.filter(function(n){ return n.L; }), seg='';
+  for(var j=1;j<pts.length;j++){
+    var a=pts[j-1], b=pts[j]; if((b.L-1)%10===0) continue;   // el mundo nuevo arranca después del banner
+    var my=(a.y+b.y)/2, hecho=b.L<=r.L;
+    seg+='<path d="M'+a.x.toFixed(1)+' '+a.y+' C'+a.x.toFixed(1)+' '+my+' '+b.x.toFixed(1)+' '+my+' '+b.x.toFixed(1)+' '+b.y+'"'
+      + ' class="'+(hecho?'pt-road ok':'pt-road')+'" style="--tc:'+tierOf(b.L).c+'" vector-effect="non-scaling-stroke"/>';
+  }
+  s+='<div class="pt" style="height:'+H+'px"><svg class="pt-svg" viewBox="0 0 100 '+H+'" preserveAspectRatio="none" width="100%" height="'+H+'">'+seg+'</svg>';
   nodos.forEach(function(n){
     if(n.banner!=null){
       var t=TIERS[n.banner], st=n.banner<r.ti?'done':(n.banner===r.ti?'cur':'lock');
-      s+='<div class="pth-ban '+st+'" style="top:'+n.y+'px;--tc:'+t.c+'">'
-        + '<span class="pb-ic">'+tIco(t,20,2)+'</span>'
-        + '<span class="pb-t">'+t.n+'</span>'
-        + '<span class="pb-r">'+(n.banner*10+1)+'–'+(n.banner*10+10)+'</span>'
-        + '</div>';
+      var hechos = st==='done'?10:(st==='cur'?enTier-1:0);
+      s+='<div class="pt-world '+st+'" style="top:'+n.y+'px;--tc:'+t.c+'">'
+        + paisaje(n.banner)
+        + '<div class="pt-wx">'+emblema(t, 52, 0, st==='lock')
+        +   '<div class="pt-wt"><div class="pt-k">Mundo '+(n.banner+1)+' · niveles '+(n.banner*10+1)+'–'+(n.banner*10+10)+'</div><b>'+t.n+'</b>'
+        +   '<small>'+(st==='lock'?'Bloqueado · exige '+(t.req?t.req+'%':'nada'):(st==='done'?'Completado':hechos+' de 10 superados'))+'</small></div>'
+        + '</div></div>';
       return;
     }
-    var L=n.L, t=tierOf(L), st=L<r.L?'done':(L===r.L?'cur':'lock'), inicio=(L-1)%10===0;
-    var cont = st==='lock' ? ico(IC.lock,16,2.2) : (inicio ? tIco(t,st==='cur'?28:22,2) : '<b>'+L+'</b>');
-    s+='<button class="pn '+st+(inicio?' big':'')+'" data-l="'+L+'" style="left:'+n.x.toFixed(1)+'%;top:'+n.y+'px;--tc:'+t.c+'">'
-      + (st==='cur'?'<i class="pn-ring" style="--p:'+pctNivel(r)+'"></i>':'')
-      + '<span class="pn-in">'+cont+'</span>'
+    var L=n.L, t=tierOf(L), st=L<r.L?'done':(L===r.L?'cur':'lock');
+    var tipo = L%10===0 ? 'boss' : (L%5===0 ? 'gift' : '');
+    var reclam = tipo && L<=r.L && !recReclamada(L);
+    var cont;
+    if(tipo==='boss') cont=emblema(t, st==='cur'?78:66, L, st==='lock');
+    else if(tipo==='gift') cont='<span class="pn-in">'+ico(IC_GIFT, 24, 2)+'</span>';
+    else cont='<span class="pn-in">'+(st==='lock'?'<small>'+L+'</small>':(st==='done'?ico(IC.check,20,3):'<b>'+L+'</b>'))+'</span>';
+    s+='<button class="pv '+st+(tipo?' '+tipo:'')+(reclam?' claim':'')+'" data-l="'+L+'" style="left:'+n.x.toFixed(1)+'%;top:'+n.y+'px;--tc:'+t.c+(st==='cur'?';--p:'+pctNivel(r):'')+'">'
+      + (st==='cur' && tipo!=='boss' ? '<i class="pv-ring"></i>' : '')
+      + cont
+      + (st==='cur' ? '<span class="pv-tag">VOS</span>' : '')
+      + (reclam ? '<span class="pv-badge">+'+premioNivel(L)+'</span>' : '')
       + '</button>';
     if(st==='cur'){
-      var cx = n.x<50 ? n.x+30 : n.x-30, disp=cofreDisp();
-      s+='<button class="pth-cofre'+(disp?' on':'')+'" id="pthCofre" style="left:'+cx.toFixed(1)+'%;top:'+n.y+'px">'
-        + cofreSVG(!disp,52)+'<span>'+(disp?'Cofre':'Lunes')+'</span></button>';
+      var cx = n.x<50 ? n.x+32 : n.x-32, disp=cofreDisp();
+      s+='<button class="pt-cofre'+(disp?' on':'')+'" id="pthCofre" style="left:'+cx.toFixed(1)+'%;top:'+n.y+'px">'
+        + cofreSVG(!disp,50)+'<span>'+(disp?'Cofre semanal':'Vuelve el lunes')+'</span></button>';
     }
   });
-  s+='</div>'
-    + '<button class="lv-link" id="lvRank">'+ico(IC.trophy,18,2)+'<span>Ranking semanal</span></button>';
+  s+='</div><button class="lv-link" id="lvRank">'+ico(IC.trophy,18,2)+'<span>Ranking semanal</span></button>';
   el.innerHTML=s;
 
-  el.querySelectorAll('.pn').forEach(function(b){
-    b.addEventListener('click', function(){ abrirNivel(Number(b.dataset.l), r); });
-  });
-  var cf=document.getElementById('pthCofre');
-  if(cf) cf.addEventListener('click', function(){ abrirCofre(r); });
+  el.querySelectorAll('.pv').forEach(function(b){ b.addEventListener('click', function(){ abrirNivel(Number(b.dataset.l), r); }); });
+  var cf=document.getElementById('pthCofre'); if(cf) cf.addEventListener('click', function(){ abrirCofre(r); });
+  var pp=document.getElementById('ptPend'); if(pp) pp.addEventListener('click', function(){
+    var b=el.querySelector('.pv[data-l="'+pend[0]+'"]'); if(b){ b.scrollIntoView({block:'center', behavior:'smooth'}); setTimeout(function(){ abrirNivel(pend[0], r); }, 450); } });
   document.getElementById('lvRank').addEventListener('click', function(){ if(window.App && App.showScreen) App.showScreen('hab','rank'); });
-
-  // centrar el nivel actual (después del reset de scroll del shell)
-  setTimeout(function(){
-    var cur=el.querySelector('.pn.cur');
-    if(cur) cur.scrollIntoView({block:'center'});
-  }, 60);
+  setTimeout(function(){ var cur=el.querySelector('.pv.cur'); if(cur) cur.scrollIntoView({block:'center'}); }, 60);
 }
 
 /* ── Hoja con el detalle de un nivel ── */
@@ -6786,19 +6961,41 @@ function hoja(html){
   if(x) x.addEventListener('click', function(){ bg.classList.remove('on'); });
 }
 function abrirNivel(L, r){
-  var t=tierOf(L), estado, sub;
+  var t=tierOf(L), estado, sub, tipo=L%10===0?'boss':(L%5===0?'gift':'');
   if(L<r.L){ estado='Superado'; sub='Ya pasaste por acá.'; }
   else if(L===r.L){ estado='Estás acá'; sub=r.L>=MAX?'Llegaste a la cima.':'Te faltan <b>'+fmt(r.falta)+' XP</b> para el '+(L+1)+'.'; }
-  else { var falta=xpHasta(L)-(xpHasta(r.L)+r.xp); estado='Bloqueado'; sub='Se desbloquea con <b>'+fmt(xpHasta(L))+' XP</b>. Te faltan '+fmt(falta)+'.'; }
+  else { var falta=xpHasta(L)-(xpHasta(r.L)+r.xp); estado='Bloqueado'; sub='Se desbloquea con <b>'+fmt(xpHasta(L))+' XP</b> · te faltan '+fmt(falta)+'.'; }
+  var extra='';
+  if(tipo){
+    var pts=premioNivel(L), ok=L<=r.L, rec=recReclamada(L);
+    extra='<div class="lvs-rew'+(rec?' done':'')+'"><span>'+ico(IC_GIFT,22,2)+'</span><div><b>'+(tipo==='boss'?'Cofre de rango':'Regalo de nivel')+'</b><small>'
+      + (rec?'Ya lo reclamaste':(ok?'¡Listo para abrir!':'Se abre al llegar al nivel '+L))+'</small></div><em>+'+pts+'</em></div>';
+    if(ok && !rec){
+      hoja('<div class="lvup lvs" style="--tc:'+t.c+'">'+emblema(t,96,L)+'<div class="lvs-st">'+estado+'</div><h3>Nivel '+L+'</h3>'+extra
+        + '<button id="lvClaim">Abrir y cobrar +'+pts+'</button><button class="lvs-sec" data-cerrar>Después</button></div>');
+      document.getElementById('lvClaim').addEventListener('click', function(){ reclamar(L, r); });
+      return;
+    }
+  }
   var regla = (L-1)%10===0 && t.req ? '<div class="lvs-rule">Desde acá, un día suma XP si cumplís el <b>'+t.req+'%</b> de tu rutina.</div>' : '';
   hoja('<div class="lvup lvs'+(L>r.L?' lock':'')+'" style="--tc:'+t.c+'">'
-    + badge(L,t)
+    + emblema(t, 96, L, L>r.L)
     + '<div class="lvs-st">'+estado+'</div>'
     + '<h3>Nivel '+L+'</h3>'
     + '<p>'+t.n+' · '+sub+'</p>'
-    + regla
+    + regla + extra
     + '<button data-cerrar>Listo</button>'
     + '</div>');
+}
+function reclamar(L, r){
+  var pts=premioNivel(L);
+  try { Track.recompensa.reclamar(L, pts); } catch(e){ return; }
+  if(navigator.vibrate) navigator.vibrate([20,40,40]);
+  var conf='', cols=['#d9a066','#c98a5a','#e6c99a','#8fb39a'];
+  for(var i=0;i<24;i++) conf+='<i style="left:'+Math.round(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.4).toFixed(2)+'s"></i>';
+  hoja('<div class="lvup lvs"><div class="confetti">'+conf+'</div><div class="lvs-chest pop">'+cofreSVG(true,104)+'</div>'
+    + '<h3>+'+pts+' monedas</h3><p>Recompensa del nivel '+L+'. Gastalas en Premios.</p><button data-cerrar>Seguir</button></div>');
+  renderCard(); renderPage();
 }
 function abrirCofre(r){
   if(!cofreDisp()){
@@ -6833,7 +7030,7 @@ function chequearSubida(r){
   for(var i=0;i<28;i++) conf+='<i style="left:'+Math.round(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.5).toFixed(2)+'s"></i>';
   hoja('<div class="lvup" style="--tc:'+r.tier.c+'">'
     + '<div class="confetti">'+conf+'</div>'
-    + badge(r.L,r.tier)
+    + emblema(r.tier,96,r.L)
     + '<h3>¡Nivel '+r.L+'!</h3>'
     + (nuevoRango ? '<p>Nuevo rango: <b>'+r.tier.n+'</b></p>' : '')
     + '<button data-cerrar>Seguir</button>'
